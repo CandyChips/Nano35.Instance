@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "Nano35.Instance.Processor": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://localhost:5052",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
