@@ -61,20 +61,7 @@ namespace Nano35.Instance.Api.Services.Requests
             var result = new CreateInstanceResultViewModel();
             var client = _bus.CreateRequestClient<ICreateInstanceRequestContract>(TimeSpan.FromSeconds(10));
             var response = await client
-                .GetResponse<ICreateInstanceSuccessResultContract, ICreateInstanceErrorResultContract>(message, cancellationToken);
-
-            if (response.Is(out Response<ICreateInstanceSuccessResultContract> successResponse))
-            {
-                result.Id = successResponse.Message.Id;
-                return result;
-            }
-            
-            if (response.Is(out Response<ICreateInstanceErrorResultContract> errorResponse))
-            {
-                result.Error = errorResponse.Message.Error;
-                return result;
-            }
-            
+                .GetResponse<ICreateInstanceSuccessResultContract>(message, cancellationToken);
             throw new InvalidOperationException();
         }
     }

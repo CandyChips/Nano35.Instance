@@ -12,7 +12,7 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 namespace Nano35.Instance.Api.Services.Requests
 {
     public class GetAllInstanceTypesResultViewModel :
-        IGetAllInstanceTypesResultContract,
+        IGetAllInstanceTypesSuccessResultContract,
         IGetAllInstanceTypesNotFoundResultContract
     {
         public string Error { get; set; }
@@ -45,9 +45,9 @@ namespace Nano35.Instance.Api.Services.Requests
             var result = new GetAllInstanceTypesResultViewModel();
             var client = _bus.CreateRequestClient<IGetAllInstanceTypesRequestContract>(TimeSpan.FromSeconds(10));
             var response = await client
-                .GetResponse<IGetAllInstanceTypesResultContract, IGetAllInstanceTypesNotFoundResultContract>(message, cancellationToken);
+                .GetResponse<IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesNotFoundResultContract>(message, cancellationToken);
 
-            if (response.Is(out Response<IGetAllInstanceTypesResultContract> successResponse))
+            if (response.Is(out Response<IGetAllInstanceTypesSuccessResultContract> successResponse))
             {
                 result.Data = successResponse.Message.Data;
                 return result;

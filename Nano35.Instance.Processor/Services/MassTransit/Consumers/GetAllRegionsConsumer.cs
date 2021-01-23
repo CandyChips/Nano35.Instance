@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MassTransit;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
@@ -11,36 +12,17 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
     public class GetAllRegionsConsumer : 
         IConsumer<IGetAllRegionsRequestContract>
     {
-        private readonly ILogger<GetAllRegionsConsumer> _logger;
-        private readonly ApplicationContext _context;
-        
+        private readonly MediatR.IMediator _mediator;
+
         public GetAllRegionsConsumer(
-            ILogger<GetAllRegionsConsumer> logger, 
-            ApplicationContext context)
+            IMediator mediator)
         {
-            _logger = logger;
-            _context = context;
+            _mediator = mediator;
         }
-        
+
         public async Task Consume(ConsumeContext<IGetAllRegionsRequestContract> context)
         {
-            _logger.LogInformation("IGetAllInstancesRequestContract tracked");
-            var message = context.Message;
-            var result = await this._context.Regions
-                .MapAllToAsync<IRegionViewModel>();
-            if (result.Count == 0)
-            {
-                await context.RespondAsync<IGetAllRegionsNotFoundResultContract>(new
-                {
-                });
-            }
-            else
-            {
-                await context.RespondAsync<IGetAllRegionsResultContract>(new
-                {
-                    Data = result
-                });
-            }
+            await context.RespondAsync<IGetAllRegionsResultContract>(_mediator.Send(context.Message));
         }
     }
 }

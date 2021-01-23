@@ -1,48 +1,32 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
+using MassTransit.Mediator;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.MappingProfiles;
+using Nano35.Instance.Processor.Services.Requests;
 
 namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
 {
     public class GetAllInstancesConsumer : 
         IConsumer<IGetAllInstancesRequestContract>
     {
-        private readonly ILogger<GetAllInstancesConsumer> _logger;
-        private readonly ApplicationContext _context;
-        
+        private readonly MediatR.IMediator _mediator;
+
         public GetAllInstancesConsumer(
-            ILogger<GetAllInstancesConsumer> logger, 
-            ApplicationContext context)
+            MediatR.IMediator mediator)
         {
-            _logger = logger;
-            _context = context;
+            _mediator = mediator;
         }
         
-        public async Task Consume(ConsumeContext<IGetAllInstancesRequestContract> context)
+        public async Task Consume(
+            ConsumeContext<IGetAllInstancesRequestContract> context)
         {
-            _logger.LogInformation("IGetAllInstancesRequestContract tracked");
-            var message = context.Message;
-            var result = await (this._context.Instances
-                .Where(c => c.Deleted == false)
-                .MapAllToAsync<IInstanceViewModel>());
-            if (result.Count == 0)
-            {
-                await context.RespondAsync<IGetAllInstancesNotFoundResultContract>(new
-                {
-                });
-            }
-            else
-            {
-                await context.RespondAsync<IGetAllInstancesResultContract>(new
-                {
-                    Data = result
-                });
-            }
+            await context.RespondAsync<IGetAllInstancesSuccessResultContract>(
+                await _mediator.Send(new GetAllInstancesQuery(context.Message)));
         }
     }
 }

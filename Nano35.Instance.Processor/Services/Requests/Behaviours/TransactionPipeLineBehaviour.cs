@@ -1,0 +1,44 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using Nano35.Instance.Processor.Services.Contexts;
+
+namespace Nano35.Instance.Processor.Services.Requests.Behaviours
+{
+    public class TransactionPipeLineBehaviour<TIn, TOut> :
+        IPipelineBehavior<TIn, TOut>
+        where TIn : ICommandRequest<TOut>
+    {
+        private readonly ILogger<TransactionPipeLineBehaviour<TIn, TOut>> _logger;
+        private readonly ApplicationContext _context;
+
+        public TransactionPipeLineBehaviour(
+            ILogger<TransactionPipeLineBehaviour<TIn, TOut>> logger, 
+            ApplicationContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+        
+        public async Task<TOut> Handle(TIn request, CancellationToken cancellationToken, RequestHandlerDelegate<TOut> next)
+        {
+            
+            await using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var response = await next();
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                _logger.LogError("Transaction refused");
+                throw;
+            }
+        }
+    }
+}

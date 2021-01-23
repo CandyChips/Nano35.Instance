@@ -11,16 +11,9 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class GetAllInstancesResultViewModel :
-        IGetAllInstancesResultContract,
-        IGetAllInstancesNotFoundResultContract
-    {
-        public string Error { get; set; }
-        public IEnumerable<IInstanceViewModel> Data { get; set; }
-    }
     public class GetAllInstancesQuery : 
         IGetAllInstancesRequestContract, 
-        IQueryRequest<GetAllInstancesResultViewModel>
+        IQueryRequest<IGetAllInstancesSuccessResultContract>
     {
         public Guid UserId { get; set; }
         public Guid InstanceTypeId { get; set; }
@@ -28,7 +21,7 @@ namespace Nano35.Instance.Api.Services.Requests
     }
 
     public class GetAllInstancesHandler 
-        : IRequestHandler<GetAllInstancesQuery, GetAllInstancesResultViewModel>
+        : IRequestHandler<GetAllInstancesQuery, IGetAllInstancesSuccessResultContract>
     {
         private readonly ILogger<GetAllInstancesHandler> _logger;
         private readonly IBus _bus;
@@ -40,26 +33,15 @@ namespace Nano35.Instance.Api.Services.Requests
             _logger = logger;
         }
 
-        public async Task<GetAllInstancesResultViewModel> Handle(
+        public async Task<IGetAllInstancesSuccessResultContract> Handle(
             GetAllInstancesQuery message,
             CancellationToken cancellationToken)
         {
-            var result = new GetAllInstancesResultViewModel();
             var client = _bus.CreateRequestClient<IGetAllInstancesRequestContract>(TimeSpan.FromSeconds(10));
             var response = await client
-                .GetResponse<IGetAllInstancesResultContract, IGetAllInstancesNotFoundResultContract>(message, cancellationToken);
+                .GetResponse<IGetAllInstancesSuccessResultContract>(message, cancellationToken);
 
-            if (response.Is(out Response<IGetAllInstancesResultContract> successResponse))
-            {
-                result.Data = successResponse.Message.Data;
-                return result;
-            }
-            
-            if (response.Is(out Response<IGetAllInstancesNotFoundResultContract> errorResponse))
-            {
-                result.Error = "Не найдено";
-                return result;
-            }
+            return response.Message;
             
             throw new InvalidOperationException();
         }
