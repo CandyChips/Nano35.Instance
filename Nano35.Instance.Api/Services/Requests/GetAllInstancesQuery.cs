@@ -9,6 +9,7 @@ using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Identity.Models;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
+using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
@@ -21,7 +22,7 @@ namespace Nano35.Instance.Api.Services.Requests
     }
     public class GetAllInstancesQuery : 
         IGetAllInstancesRequestContract, 
-        IRequest<GetAllInstancesResultViewModel>
+        IQueryRequest<GetAllInstancesResultViewModel>
     {
         public Guid UserId { get; set; }
         public Guid InstanceTypeId { get; set; }

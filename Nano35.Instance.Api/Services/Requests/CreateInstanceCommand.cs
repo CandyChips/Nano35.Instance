@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
@@ -20,7 +21,7 @@ namespace Nano35.Instance.Api.Services.Requests
     
     public class CreateInstanceCommand :
         ICreateInstanceRequestContract, 
-        IRequest<CreateInstanceResultViewModel>
+        ICommandRequest<CreateInstanceResultViewModel>
     {
         public Guid NewId { get; set; }
         public Guid UserId { get; set; }

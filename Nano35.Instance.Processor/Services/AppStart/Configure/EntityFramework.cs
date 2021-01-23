@@ -4,12 +4,29 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Services.AppStart.Configure
 {
-    public static class EntityFrameworkServiceConstructor 
+    public class EntityFrameworkServiceConstruct
     {
-        public static void Construct(IServiceCollection services) 
+        private readonly string _dbServer;
+        private readonly string _catalog;
+        private readonly string _login;
+        private readonly string _password;
+
+        public EntityFrameworkServiceConstruct(
+            string dbServer, 
+            string catalog, 
+            string login,
+            string password)
+        {
+            _dbServer = dbServer;
+            _catalog = catalog;
+            _login = login;
+            _password = password;
+        }
+        
+        public void Register(IServiceCollection services) 
         {
             services.AddDbContext<ApplicationContext>(options => 
-                options.UseSqlServer("server=192.168.100.120; Initial Catalog=Nano35.Instance.DB; User id=sa; Password=Cerber666;"));
+                options.UseSqlServer($"server={_dbServer}; Initial Catalog={_catalog}; User id={_login}; Password={_password};"));
         }
     }
 }

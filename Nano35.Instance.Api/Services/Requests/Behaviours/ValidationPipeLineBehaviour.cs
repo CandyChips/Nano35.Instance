@@ -9,7 +9,7 @@ namespace Nano35.Instance.Api.Services.Requests.Behaviours
 {
     public class ValidationPipeLineBehaviour<TRequest, TResponse> 
         : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+        where TRequest : ICommandRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators; 
         public ValidationPipeLineBehaviour(IEnumerable<IValidator<TRequest>> validators)

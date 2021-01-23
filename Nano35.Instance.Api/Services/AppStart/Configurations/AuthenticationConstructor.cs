@@ -34,8 +34,6 @@ namespace Nano35.Instance.Api.Services.AppStart.Configurations
                 });
             services.AddScoped<ICustomAuthStateProvider, CookiesAuthStateProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            
         }
     }
 }
