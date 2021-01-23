@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Instance.Processor",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Instance.Api", "Nano35.Instance.Api\Nano35.Instance.Api.csproj", "{27030202-B348-4541-9258-0312D6C999D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Identity.Tests", "Nano35.Identity.Tests\Nano35.Identity.Tests.csproj", "{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{27030202-B348-4541-9258-0312D6C999D1}.Release|x64.Build.0 = Release|Any CPU
 		{27030202-B348-4541-9258-0312D6C999D1}.Release|x86.ActiveCfg = Release|Any CPU
 		{27030202-B348-4541-9258-0312D6C999D1}.Release|x86.Build.0 = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Debug|x86.Build.0 = Debug|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|x64.Build.0 = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|x86.ActiveCfg = Release|Any CPU
+		{6724D9D4-73ED-4C51-B3A1-8CC6C595F3CD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

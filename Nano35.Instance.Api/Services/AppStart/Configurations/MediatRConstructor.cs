@@ -1,4 +1,3 @@
-using Autofac;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Instance.Api.Services.Requests.Behaviours;

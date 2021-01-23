@@ -5,7 +5,6 @@ using FluentValidation;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Services.Requests.Behaviours;
 
