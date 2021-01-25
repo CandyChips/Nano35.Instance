@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Models;
 using Nano35.Contracts.Users.Models;
 
 namespace Nano35.Instance.Processor.Models
@@ -60,13 +61,11 @@ namespace Nano35.Instance.Processor.Models
     {
         public WorkersAutoMapperProfile()
         {
-            CreateMap<Worker, IUserViewModel>()
+            CreateMap<Worker, IWorkerViewModel>()
                 .ForMember(dest => dest.Id, source => source
-                .MapFrom(s => s.Id))
+                    .MapFrom(s => s.Id))
                 .ForMember(dest => dest.Name, source => source
-                .MapFrom(s => s.Name))
-                .ForMember(dest => dest.Comment, source => source
-                .MapFrom(s => s.Comment));
+                    .MapFrom(s => s.Name));
 
             CreateMap<Worker, IUserSelectViewModel>()
                 .ForMember(dest => dest.Id, source => source

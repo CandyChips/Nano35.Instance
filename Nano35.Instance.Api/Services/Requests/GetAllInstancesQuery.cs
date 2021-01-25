@@ -23,14 +23,10 @@ namespace Nano35.Instance.Api.Services.Requests
         public class GetAllInstancesHandler 
             : IRequestHandler<GetAllInstancesQuery, IGetAllInstancesResultContract>
         {
-            private readonly ILogger<GetAllInstancesHandler> _logger;
             private readonly IBus _bus;
-            public GetAllInstancesHandler(
-                IBus bus, 
-                ILogger<GetAllInstancesHandler> logger)
+            public GetAllInstancesHandler(IBus bus)
             {
                 _bus = bus;
-                _logger = logger;
             }
 
             public async Task<IGetAllInstancesResultContract> Handle(
@@ -50,18 +46,6 @@ namespace Nano35.Instance.Api.Services.Requests
                     throw new Exception();
                 }
                 throw new InvalidOperationException();
-            }
-        }
-
-        public class GetAllInstancesQueryExceptionHandler :
-            RequestExceptionHandler<GetAllInstancesHandler, IGetAllInstancesResultContract, Exception>
-        {
-            protected override void Handle(
-                GetAllInstancesHandler request, 
-                Exception exception, 
-                RequestExceptionHandlerState<IGetAllInstancesResultContract> state)
-            {
-                //state.Handled()
             }
         }
     }

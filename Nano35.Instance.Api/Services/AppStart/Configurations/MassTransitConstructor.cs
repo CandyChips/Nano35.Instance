@@ -22,6 +22,10 @@ namespace Nano35.Instance.Api.Services.AppStart.Configurations
                         h.Password(ContractBase.RabbitMqPassword);
                     });
                 }));
+                x.AddRequestClient<IGetAllWorkersRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkersRequestContract"));
+                x.AddRequestClient<ICreateWorkerRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateWorkerRequestContract"));
                 x.AddRequestClient<IGetAllInstancesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstancesRequestContract"));
                 x.AddRequestClient<ICreateInstanceRequestContract>(

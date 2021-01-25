@@ -1,46 +1,39 @@
 using System.Threading.Tasks;
 using MassTransit;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.MappingProfiles;
+using Nano35.Instance.Processor.Services.Requests;
 
 namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
 {
     public class GetInstanceByIdConsumer : 
         IConsumer<IGetInstanceByIdRequestContract>
     {
-        private readonly ILogger<GetInstanceByIdConsumer> _logger;
-        private readonly ApplicationContext _context;
-        
-        public GetInstanceByIdConsumer(
-            ILogger<GetInstanceByIdConsumer> logger, 
-            ApplicationContext context)
+        private readonly MediatR.IMediator _mediator;
+
+        public GetInstanceByIdConsumer(IMediator mediator)
         {
-            _logger = logger;
-            _context = context;
+            _mediator = mediator;
         }
-        
+
+
         public async Task Consume(ConsumeContext<IGetInstanceByIdRequestContract> context)
         {
-            _logger.LogInformation("IGetInstanceByIdRequestContract tracked");
-            var message = context.Message;
-            var result = this._context.Instances
-                .Find(message.InstanceId)
-                .MapTo<IInstanceViewModel>();
-            if (result == null)
+            var result = await _mediator.Send(new GetInstanceByIdQuery(context.Message));
+            if (result is IGetInstanceByIdSuccessResultContract)
             {
-                await context.RespondAsync<IGetInstanceByIdNotFoundResultContract>(new
-                {
-                });
+                await context.RespondAsync<IGetInstanceByIdSuccessResultContract>(result);
             }
-            else
+            if (result is IGetInstanceByIdErrorResultContract)
             {
-                await context.RespondAsync<IGetInstanceByIdSuccessResultContract>(new
+                if (result is IGetInstanceByIdNotFoundResultContract)
                 {
-                    Data = result
-                });
+                    await context.RespondAsync<IGetInstanceByIdNotFoundResultContract>(result);
+                }
             }
         }
     }

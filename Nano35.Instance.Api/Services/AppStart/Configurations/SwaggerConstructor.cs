@@ -13,13 +13,13 @@ namespace Nano35.Instance.Api.Services.AppStart.Configurations
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Identity API",
-                    Description = "A entrypoint to identity microservice",
+                    Title = "Instance API",
+                    Description = "A entrypoint to instance microservice",
                     Contact = new OpenApiContact
                     {
                         Name = "Guihub folder",
                         Email = string.Empty,
-                        Url = new Uri("https://github.com/candychips/nano35/"),
+                        Url = new Uri("https://github.com/CandyChips/Nano35.Instance"),
                     }
                 });
             });

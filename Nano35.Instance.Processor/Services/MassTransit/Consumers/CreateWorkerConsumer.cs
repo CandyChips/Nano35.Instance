@@ -5,22 +5,21 @@ using Nano35.Instance.Processor.Services.Requests;
 
 namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
 {
-    public class GetAllInstancesConsumer : 
-        IConsumer<IGetAllInstancesRequestContract>
+    public class CreateWorkerConsumer : 
+        IConsumer<ICreateWorkerRequestContract>
     {
         private readonly MediatR.IMediator _mediator;
-
-        public GetAllInstancesConsumer(
+        
+        public CreateWorkerConsumer(
             MediatR.IMediator mediator)
         {
             _mediator = mediator;
         }
-        
         public async Task Consume(
-            ConsumeContext<IGetAllInstancesRequestContract> context)
+            ConsumeContext<ICreateWorkerRequestContract> context)
         {
-            var result = await _mediator.Send(new GetAllInstancesQuery(context.Message));
-            await context.RespondAsync<IGetAllInstancesSuccessResultContract>(result);
+            var result = await _mediator.Send(new CreateWorkerCommand(context.Message));
+            await context.RespondAsync<ICreateWorkerSuccessResultContract>(result);
         }
     }
 }

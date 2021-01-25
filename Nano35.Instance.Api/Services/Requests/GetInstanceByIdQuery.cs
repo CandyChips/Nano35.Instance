@@ -10,55 +10,48 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class GetInstanceByIdResultViewModel :
-        IGetInstanceByIdSuccessResultContract,
-        IGetInstanceByIdNotFoundResultContract
-    {
-        public string Error { get; set; }
-        public IInstanceViewModel Data { get; set; }
-    }
     public class GetInstanceByIdQuery : 
         IGetInstanceByIdRequestContract, 
-        IQueryRequest<GetInstanceByIdResultViewModel>
+        IQueryRequest<IGetInstanceByIdResultContract>
     {
         public Guid InstanceId { get; set; }
-    }
 
-    public class GetInstanceByIdHandler 
-        : IRequestHandler<GetInstanceByIdQuery, GetInstanceByIdResultViewModel>
-    {
-        private readonly ILogger<GetInstanceByIdHandler> _logger;
-        private readonly IBus _bus;
-        public GetInstanceByIdHandler(
-            IBus bus, 
-            ILogger<GetInstanceByIdHandler> logger)
+        public GetInstanceByIdQuery(Guid id)
         {
-            _bus = bus;
-            _logger = logger;
+            InstanceId = id;
         }
-
-        public async Task<GetInstanceByIdResultViewModel> Handle(
-            GetInstanceByIdQuery message,
-            CancellationToken cancellationToken)
+        
+        public class GetInstanceByIdHandler 
+            : IRequestHandler<GetInstanceByIdQuery, IGetInstanceByIdResultContract>
         {
-            var result = new GetInstanceByIdResultViewModel();
-            var client = _bus.CreateRequestClient<IGetInstanceByIdRequestContract>(TimeSpan.FromSeconds(10));
-            var response = await client
-                .GetResponse<IGetInstanceByIdSuccessResultContract, IGetInstanceByIdNotFoundResultContract>(message, cancellationToken);
+            private readonly ILogger<GetInstanceByIdHandler> _logger;
+            private readonly IBus _bus;
+            public GetInstanceByIdHandler(
+                IBus bus, 
+                ILogger<GetInstanceByIdHandler> logger)
+            {
+                _bus = bus;
+                _logger = logger;
+            }
 
-            if (response.Is(out Response<IGetInstanceByIdSuccessResultContract> successResponse))
+            public async Task<IGetInstanceByIdResultContract> Handle(
+                GetInstanceByIdQuery message,
+                CancellationToken cancellationToken)
             {
-                result.Data = successResponse.Message.Data;
-                return result;
+                var client = _bus.CreateRequestClient<IGetInstanceByIdRequestContract>(TimeSpan.FromSeconds(10));
+                var response = await client
+                    .GetResponse<IGetInstanceByIdSuccessResultContract, IGetInstanceByIdErrorResultContract>(message, cancellationToken);
+
+                if (response.Is(out Response<IGetInstanceByIdSuccessResultContract> responseA))
+                {
+                    return responseA.Message;
+                }
+                else if (response.Is(out Response<IGetInstanceByIdErrorResultContract> responseB))
+                {
+                    throw new Exception();
+                }
+                throw new InvalidOperationException();
             }
-            
-            if (response.Is(out Response<IGetInstanceByIdNotFoundResultContract> errorResponse))
-            {
-                result.Error = "Не найдено";
-                return result;
-            }
-            
-            throw new InvalidOperationException();
         }
     }
 }

@@ -43,6 +43,25 @@ namespace Nano35.Instance.Api.Controllers
         }
 
         [HttpGet]
+        [Route("GetInstanceById/Id={id}")]
+        public async Task<IActionResult> GetInstanceById([FromRoute] Guid id)
+        {
+            var result = await this._mediator.Send(new GetInstanceByIdQuery(id));
+            if (result is IGetInstanceByIdSuccessResultContract)
+            {
+                return Ok(result);
+            }
+            if (result is IGetInstanceByIdErrorResultContract)
+            {
+                if (result is IGetInstanceByIdNotFoundResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
         [Route("GetAllInstanceTypes")]
         public async Task<IActionResult> GetAllInstanceTypes()
         {

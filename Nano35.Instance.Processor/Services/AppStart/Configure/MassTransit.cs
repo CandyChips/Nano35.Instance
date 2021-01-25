@@ -46,12 +46,24 @@ namespace Nano35.Instance.Processor.Services.AppStart.Configure
                     {
                         e.Consumer<GetInstanceByIdConsumer>(provider);
                     });
+                    
+                    cfg.ReceiveEndpoint("IGetAllWorkerRolesRequestContract", e =>
+                    {
+                        e.Consumer<CreateWorkerConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateWorkerRequestContract", e =>
+                    {
+                        e.Consumer<GetAllWorkersConsumer>(provider);
+                    });
                 }));
                 x.AddConsumer<GetAllInstancesConsumer>();
                 x.AddConsumer<CreateInstanceConsumer>();
                 x.AddConsumer<GetAllInstanceTypesConsumer>();
                 x.AddConsumer<GetAllRegionsConsumer>();
                 x.AddConsumer<GetInstanceByIdConsumer>();
+                x.AddConsumer<CreateWorkerConsumer>();
+                x.AddConsumer<GetAllWorkersConsumer>();
             });
             services.AddMassTransitHostedService();
         }
