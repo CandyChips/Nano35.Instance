@@ -11,55 +11,44 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class GetAllRegionsResultViewModel :
-        IGetAllRegionsResultContract,
-        IGetAllRegionsNotFoundResultContract
-    {
-        public string Error { get; set; }
-        public IEnumerable<IRegionViewModel> Data { get; set; }
-    }
     public class GetAllRegionsQuery : 
         IGetAllRegionsRequestContract, 
-        IQueryRequest<GetAllRegionsResultViewModel>
+        IQueryRequest<IGetAllRegionsResultContract>
     {
-        public Guid InstanceId { get; set; }
-    }
-
-    public class GetAllRegionsHandler 
-        : IRequestHandler<GetAllRegionsQuery, GetAllRegionsResultViewModel>
-    {
-        private readonly ILogger<GetAllRegionsHandler> _logger;
-        private readonly IBus _bus;
-        public GetAllRegionsHandler(
-            IBus bus, 
-            ILogger<GetAllRegionsHandler> logger)
+        public class GetAllRegionsHandler 
+            : IRequestHandler<GetAllRegionsQuery, IGetAllRegionsResultContract>
         {
-            _bus = bus;
-            _logger = logger;
-        }
-
-        public async Task<GetAllRegionsResultViewModel> Handle(
-            GetAllRegionsQuery message,
-            CancellationToken cancellationToken)
-        {
-            var result = new GetAllRegionsResultViewModel();
-            var client = _bus.CreateRequestClient<IGetAllRegionsRequestContract>(TimeSpan.FromSeconds(10));
-            var response = await client
-                .GetResponse<IGetAllRegionsResultContract, IGetAllRegionsNotFoundResultContract>(message, cancellationToken);
-
-            if (response.Is(out Response<IGetAllRegionsResultContract> successResponse))
+            private readonly ILogger<GetAllRegionsHandler> _logger;
+            private readonly IBus _bus;
+            public GetAllRegionsHandler(
+                IBus bus, 
+                ILogger<GetAllRegionsHandler> logger)
             {
-                result.Data = successResponse.Message.Data;
-                return result;
+                _bus = bus;
+                _logger = logger;
             }
-            
-            if (response.Is(out Response<IGetAllRegionsNotFoundResultContract> errorResponse))
+
+            public async Task<IGetAllRegionsResultContract> Handle(
+                GetAllRegionsQuery message,
+                CancellationToken cancellationToken)
             {
-                result.Error = "Не найдено";
-                return result;
-            }
+                var client = _bus.CreateRequestClient<IGetAllRegionsRequestContract>(TimeSpan.FromSeconds(10));
+                var response = await client
+                    .GetResponse<IGetAllRegionsSuccessResultContract, IGetAllRegionsNotFoundResultContract>(message, cancellationToken);
+
+                if (response.Is(out Response<IGetAllRegionsSuccessResultContract> successResponse))
+                {
+                    return successResponse.Message;
+                }
             
-            throw new InvalidOperationException();
+                if (response.Is(out Response<IGetAllRegionsNotFoundResultContract> errorResponse))
+                {
+                    throw new Exception();
+                }
+            
+                throw new InvalidOperationException();
+            }
         }
     }
+
 }

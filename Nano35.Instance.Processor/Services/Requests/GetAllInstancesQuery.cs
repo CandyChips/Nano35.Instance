@@ -15,6 +15,7 @@ using Nano35.Instance.Processor.Services.Requests.Behaviours;
 namespace Nano35.Instance.Processor.Services.Requests
 {
     public class GetAllInstancesQuery : 
+        IGetAllInstancesRequestContract,
         IQueryRequest<IGetAllInstancesSuccessResultContract>
     {
         public Guid UserId { get; set; }

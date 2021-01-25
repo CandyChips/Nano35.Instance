@@ -11,55 +11,43 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class GetAllInstanceTypesResultViewModel :
-        IGetAllInstanceTypesSuccessResultContract,
-        IGetAllInstanceTypesNotFoundResultContract
-    {
-        public string Error { get; set; }
-        public IEnumerable<IInstanceTypeViewModel> Data { get; set; }
-    }
     public class GetAllInstanceTypesQuery : 
         IGetAllInstanceTypesRequestContract, 
-        IQueryRequest<GetAllInstanceTypesResultViewModel>
+        IQueryRequest<IGetAllInstanceTypesResultContract>
     {
-        public Guid InstanceId { get; set; }
-    }
-
-    public class GetAllInstanceTypesHandler 
-        : IRequestHandler<GetAllInstanceTypesQuery, GetAllInstanceTypesResultViewModel>
-    {
-        private readonly ILogger<GetAllInstanceTypesHandler> _logger;
-        private readonly IBus _bus;
-        public GetAllInstanceTypesHandler(
-            IBus bus, 
-            ILogger<GetAllInstanceTypesHandler> logger)
+        public class GetAllInstanceTypesHandler 
+            : IRequestHandler<GetAllInstanceTypesQuery, IGetAllInstanceTypesResultContract>
         {
-            _bus = bus;
-            _logger = logger;
-        }
-
-        public async Task<GetAllInstanceTypesResultViewModel> Handle(
-            GetAllInstanceTypesQuery message,
-            CancellationToken cancellationToken)
-        {
-            var result = new GetAllInstanceTypesResultViewModel();
-            var client = _bus.CreateRequestClient<IGetAllInstanceTypesRequestContract>(TimeSpan.FromSeconds(10));
-            var response = await client
-                .GetResponse<IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesNotFoundResultContract>(message, cancellationToken);
-
-            if (response.Is(out Response<IGetAllInstanceTypesSuccessResultContract> successResponse))
+            private readonly ILogger<GetAllInstanceTypesHandler> _logger;
+            private readonly IBus _bus;
+            public GetAllInstanceTypesHandler(
+                IBus bus, 
+                ILogger<GetAllInstanceTypesHandler> logger)
             {
-                result.Data = successResponse.Message.Data;
-                return result;
+                _bus = bus;
+                _logger = logger;
             }
-            
-            if (response.Is(out Response<IGetAllInstanceTypesNotFoundResultContract> errorResponse))
+
+            public async Task<IGetAllInstanceTypesResultContract> Handle(
+                GetAllInstanceTypesQuery message,
+                CancellationToken cancellationToken)
             {
-                result.Error = "Не найдено";
-                return result;
-            }
+                var client = _bus.CreateRequestClient<IGetAllInstanceTypesRequestContract>(TimeSpan.FromSeconds(10));
+                var response = await client
+                    .GetResponse<IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesNotFoundResultContract>(message, cancellationToken);
+
+                if (response.Is(out Response<IGetAllInstanceTypesSuccessResultContract> successResponse))
+                {
+                    return successResponse.Message;
+                }
             
-            throw new InvalidOperationException();
+                if (response.Is(out Response<IGetAllInstanceTypesNotFoundResultContract> errorResponse))
+                {
+                    throw new Exception();
+                }
+            
+                throw new InvalidOperationException();
+            }
         }
     }
 }

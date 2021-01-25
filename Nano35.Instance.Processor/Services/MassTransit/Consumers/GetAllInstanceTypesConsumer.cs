@@ -6,6 +6,7 @@ using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.MappingProfiles;
+using Nano35.Instance.Processor.Services.Requests;
 
 namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
 {
@@ -20,9 +21,21 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
             _mediator = mediator;
         }
         
-        public async Task Consume(ConsumeContext<IGetAllInstanceTypesRequestContract> context)
+        public async Task Consume(
+            ConsumeContext<IGetAllInstanceTypesRequestContract> context)
         {
-            await context.RespondAsync<IGetAllInstanceTypesSuccessResultContract>(_mediator.Send(context.Message));
+            var result = await _mediator.Send(new GetAllInstanceTypesQuery(context.Message));
+            if (result is IGetAllInstanceTypesSuccessResultContract)
+            {
+                await context.RespondAsync<IGetAllInstanceTypesSuccessResultContract>(result);
+            }
+            if (result is IGetAllInstanceTypesErrorResultContract)
+            {
+                if (result is IGetAllInstanceTypesNotFoundResultContract)
+                {
+                    await context.RespondAsync<IGetAllInstanceTypesNotFoundResultContract>(result);
+                }
+            }
         }
     }
 }

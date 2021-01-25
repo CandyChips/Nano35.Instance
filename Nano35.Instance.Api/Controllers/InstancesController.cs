@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Services.Requests;
 
 namespace Nano35.Instance.Api.Controllers
@@ -26,51 +27,57 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances()
         {
-            try
+            var result = await this._mediator.Send(new GetAllInstancesQuery());
+            if (result is IGetAllInstancesSuccessResultContract)
             {
-                var query = new GetAllInstancesQuery();
-                var result = await this._mediator.Send(query);
                 return Ok(result);
             }
-            catch(Exception ex)
+            if (result is IGetAllInstancesErrorResultContract)
             {
-                this._logger.LogError(ex.ToString());
-                return BadRequest();
+                if (result is IGetAllInstancesNotFoundResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
             }
+            return BadRequest();
         }
 
         [HttpGet]
         [Route("GetAllInstanceTypes")]
         public async Task<IActionResult> GetAllInstanceTypes()
         {
-            try
+            var result = await this._mediator.Send(new GetAllInstanceTypesQuery());
+            if (result is IGetAllInstanceTypesSuccessResultContract)
             {
-                var query = new GetAllInstanceTypesQuery();
-                var result = await this._mediator.Send(query);
                 return Ok(result);
             }
-            catch(Exception ex)
+            if (result is IGetAllInstanceTypesErrorResultContract)
             {
-                this._logger.LogError(ex.ToString());
-                return BadRequest();
+                if (result is IGetAllInstanceTypesNotFoundResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
             }
+            return BadRequest();
         }
 
         [HttpGet]
         [Route("GetAllRegions")]
         public async Task<IActionResult> GetAllRegions()
         {
-            try
+            var result = await this._mediator.Send(new GetAllRegionsQuery());
+            if (result is IGetAllRegionsSuccessResultContract)
             {
-                var query = new GetAllRegionsQuery();
-                var result = await this._mediator.Send(query);
                 return Ok(result);
             }
-            catch(Exception ex)
+            if (result is IGetAllRegionsErrorResultContract)
             {
-                this._logger.LogError(ex.ToString());
-                return BadRequest();
+                if (result is IGetAllRegionsNotFoundResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
             }
+            return BadRequest();
         }
 
         [HttpPost]
@@ -78,16 +85,23 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateInstance(
             [FromBody]CreateInstanceCommand command)
         {
-            try
+            var result = await this._mediator.Send(command);
+            if (result is ICreateInstanceSuccessResultContract)
             {
-                var result = await this._mediator.Send(command);
                 return Ok(result);
             }
-            catch(Exception ex)
+            if (result is ICreateInstanceErrorResultContract)
             {
-                this._logger.LogError(ex.ToString());
-                return BadRequest();
+                if (result is ICreateInstanceNameExistResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
+                if (result is ICreateInstanceEmailExistResultContract)
+                {
+                    return BadRequest("NotFound");
+                }
             }
+            return BadRequest();
         }
     }
 }

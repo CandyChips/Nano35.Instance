@@ -16,36 +16,36 @@ namespace Nano35.Instance.Processor.Services.Requests
 {
     public class GetAllInstanceTypesQuery : 
         IGetAllInstanceTypesRequestContract, 
-        IQueryRequest<IGetAllInstanceTypesSuccessResultContract>
+        IQueryRequest<IGetAllInstanceTypesResultContract>
     {
-        public Guid UserId { get; set; }
-        public Guid InstanceTypeId { get; set; }
-        public Guid RegionId { get; set; }
+        public GetAllInstanceTypesQuery(IGetAllInstanceTypesRequestContract request)
+        {
+            
+        }
 
-        public class GetAllInstanceTypesResultContract : 
+        public class GetAllInstanceTypesSuccessResultContract : 
             IGetAllInstanceTypesSuccessResultContract
         {
             public IEnumerable<IInstanceTypeViewModel> Data { get; set; }
         }
 
-        public class GetAllInstancesHandler 
-            : IRequestHandler<GetAllInstanceTypesQuery, 
-                IGetAllInstanceTypesSuccessResultContract>
+        public class GetAllInstanceTypesHandler 
+            : IRequestHandler<GetAllInstanceTypesQuery, IGetAllInstanceTypesResultContract>
         {
             private readonly ApplicationContext _context;
-            public GetAllInstancesHandler(
+            public GetAllInstanceTypesHandler(
                 ApplicationContext context)
             {
                 _context = context;
             }
 
-            public async Task<IGetAllInstanceTypesSuccessResultContract> Handle(
+            public async Task<IGetAllInstanceTypesResultContract> Handle(
                 GetAllInstanceTypesQuery message,
                 CancellationToken cancellationToken)
             {
                 var result = await this._context.InstanceTypes
                     .MapAllToAsync<IInstanceTypeViewModel>();
-                return new GetAllInstanceTypesResultContract() {Data = result};
+                return new GetAllInstanceTypesSuccessResultContract() {Data = result};
             }
         }
     }

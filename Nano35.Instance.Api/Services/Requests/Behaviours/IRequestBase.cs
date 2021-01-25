@@ -7,6 +7,7 @@ namespace Nano35.Instance.Api.Services.Requests.Behaviours
     {
         
     }
+    
     public interface ICommandRequest<TOut> :
         IRequest<TOut>
     {

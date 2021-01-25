@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -15,33 +14,33 @@ using Nano35.Instance.Processor.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Processor.Services.Requests
 {
-    public class GetAllRolesQuery : 
-        IGetAllRolesRequestContract, 
+    public class GetAllRegionsQuery : 
+        IGetAllRegionsRequestContract, 
         IQueryRequest<IGetAllRegionsResultContract>
     {
-        public GetAllRolesQuery(IGetAllRolesRequestContract request)
+        public GetAllRegionsQuery(IGetAllRegionsRequestContract request)
         {
             
         }
-        
+
         public class GetAllRegionsSuccessResultContract : 
-            IGetAllRegionsResultContract
+            IGetAllRegionsSuccessResultContract
         {
             public IEnumerable<IRegionViewModel> Data { get; set; }
         }
 
-        public class GetAllRolesHandler 
-            : IRequestHandler<GetAllRolesQuery, IGetAllRegionsResultContract>
+        public class GetAllRegionsHandler 
+            : IRequestHandler<GetAllRegionsQuery, IGetAllRegionsResultContract>
         {
             private readonly ApplicationContext _context;
-            public GetAllRolesHandler(
+            public GetAllRegionsHandler(
                 ApplicationContext context)
             {
                 _context = context;
             }
 
             public async Task<IGetAllRegionsResultContract> Handle(
-                GetAllRolesQuery message,
+                GetAllRegionsQuery message,
                 CancellationToken cancellationToken)
             {
                 var result = await this._context.Regions

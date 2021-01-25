@@ -26,6 +26,19 @@ namespace Nano35.Instance.Processor.Services.Requests
         public string Phone { get; set; }
         public Guid TypeId { get; set; }
         public Guid RegionId { get; set; }
+        
+        public CreateInstanceCommand(ICreateInstanceRequestContract request)
+        {
+            NewId = request.NewId;
+            UserId = request.UserId;
+            Name = request.Name;
+            RealName = request.RealName;
+            Email = request.Email;
+            Info = request.Info;
+            Phone = request.Phone;
+            TypeId = request.TypeId;
+            RegionId = request.RegionId;
+        }
 
         public class CreateInstanceCommandValidator : 
             AbstractValidator<CreateInstanceCommand>

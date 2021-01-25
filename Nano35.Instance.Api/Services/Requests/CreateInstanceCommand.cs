@@ -10,17 +10,9 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class CreateInstanceResultViewModel :
-        ICreateInstanceSuccessResultContract,
-        ICreateInstanceErrorResultContract
-    {
-        public string Error { get; set; }
-        public Guid Id { get; set; }
-    }
-    
     public class CreateInstanceCommand :
         ICreateInstanceRequestContract, 
-        ICommandRequest<CreateInstanceResultViewModel>
+        ICommandRequest<ICreateInstanceResultContract>
     {
         public Guid NewId { get; set; }
         public Guid UserId { get; set; }
@@ -42,7 +34,7 @@ namespace Nano35.Instance.Api.Services.Requests
     }
     
     public class CreateInstanceHandler : 
-        IRequestHandler<CreateInstanceCommand, CreateInstanceResultViewModel>
+        IRequestHandler<CreateInstanceCommand, ICreateInstanceResultContract>
     {
         private readonly ILogger<CreateInstanceHandler> _logger;
         private readonly IBus _bus;
@@ -54,14 +46,22 @@ namespace Nano35.Instance.Api.Services.Requests
             _logger = logger;
         }
         
-        public async Task<CreateInstanceResultViewModel> Handle(
+        public async Task<ICreateInstanceResultContract> Handle(
             CreateInstanceCommand message, 
             CancellationToken cancellationToken)
         {
-            var result = new CreateInstanceResultViewModel();
             var client = _bus.CreateRequestClient<ICreateInstanceRequestContract>(TimeSpan.FromSeconds(10));
             var response = await client
-                .GetResponse<ICreateInstanceSuccessResultContract>(message, cancellationToken);
+                .GetResponse<ICreateInstanceSuccessResultContract, ICreateInstanceErrorResultContract>(message, cancellationToken);
+            
+            if (response.Is(out Response<ICreateInstanceSuccessResultContract> responseA))
+            {
+                return responseA.Message;
+            }
+            else if (response.Is(out Response<ICreateInstanceErrorResultContract> responseB))
+            {
+                throw new Exception();
+            }
             throw new InvalidOperationException();
         }
     }
