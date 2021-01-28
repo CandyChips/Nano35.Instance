@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,9 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllWorkers")]
         public async Task<IActionResult> GetAllWorkers()
         {
+            var headerValue = Request.Headers["x-instance-id"];
+            if(headerValue.Any() == false) return BadRequest(); //401
+            
             var result = await this._mediator.Send(new GetAllWorkersQuery());
             if (result is IGetAllWorkersSuccessResultContract)
             {
