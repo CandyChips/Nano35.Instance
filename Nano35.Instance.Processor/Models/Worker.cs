@@ -65,7 +65,9 @@ namespace Nano35.Instance.Processor.Models
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(s => s.Id))
                 .ForMember(dest => dest.Name, source => source
-                    .MapFrom(s => s.Name));
+                    .MapFrom(s => s.Name))
+                .ForMember(dest => dest.Comment, source => source
+                    .MapFrom(s => s.Comment));
 
             CreateMap<Worker, IUserSelectViewModel>()
                 .ForMember(dest => dest.Id, source => source

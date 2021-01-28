@@ -2,6 +2,7 @@ using System;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
+using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Instance.Processor.Services.MassTransit.Consumers;
 
 namespace Nano35.Instance.Processor.Services.AppStart.Configure
@@ -64,6 +65,8 @@ namespace Nano35.Instance.Processor.Services.AppStart.Configure
                 x.AddConsumer<GetInstanceByIdConsumer>();
                 x.AddConsumer<CreateWorkerConsumer>();
                 x.AddConsumer<GetAllWorkersConsumer>();
+                
+                x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });
             services.AddMassTransitHostedService();
         }
