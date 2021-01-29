@@ -53,9 +53,10 @@ namespace Nano35.Instance.Processor.Services.Requests
         {
             public Guid Id { get; set; }
         }
+        
         public class CreateWorkerErrorResultContract : ICreateWorkerErrorResultContract
         {
-            
+            public string Message { get; set; }
         }
 
         public class CreateInstanceHandler : 

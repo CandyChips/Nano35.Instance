@@ -31,10 +31,7 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
             }
             if (result is IGetAllInstanceTypesErrorResultContract)
             {
-                if (result is IGetAllInstanceTypesNotFoundResultContract)
-                {
-                    await context.RespondAsync<IGetAllInstanceTypesNotFoundResultContract>(result);
-                }
+                await context.RespondAsync<IGetAllInstanceTypesErrorResultContract>(result);
             }
         }
     }

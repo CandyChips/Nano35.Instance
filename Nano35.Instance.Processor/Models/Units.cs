@@ -1,7 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts.Units.Models;
+using Nano35.Contracts.Instance.Models;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -104,12 +104,6 @@ namespace Nano35.Instance.Processor.Models
                     .MapFrom(s => s.Phone))
                 .ForMember(dest => dest.UnitType, source => source
                     .MapFrom(s => s.UnitType.Name));
-
-            CreateMap<Unit, IUnitSelectViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(s => s.Id))
-                .ForMember(dest => dest.Name, source => source
-                    .MapFrom(s => s.Name));
         }
     }
 }

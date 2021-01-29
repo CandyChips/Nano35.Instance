@@ -1,8 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts.Clients.Models;
-
+using Nano35.Contracts.Instance.Models;
 namespace Nano35.Instance.Processor.Models
 {
     public class Client

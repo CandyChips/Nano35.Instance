@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.Swagger.Model;
 
 namespace Nano35.Instance.Api.Services.AppStart.Configurations
 {
@@ -20,7 +21,7 @@ namespace Nano35.Instance.Api.Services.AppStart.Configurations
                         Name = "Guihub folder",
                         Email = string.Empty,
                         Url = new Uri("https://github.com/CandyChips/Nano35.Instance"),
-                    }
+                                                     }
                 });
             });
         }

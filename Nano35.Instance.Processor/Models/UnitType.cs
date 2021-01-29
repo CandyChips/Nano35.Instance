@@ -1,7 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts.Units.Models;
+using Nano35.Contracts.Instance.Models;
 
 namespace Nano35.Instance.Processor.Models
 {

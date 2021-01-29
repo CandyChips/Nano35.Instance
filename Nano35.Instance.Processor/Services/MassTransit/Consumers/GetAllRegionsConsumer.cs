@@ -31,10 +31,7 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
             }
             if (result is IGetAllRegionsErrorResultContract)
             {
-                if (result is IGetAllRegionsNotFoundResultContract)
-                {
-                    await context.RespondAsync<IGetAllRegionsNotFoundResultContract>(result);
-                }
+                await context.RespondAsync<IGetAllRegionsErrorResultContract>(result);
             }
         }
     }

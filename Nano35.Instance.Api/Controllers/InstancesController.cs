@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,16 +29,13 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllInstances()
         {
             var result = await this._mediator.Send(new GetAllInstancesQuery());
-            if (result is IGetAllInstancesSuccessResultContract)
+            if (result is IGetAllInstancesSuccessResultContract success)
             {
-                return Ok(result);
+                return Ok(success.Data);
             }
-            if (result is IGetAllInstancesErrorResultContract)
+            if (result is IGetAllInstancesErrorResultContract error)
             {
-                if (result is IGetAllInstancesNotFoundResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest(error.Message);
             }
             return BadRequest();
         }
@@ -53,10 +51,7 @@ namespace Nano35.Instance.Api.Controllers
             }
             if (result is IGetInstanceByIdErrorResultContract)
             {
-                if (result is IGetInstanceByIdNotFoundResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest("NotFound");
             }
             return BadRequest();
         }
@@ -72,10 +67,7 @@ namespace Nano35.Instance.Api.Controllers
             }
             if (result is IGetAllInstanceTypesErrorResultContract)
             {
-                if (result is IGetAllInstanceTypesNotFoundResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest("NotFound");
             }
             return BadRequest();
         }
@@ -91,10 +83,7 @@ namespace Nano35.Instance.Api.Controllers
             }
             if (result is IGetAllRegionsErrorResultContract)
             {
-                if (result is IGetAllRegionsNotFoundResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest("NotFound");
             }
             return BadRequest();
         }
@@ -104,6 +93,10 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateInstance(
             [FromBody]CreateInstanceCommand command)
         {
+            var newId = Request.Headers["x-new-id"];
+            if(newId.Any() == false) return BadRequest(); //401
+            command.NewId = Guid.Parse(newId);
+            
             var result = await this._mediator.Send(command);
             if (result is ICreateInstanceSuccessResultContract)
             {
@@ -111,14 +104,7 @@ namespace Nano35.Instance.Api.Controllers
             }
             if (result is ICreateInstanceErrorResultContract)
             {
-                if (result is ICreateInstanceNameExistResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
-                if (result is ICreateInstanceEmailExistResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest("NotFound");
             }
             return BadRequest();
         }

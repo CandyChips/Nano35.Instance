@@ -25,23 +25,21 @@ namespace Nano35.Instance.Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllWorkers")]
-        public async Task<IActionResult> GetAllWorkers()
+        [Route("GetAllWorkers/ByRole={id}")]
+        public async Task<IActionResult> GetAllWorkers(Guid roleId)
         {
-            var headerValue = Request.Headers["x-instance-id"];
-            if(headerValue.Any() == false) return BadRequest(); //401
+            var instanceId = Request.Headers["x-instance-id"];
+            if(instanceId.Any() == false) return BadRequest(); //401
             
-            var result = await this._mediator.Send(new GetAllWorkersQuery());
+            var result = await this._mediator.Send(new GetAllWorkersQuery() 
+                { InstanceId = Guid.Parse(instanceId), WorkersRoleId = roleId});
             if (result is IGetAllWorkersSuccessResultContract)
             {
                 return Ok(result);
             }
             if (result is IGetAllWorkersErrorResultContract)
             {
-                if (result is IGetAllWorkersNotFoundResultContract)
-                {
-                    return BadRequest("NotFound");
-                }
+                return BadRequest("Not found");
             }
             return BadRequest();
         }
@@ -51,6 +49,14 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateWorker(
             [FromBody]CreateWorkerCommand command)
         {
+            var instanceId = Request.Headers["x-instance-id"];
+            if(instanceId.Any() == false) return BadRequest(); //401
+            command.InstanceId = Guid.Parse(instanceId);
+            
+            var newId = Request.Headers["x-new-id"];
+            if(newId.Any() == false) return BadRequest(); //401
+            command.NewId = Guid.Parse(newId);
+            
             var result = await this._mediator.Send(command);
             if (result is ICreateWorkerSuccessResultContract)
             {
@@ -61,6 +67,13 @@ namespace Nano35.Instance.Api.Controllers
                 return BadRequest("bAD DATA");
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public async Task<IActionResult> TestAction()
+        {
+            return Ok("success");
         }
     }
 }

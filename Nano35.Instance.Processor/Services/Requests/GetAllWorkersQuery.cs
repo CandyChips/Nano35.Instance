@@ -19,7 +19,8 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllWorkersRequestContract,
         IQueryRequest<IGetAllWorkersResultContract>
     {
-        public Guid InstanceTypeId { get; set; }
+        public Guid InstanceId { get; set; }
+        public Guid WorkersRoleId { get; set; }
 
         public class GetAllWorkersResultContract : IGetAllWorkersSuccessResultContract
         {
@@ -75,5 +76,6 @@ namespace Nano35.Instance.Processor.Services.Requests
                 return new GetAllWorkersResultContract() {Data = result};
             }
         }
+
     }
 }

@@ -34,16 +34,16 @@ namespace Nano35.Instance.Api.Services.Requests
             {
                 var client = _bus.CreateRequestClient<IGetAllInstanceTypesRequestContract>(TimeSpan.FromSeconds(10));
                 var response = await client
-                    .GetResponse<IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesNotFoundResultContract>(message, cancellationToken);
+                    .GetResponse<IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesErrorResultContract>(message, cancellationToken);
 
                 if (response.Is(out Response<IGetAllInstanceTypesSuccessResultContract> successResponse))
                 {
                     return successResponse.Message;
                 }
             
-                if (response.Is(out Response<IGetAllInstanceTypesNotFoundResultContract> errorResponse))
+                if (response.Is(out Response<IGetAllInstanceTypesErrorResultContract> errorResponse))
                 {
-                    throw new Exception();
+                    return errorResponse.Message;
                 }
             
                 throw new InvalidOperationException();

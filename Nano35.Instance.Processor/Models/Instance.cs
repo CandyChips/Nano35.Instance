@@ -89,12 +89,6 @@ namespace Nano35.Instance.Processor.Models
                 .ForMember(dest => dest.RegionId, source => source
                     .MapFrom(source => source.RegionId));
 
-            CreateMap<Instance, IInstanceSelectViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.OrgName, source => source
-                    .MapFrom(source => source.OrgName));
-
         }
     }
 }

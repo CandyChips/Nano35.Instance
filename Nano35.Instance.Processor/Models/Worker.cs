@@ -2,7 +2,6 @@ using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Models;
-using Nano35.Contracts.Users.Models;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -69,11 +68,6 @@ namespace Nano35.Instance.Processor.Models
                 .ForMember(dest => dest.Comment, source => source
                     .MapFrom(s => s.Comment));
 
-            CreateMap<Worker, IUserSelectViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                .MapFrom(s => s.Id))
-                .ForMember(dest => dest.Name, source => source
-                .MapFrom(s => s.Name));
         }
     }
 }

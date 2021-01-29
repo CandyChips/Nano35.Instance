@@ -16,7 +16,9 @@ namespace Nano35.Instance.Api.Services.Requests
         IGetAllWorkersRequestContract, 
         IQueryRequest<IGetAllWorkersResultContract>
     {
-        public Guid InstanceTypeId { get; set; }
+
+        public Guid InstanceId { get; set; }
+        public Guid WorkersRoleId { get; set; }
 
         public class GetAllWorkersHandler 
             : IRequestHandler<GetAllWorkersQuery, IGetAllWorkersResultContract>
