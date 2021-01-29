@@ -25,17 +25,20 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
         public async Task Consume(
             ConsumeContext<IGetAllWorkersRequestContract> context)
         {
-            var result = await _mediator.Send(
-                new GetAllWorkersQuery(context.Message));
+            var message = context.Message;
+
+            var request = new GetAllWorkersQuery(message);
             
-            if (result is IGetAllWorkersSuccessResultContract)
-            {
-                await context.RespondAsync<IGetAllWorkersSuccessResultContract>(result);
-            }
+            var result = await _mediator.Send(request);
             
-            if (result is IGetAllWorkersErrorResultContract)
+            switch (result)
             {
-                await context.RespondAsync<IGetAllWorkersErrorResultContract>(result);
+                case IGetAllWorkersSuccessResultContract:
+                    await context.RespondAsync<IGetAllWorkersSuccessResultContract>(result);
+                    break;
+                case IGetAllWorkersErrorResultContract:
+                    await context.RespondAsync<IGetAllWorkersErrorResultContract>(result);
+                    break;
             }
         }
     }

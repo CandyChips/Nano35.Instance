@@ -46,15 +46,11 @@ namespace Nano35.Instance.Api.Services.Requests
             var response = await client
                 .GetResponse<ICreateInstanceSuccessResultContract, ICreateInstanceErrorResultContract>(message, cancellationToken);
             
-            if (response.Is(out Response<ICreateInstanceSuccessResultContract> responseA))
-            {
-                return responseA.Message;
-            }
+            if (response.Is(out Response<ICreateInstanceSuccessResultContract> successResponse))
+                return successResponse.Message;
             
-            if (response.Is(out Response<ICreateInstanceErrorResultContract> responseB))
-            {
-                throw new Exception();
-            }
+            if (response.Is(out Response<ICreateInstanceErrorResultContract> errorResponse))
+                return errorResponse.Message;
             
             throw new InvalidOperationException();
         }

@@ -28,7 +28,8 @@ namespace Nano35.Instance.Processor.Services.Requests
             WorkersRoleId = message.WorkersRoleId;
         }
 
-        public class GetAllWorkersResultContract : IGetAllWorkersSuccessResultContract
+        private class GetAllWorkersResultContract :
+            IGetAllWorkersSuccessResultContract
         {
             public IEnumerable<IWorkerViewModel> Data { get; set; }
         }

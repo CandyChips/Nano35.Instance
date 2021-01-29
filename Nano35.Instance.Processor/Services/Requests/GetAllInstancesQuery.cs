@@ -16,7 +16,7 @@ namespace Nano35.Instance.Processor.Services.Requests
 {
     public class GetAllInstancesQuery : 
         IGetAllInstancesRequestContract,
-        IQueryRequest<IGetAllInstancesSuccessResultContract>
+        IQueryRequest<IGetAllInstancesResultContract>
     {
         public Guid UserId { get; set; }
         public Guid InstanceTypeId { get; set; }
@@ -29,13 +29,14 @@ namespace Nano35.Instance.Processor.Services.Requests
             RegionId = request.RegionId;
         }
 
-        public class GetAllInstancesResultContract : IGetAllInstancesSuccessResultContract
+        private class GetAllInstancesResultContract : 
+            IGetAllInstancesSuccessResultContract
         {
             public IEnumerable<IInstanceViewModel> Data { get; set; }
         }
 
         public class GetAllInstancesHandler 
-            : IRequestHandler<GetAllInstancesQuery, IGetAllInstancesSuccessResultContract>
+            : IRequestHandler<GetAllInstancesQuery, IGetAllInstancesResultContract>
         {
             private readonly ApplicationContext _context;
             public GetAllInstancesHandler(
@@ -44,7 +45,7 @@ namespace Nano35.Instance.Processor.Services.Requests
                 _context = context;
             }
 
-            public async Task<IGetAllInstancesSuccessResultContract> Handle(
+            public async Task<IGetAllInstancesResultContract> Handle(
                 GetAllInstancesQuery message,
                 CancellationToken cancellationToken)
             {

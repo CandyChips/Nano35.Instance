@@ -36,17 +36,14 @@ namespace Nano35.Instance.Api.Controllers
                 UnitTypeId = unitTypeId
             };
             
-            var result = await this._mediator.Send(request);
-            
-            if (result is IGetAllUnitsSuccessResultContract success)
+            var result = await _mediator.Send(request);
+
+            return result switch
             {
-                return Ok(success.Data);
-            }
-            if (result is IGetAllUnitsErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            return BadRequest();
+                IGetAllUnitsSuccessResultContract success => Ok(success.Data),
+                IGetAllUnitsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
@@ -55,19 +52,14 @@ namespace Nano35.Instance.Api.Controllers
         {
             var request = new GetAllUnitTypesQuery();
             
-            var result = await this._mediator.Send(request);
-            
-            if (result is IGetAllUnitTypesSuccessResultContract success)
+            var result = await _mediator.Send(request);
+
+            return result switch
             {
-                return Ok(success.Data);
-            }
-            
-            if (result is IGetAllUnitTypesErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            
-            return BadRequest();
+                IGetAllUnitTypesSuccessResultContract success => Ok(success.Data),
+                IGetAllUnitTypesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
 
         [HttpPost]
@@ -75,19 +67,14 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateUnit(
             [FromBody]CreateUnitCommand request)
         {
-            var result = await this._mediator.Send(request);
-            
-            if (result is ICreateUnitSuccessResultContract)
+            var result = await _mediator.Send(request);
+
+            return result switch
             {
-                return Ok();
-            }
-            
-            if (result is ICreateUnitErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            
-            return BadRequest();
+                ICreateUnitSuccessResultContract => Ok(),
+                ICreateUnitErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     }
 }

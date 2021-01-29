@@ -34,17 +34,15 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = instanceId,
                 WorkersRoleId = roleId
             };
-            var result = await this._mediator.Send(request);
             
-            if (result is IGetAllWorkersSuccessResultContract success)
+            var result = await _mediator.Send(request);
+
+            return result switch
             {
-                return Ok(success.Data);
-            }
-            if (result is IGetAllWorkersErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            return BadRequest();
+                IGetAllWorkersSuccessResultContract success => Ok(success.Data),
+                IGetAllWorkersErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
@@ -52,17 +50,15 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllWorkerRoles()
         {
             var request = new GetAllWorkerRolesQuery();
-            var result = await this._mediator.Send(request);
             
-            if (result is IGetAllWorkerRolesSuccessResultContract success)
+            var result = await _mediator.Send(request);
+
+            return result switch
             {
-                return Ok(success.Data);
-            }
-            if (result is IGetAllWorkerRolesErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            return BadRequest();
+                IGetAllWorkerRolesSuccessResultContract success => Ok(success.Data),
+                IGetAllWorkerRolesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
         
         [HttpPost]
@@ -70,16 +66,14 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateWorker(
             [FromBody] CreateWorkerCommand command)
         {
-            var result = await this._mediator.Send(command);
-            if (result is ICreateWorkerSuccessResultContract)
+            var result = await _mediator.Send(command);
+            
+            return result switch
             {
-                return Ok();
-            }
-            if (result is ICreateWorkerErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            return BadRequest();
+                ICreateWorkerSuccessResultContract => Ok(),
+                ICreateWorkerErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     }
 }

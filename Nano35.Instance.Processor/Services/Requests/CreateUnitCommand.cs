@@ -23,24 +23,14 @@ namespace Nano35.Instance.Processor.Services.Requests
         public Guid CreatorId { get; set; }
         public Guid InstanceId { get; set; }
 
-        public CreateUnitCommand(ICreateUnitRequestContract request)
-        {
-            Id = request.Id;
-            Name = request.Name;
-            Adress = request.Adress;
-            WorkingFormat = request.WorkingFormat;
-            Phone = request.Phone;
-            UnitTypeId = request.UnitTypeId;
-            CreatorId = request.CreatorId;
-            InstanceId = request.InstanceId;
-        }
-        
-        public class CreateUnitSuccessResultContract : ICreateUnitSuccessResultContract
+        private class CreateUnitSuccessResultContract :
+            ICreateUnitSuccessResultContract
         {
             
         }
-        
-        public class CreateUnitErrorResultContract : ICreateUnitErrorResultContract
+
+        private class CreateUnitErrorResultContract :
+            ICreateUnitErrorResultContract
         {
             public string Message { get; set; }
         }

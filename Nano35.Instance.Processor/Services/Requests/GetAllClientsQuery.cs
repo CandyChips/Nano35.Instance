@@ -22,12 +22,8 @@ namespace Nano35.Instance.Processor.Services.Requests
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         public Guid InstanceId { get; set; }
-        
-        public GetAllClientsQuery(IGetAllClientsRequestContract message)
-        {
-        }
-        
-        public class GetAllClientsResultContract : 
+
+        private class GetAllClientsResultContract : 
             IGetAllClientsSuccessResultContract
         {
             public IEnumerable<IClientViewModel> Data { get; set; }

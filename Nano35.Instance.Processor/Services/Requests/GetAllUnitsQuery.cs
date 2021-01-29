@@ -27,8 +27,8 @@ namespace Nano35.Instance.Processor.Services.Requests
             InstanceId = message.InstanceId;
             UnitTypeId = message.UnitTypeId;
         }
-        
-        public class GetAllUnitsResultContract : 
+
+        private class GetAllUnitsResultContract : 
             IGetAllUnitsSuccessResultContract
         {
             public IEnumerable<IUnitViewModel> Data { get; set; }

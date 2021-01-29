@@ -25,26 +25,15 @@ namespace Nano35.Instance.Processor.Services.Requests
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordConfirm { get; set; }
-        
-        public CreateWorkerCommand(ICreateWorkerRequestContract request)
-        {
-            NewId = request.NewId;
-            InstanceId = request.InstanceId;
-            RoleId = request.RoleId;
-            Name = request.Name;
-            Comment = request.Comment;
-            Phone = request.Phone;
-            Email = request.Email;
-            Password = request.Password;
-            PasswordConfirm = request.PasswordConfirm;
-        }
-        
-        public class CreateWorkerSuccessResultContract : ICreateWorkerSuccessResultContract
+
+        private class CreateWorkerSuccessResultContract : 
+            ICreateWorkerSuccessResultContract
         {
             
         }
-        
-        public class CreateWorkerErrorResultContract : ICreateWorkerErrorResultContract
+
+        private class CreateWorkerErrorResultContract : 
+            ICreateWorkerErrorResultContract
         {
             public string Message { get; set; }
         }

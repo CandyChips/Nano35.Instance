@@ -20,7 +20,8 @@ namespace Nano35.Instance.Processor.Services.Requests
     {
         public Guid WorkerId { get; set; }
 
-        public class GetWorkerByIdResultContract : IGetWorkerByIdSuccessResultContract
+        private class GetWorkerByIdResultContract :
+            IGetWorkerByIdSuccessResultContract
         {
             public IWorkerViewModel Data { get; set; }
         }

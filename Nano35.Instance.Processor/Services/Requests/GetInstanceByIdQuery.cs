@@ -25,7 +25,8 @@ namespace Nano35.Instance.Processor.Services.Requests
             InstanceId = request.InstanceId;
         }
 
-        public class GetInstanceByIdResultContract : IGetInstanceByIdSuccessResultContract
+        private class GetInstanceByIdResultContract : 
+            IGetInstanceByIdSuccessResultContract
         {
             public IInstanceViewModel Data { get; set; }
         }

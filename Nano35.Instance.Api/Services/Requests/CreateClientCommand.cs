@@ -48,19 +48,17 @@ namespace Nano35.Instance.Api.Services.Requests
             CancellationToken cancellationToken)
         {
             message.UserId = _auth.CurrentUserId;
+            
             var client = _bus.CreateRequestClient<ICreateClientRequestContract>(TimeSpan.FromSeconds(10));
+            
             var response = await client
                 .GetResponse<ICreateClientSuccessResultContract, ICreateClientErrorResultContract>(message, cancellationToken);
             
-            if (response.Is(out Response<ICreateClientSuccessResultContract> responseA))
-            {
-                return responseA.Message;
-            }
+            if (response.Is(out Response<ICreateClientSuccessResultContract> successResponse))
+                return successResponse.Message;
             
-            if (response.Is(out Response<ICreateClientErrorResultContract> responseB))
-            {
-                throw new Exception();
-            }
+            if (response.Is(out Response<ICreateClientErrorResultContract> errorResponse))
+                return errorResponse.Message;
             
             throw new InvalidOperationException();
         }

@@ -17,7 +17,10 @@ namespace Nano35.Instance.Api.Services.Requests.Behaviours
             _logger = logger;
         }
         
-        public async Task<TOut> Handle(TIn request, CancellationToken cancellationToken, RequestHandlerDelegate<TOut> next)
+        public async Task<TOut> Handle(
+            TIn request,
+            CancellationToken cancellationToken,
+            RequestHandlerDelegate<TOut> next)
         {
             _logger.LogInformation("Check cache");
             var response = await next();

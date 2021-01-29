@@ -19,7 +19,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllUnitTypesRequestContract,
         IQueryRequest<IGetAllUnitTypesResultContract>
     {
-        public class GetAllUnitTypesResultContract : 
+        private class GetAllUnitTypesResultContract : 
             IGetAllUnitTypesSuccessResultContract
         {
             public IEnumerable<IUnitTypeViewModel> Data { get; set; }

@@ -50,40 +50,36 @@ namespace Nano35.Instance.Api.Services.Requests
             Password = request.Password;
             PasswordConfirm = request.PasswordConfirm;
         }
-    }
     
-    public class CreateWorkerHandler : 
-        IRequestHandler<CreateWorkerCommand, ICreateWorkerResultContract>
-    {
-        private readonly ILogger<CreateWorkerHandler> _logger;
-        private readonly IBus _bus;
-        public CreateWorkerHandler(
-            IBus bus, 
-            ILogger<CreateWorkerHandler> logger)
+        public class CreateWorkerHandler : 
+            IRequestHandler<CreateWorkerCommand, ICreateWorkerResultContract>
         {
-            _bus = bus;
-            _logger = logger;
-        }
+            private readonly ILogger<CreateWorkerHandler> _logger;
+            private readonly IBus _bus;
+            public CreateWorkerHandler(
+                IBus bus, 
+                ILogger<CreateWorkerHandler> logger)
+            {
+                _bus = bus;
+                _logger = logger;
+            }
         
-        public async Task<ICreateWorkerResultContract> Handle(
-            CreateWorkerCommand message, 
-            CancellationToken cancellationToken)
-        {
-            var client = _bus.CreateRequestClient<ICreateWorkerRequestContract>(TimeSpan.FromSeconds(10));
-            var response = await client
-                .GetResponse<ICreateWorkerSuccessResultContract, ICreateWorkerErrorResultContract>(message, cancellationToken);
-            
-            if (response.Is(out Response<ICreateWorkerSuccessResultContract> responseA))
+            public async Task<ICreateWorkerResultContract> Handle(
+                CreateWorkerCommand message, 
+                CancellationToken cancellationToken)
             {
-                return responseA.Message;
-            }
+                var client = _bus.CreateRequestClient<ICreateWorkerRequestContract>(TimeSpan.FromSeconds(10));
+                var response = await client
+                    .GetResponse<ICreateWorkerSuccessResultContract, ICreateWorkerErrorResultContract>(message, cancellationToken);
             
-            if (response.Is(out Response<ICreateWorkerErrorResultContract> responseB))
-            {
-                throw new Exception();
-            }
+                if (response.Is(out Response<ICreateWorkerSuccessResultContract> successResponse))
+                    return successResponse.Message;
             
-            throw new InvalidOperationException();
+                if (response.Is(out Response<ICreateWorkerErrorResultContract> errorResponse))
+                    return errorResponse.Message;
+            
+                throw new InvalidOperationException();
+            }
         }
     }
 }

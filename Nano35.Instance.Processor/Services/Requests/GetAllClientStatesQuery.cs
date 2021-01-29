@@ -14,12 +14,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllClientStatesRequestContract,
         IQueryRequest<IGetAllClientStatesResultContract>
     {
-        
-        public GetAllClientStatesQuery(IGetAllClientStatesRequestContract message)
-        {
-        }
-        
-        public class GetAllClientStatesResultContract : 
+        private class GetAllClientStatesResultContract : 
             IGetAllClientStatesSuccessResultContract
         {
             public IEnumerable<IClientStateViewModel> Data { get; set; }

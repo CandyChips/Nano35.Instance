@@ -16,11 +16,6 @@ namespace Nano35.Instance.Api.Services.Requests
     {
         public Guid InstanceId { get; set; }
 
-        public GetInstanceByIdQuery(Guid id)
-        {
-            InstanceId = id;
-        }
-        
         public class GetInstanceByIdHandler 
             : IRequestHandler<GetInstanceByIdQuery, IGetInstanceByIdResultContract>
         {
@@ -39,17 +34,16 @@ namespace Nano35.Instance.Api.Services.Requests
                 CancellationToken cancellationToken)
             {
                 var client = _bus.CreateRequestClient<IGetInstanceByIdRequestContract>(TimeSpan.FromSeconds(10));
+                
                 var response = await client
                     .GetResponse<IGetInstanceByIdSuccessResultContract, IGetInstanceByIdErrorResultContract>(message, cancellationToken);
 
-                if (response.Is(out Response<IGetInstanceByIdSuccessResultContract> responseA))
-                {
-                    return responseA.Message;
-                }
-                else if (response.Is(out Response<IGetInstanceByIdErrorResultContract> responseB))
-                {
-                    throw new Exception();
-                }
+                if (response.Is(out Response<IGetInstanceByIdSuccessResultContract> successResponse))
+                    return successResponse.Message;
+                
+                if (response.Is(out Response<IGetInstanceByIdErrorResultContract> errorResponse))
+                    return errorResponse.Message;
+                
                 throw new InvalidOperationException();
             }
         }

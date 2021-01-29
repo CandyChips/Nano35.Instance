@@ -26,16 +26,16 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
             ConsumeContext<IGetAllClientStatesRequestContract> context)
         {
             var result = await _mediator.Send(
-                new GetAllClientStatesQuery(context.Message));
+                new GetAllClientStatesQuery());
             
-            if (result is IGetAllClientStatesSuccessResultContract)
+            switch (result)
             {
-                await context.RespondAsync<IGetAllClientStatesSuccessResultContract>(result);
-            }
-            
-            if (result is IGetAllClientStatesErrorResultContract)
-            {
-                await context.RespondAsync<IGetAllClientStatesErrorResultContract>(result);
+                case IGetAllClientStatesSuccessResultContract:
+                    await context.RespondAsync<IGetAllClientStatesSuccessResultContract>(result);
+                    break;
+                case IGetAllClientStatesErrorResultContract:
+                    await context.RespondAsync<IGetAllClientStatesErrorResultContract>(result);
+                    break;
             }
         }
     }

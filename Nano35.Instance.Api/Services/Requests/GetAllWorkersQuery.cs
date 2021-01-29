@@ -34,17 +34,16 @@ namespace Nano35.Instance.Api.Services.Requests
                 CancellationToken cancellationToken)
             {
                 var client = _bus.CreateRequestClient<IGetAllWorkersRequestContract>(TimeSpan.FromSeconds(10));
+                
                 var response = await client
                     .GetResponse<IGetAllWorkersSuccessResultContract, IGetAllWorkersErrorResultContract>(message, cancellationToken);
 
-                if (response.Is(out Response<IGetAllWorkersSuccessResultContract> responseA))
-                {
-                    return responseA.Message;
-                }
-                else if (response.Is(out Response<IGetAllWorkersErrorResultContract> responseB))
-                {
-                    return responseB.Message;
-                }
+                if (response.Is(out Response<IGetAllWorkersSuccessResultContract> successResponse))
+                    return successResponse.Message;
+                
+                if (response.Is(out Response<IGetAllWorkersErrorResultContract> errorResponse))
+                    return errorResponse.Message;
+                
                 throw new InvalidOperationException();
             }
         }

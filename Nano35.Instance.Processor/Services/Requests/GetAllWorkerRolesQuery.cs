@@ -18,12 +18,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllWorkerRolesRequestContract, 
         IQueryRequest<IGetAllWorkerRolesResultContract>
     {
-        public GetAllWorkerRolesQuery(IGetAllWorkerRolesRequestContract request)
-        {
-            
-        }
-
-        public class GetAllWorkerRolesSuccessResultContract : 
+        private class GetAllWorkerRolesSuccessResultContract : 
             IGetAllWorkerRolesSuccessResultContract
         {
             public IEnumerable<IWorkersRoleViewModel> Data { get; set; }

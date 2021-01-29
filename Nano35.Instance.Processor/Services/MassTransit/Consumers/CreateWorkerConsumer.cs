@@ -18,8 +18,32 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
         public async Task Consume(
             ConsumeContext<ICreateWorkerRequestContract> context)
         {
-            var result = await _mediator.Send(new CreateWorkerCommand(context.Message));
-            await context.RespondAsync<ICreateWorkerSuccessResultContract>(result);
+            var message = context.Message;
+            
+            var request = new CreateWorkerCommand()
+            {
+                NewId = message.NewId,
+                InstanceId = message.InstanceId,
+                RoleId = message.RoleId,
+                Name = message.Name,
+                Comment = message.Comment,
+                Phone = message.Phone,
+                Email = message.Email,
+                Password = message.Password,
+                PasswordConfirm = message.PasswordConfirm
+            };
+            
+            var result = await _mediator.Send(request);
+            
+            switch (result)
+            {
+                case ICreateWorkerSuccessResultContract:
+                    await context.RespondAsync<ICreateWorkerSuccessResultContract>(result);
+                    break;
+                case ICreateWorkerErrorResultContract:
+                    await context.RespondAsync<ICreateWorkerErrorResultContract>(result);
+                    break;
+            }
         }
     }
 }

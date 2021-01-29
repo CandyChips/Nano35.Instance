@@ -19,12 +19,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllRolesRequestContract, 
         IQueryRequest<IGetAllRegionsResultContract>
     {
-        public GetAllRolesQuery(IGetAllRolesRequestContract request)
-        {
-            
-        }
-        
-        public class GetAllRegionsSuccessResultContract : 
+        private class GetAllRegionsSuccessResultContract : 
             IGetAllRegionsResultContract
         {
             public IEnumerable<IRegionViewModel> Data { get; set; }

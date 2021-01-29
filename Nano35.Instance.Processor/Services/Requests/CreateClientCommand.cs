@@ -29,25 +29,12 @@ namespace Nano35.Instance.Processor.Services.Requests
         public Guid UserId { get; set; }
         public Guid InstanceId { get; set; }
 
-        public CreateClientCommand(ICreateClientRequestContract request)
-        {
-            NewId = request.NewId;
-            Name = request.Name;
-            Email = request.Email;
-            Phone = request.Phone;
-            Salle = request.Salle;
-            ClientStateId = request.ClientStateId;
-            ClientTypeId = request.ClientTypeId;
-            UserId = request.UserId;
-            InstanceId = request.InstanceId;
-        }
-        
-        public class CreateClientSuccessResultContract : ICreateClientSuccessResultContract
+        private class CreateClientSuccessResultContract : ICreateClientSuccessResultContract
         {
             
         }
-        
-        public class CreateClientErrorResultContract : ICreateClientErrorResultContract
+
+        private class CreateClientErrorResultContract : ICreateClientErrorResultContract
         {
             public string Message { get; set; }
         }
@@ -93,7 +80,5 @@ namespace Nano35.Instance.Processor.Services.Requests
                 }
             }
         }
-
     }
-    
 }

@@ -18,12 +18,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllInstanceTypesRequestContract, 
         IQueryRequest<IGetAllInstanceTypesResultContract>
     {
-        public GetAllInstanceTypesQuery(IGetAllInstanceTypesRequestContract request)
-        {
-            
-        }
-
-        public class GetAllInstanceTypesSuccessResultContract : 
+        private class GetAllInstanceTypesSuccessResultContract : 
             IGetAllInstanceTypesSuccessResultContract
         {
             public IEnumerable<IInstanceTypeViewModel> Data { get; set; }

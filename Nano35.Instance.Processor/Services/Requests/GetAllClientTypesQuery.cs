@@ -19,12 +19,7 @@ namespace Nano35.Instance.Processor.Services.Requests
         IGetAllClientTypesRequestContract,
         IQueryRequest<IGetAllClientTypesResultContract>
     {
-        
-        public GetAllClientTypesQuery(IGetAllClientTypesRequestContract message)
-        {
-        }
-        
-        public class GetAllClientTypesResultContract : 
+        private class GetAllClientTypesResultContract : 
             IGetAllClientTypesSuccessResultContract
         {
             public IEnumerable<IClientTypeViewModel> Data { get; set; }
