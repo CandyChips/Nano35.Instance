@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Models;

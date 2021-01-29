@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.Requests.Behaviours;
 using Unit = Nano35.Instance.Processor.Models.Unit;
@@ -70,9 +65,6 @@ namespace Nano35.Instance.Processor.Services.Requests
             {
                 try
                 {
-                    //var creator = this._context.Workers.FirstOrDefault(f => f.Id == message.CreatorId && f.InstanceId == message.InstanceId);
-                    //var instance = this._context.Instances.FirstOrDefault(f => f.Id == message.InstanceId);
-                    //var unitType = this._context.UnitTypes.FirstOrDefault(f => f.Id == message.UnitTypeId);
                     var unit = new Unit(){
                         Id = message.Id,
                         Name = message.Name,

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts;
 using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Services.Requests.Behaviours
@@ -26,19 +27,18 @@ namespace Nano35.Instance.Processor.Services.Requests.Behaviours
         {
             
             await using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var response = await next();
-                await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-                return response;
-            }
-            catch (Exception ex)
+            var response = await next();
+            if (response is IError)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
                 _logger.LogError("Transaction refused");
-                throw;
             }
+            if (response is ISuccess)
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+            }
+            return response;
         }
     }
 }
