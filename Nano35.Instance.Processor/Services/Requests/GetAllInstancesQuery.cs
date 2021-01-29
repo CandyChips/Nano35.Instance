@@ -48,8 +48,9 @@ namespace Nano35.Instance.Processor.Services.Requests
                 GetAllInstancesQuery message,
                 CancellationToken cancellationToken)
             {
-                var result = await (this._context.Instances
-                    .Where(c => c.Deleted == false)
+                var result = await (_context.Workers
+                    .Where(c => c.Id == message.UserId)
+                    .Select(a => a.Instance)
                     .MapAllToAsync<IInstanceViewModel>());
                 return new GetAllInstancesResultContract() {Data = result};
             }

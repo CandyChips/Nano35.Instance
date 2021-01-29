@@ -38,11 +38,6 @@ namespace Nano35.Instance.Processor.Services.AppStart.Configure
                         e.Consumer<GetAllInstanceTypesConsumer>(provider);
                     });
                     
-                    cfg.ReceiveEndpoint("ICreateInstanceRequestContract", e =>
-                    {
-                        e.Consumer<CreateInstanceConsumer>(provider);
-                    });
-                    
                     cfg.ReceiveEndpoint("IGetInstanceByIdRequestContract", e =>
                     {
                         e.Consumer<GetInstanceByIdConsumer>(provider);
@@ -50,21 +45,68 @@ namespace Nano35.Instance.Processor.Services.AppStart.Configure
                     
                     cfg.ReceiveEndpoint("IGetAllWorkerRolesRequestContract", e =>
                     {
-                        e.Consumer<CreateWorkerConsumer>(provider);
+                        e.Consumer<GetAllWorkerRolesConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetAllUnitsResultContract", e =>
+                    {
+                        e.Consumer<GetAllUnitsConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetAllUnitTypesRequestContract", e =>
+                    {
+                        e.Consumer<GetAllUnitTypesConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateInstanceRequestContract", e =>
+                    {
+                        e.Consumer<CreateInstanceConsumer>(provider);
                     });
                     
                     cfg.ReceiveEndpoint("ICreateWorkerRequestContract", e =>
                     {
                         e.Consumer<GetAllWorkersConsumer>(provider);
                     });
+                    
+                    cfg.ReceiveEndpoint("ICreateUnitRequestContract", e =>
+                    {
+                        e.Consumer<CreateUnitConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateClientRequestContract", e =>
+                    {
+                        e.Consumer<CreateClientConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetAllClientsRequestContract", e =>
+                    {
+                        e.Consumer<GetAllClientsConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetAllClientStatesRequestContract", e =>
+                    {
+                        e.Consumer<GetAllClientStatesConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetAllClientTypesRequestContract", e =>
+                    {
+                        e.Consumer<GetAllClientTypesConsumer>(provider);
+                    });
                 }));
+                x.AddConsumer<CreateClientConsumer>();
                 x.AddConsumer<GetAllInstancesConsumer>();
                 x.AddConsumer<CreateInstanceConsumer>();
+                x.AddConsumer<GetAllUnitTypesConsumer>();
                 x.AddConsumer<GetAllInstanceTypesConsumer>();
                 x.AddConsumer<GetAllRegionsConsumer>();
                 x.AddConsumer<GetInstanceByIdConsumer>();
                 x.AddConsumer<CreateWorkerConsumer>();
                 x.AddConsumer<GetAllWorkersConsumer>();
+                x.AddConsumer<GetAllWorkerRolesConsumer>();
+                x.AddConsumer<GetAllUnitsConsumer>();
+                x.AddConsumer<GetAllClientsConsumer>();
+                x.AddConsumer<GetAllClientStatesConsumer>();
+                x.AddConsumer<GetAllClientTypesConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });

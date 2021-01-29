@@ -22,6 +22,12 @@ namespace Nano35.Instance.Processor.Services.Requests
         public Guid InstanceId { get; set; }
         public Guid WorkersRoleId { get; set; }
 
+        public GetAllWorkersQuery(IGetAllWorkersRequestContract message)
+        {
+            InstanceId = message.InstanceId;
+            WorkersRoleId = message.WorkersRoleId;
+        }
+
         public class GetAllWorkersResultContract : IGetAllWorkersSuccessResultContract
         {
             public IEnumerable<IWorkerViewModel> Data { get; set; }
@@ -49,7 +55,8 @@ namespace Nano35.Instance.Processor.Services.Requests
                 GetAllWorkersQuery message,
                 CancellationToken cancellationToken)
             {
-                var result = await (this._context.Workers
+                var result = await (_context.Workers
+                    .Where(c => c.InstanceId == message.InstanceId)
                     .MapAllToAsync<IWorkerViewModel>());
                 foreach (var item in result)
                 {

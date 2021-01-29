@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -19,9 +20,9 @@ namespace Nano35.Instance.Processor.Services.Requests.Behaviours
 
         public async Task<TOut> Handle(TIn request, CancellationToken cancellationToken, RequestHandlerDelegate<TOut> next)
         {
-            _logger.LogInformation("Before Command");
+            _logger.LogInformation($"Before Command - {DateTime.Now}");
             var response = await next();
-            _logger.LogInformation("After Command");
+            _logger.LogInformation($"After Command - {DateTime.Now}");
             return response;
         }
     }
@@ -40,9 +41,9 @@ namespace Nano35.Instance.Processor.Services.Requests.Behaviours
 
         public async Task<TOut> Handle(TIn request, CancellationToken cancellationToken, RequestHandlerDelegate<TOut> next)
         {
-            _logger.LogInformation("Before Query");
+            _logger.LogInformation($"Before Query - {DateTime.Now}");
             var response = await next();
-            _logger.LogInformation("After Query");
+            _logger.LogInformation($"After Query - {DateTime.Now}");
             return response;
         }
     }

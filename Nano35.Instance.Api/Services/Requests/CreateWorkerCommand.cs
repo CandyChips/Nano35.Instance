@@ -10,6 +10,17 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
+    public class CreateWorkerHttpRequest
+    {
+        public Guid RoleId { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string PasswordConfirm { get; set; }
+    }
+    
     public class CreateWorkerCommand :
         ICreateWorkerRequestContract, 
         ICommandRequest<ICreateWorkerResultContract>
@@ -23,6 +34,22 @@ namespace Nano35.Instance.Api.Services.Requests
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordConfirm { get; set; }
+
+        public CreateWorkerCommand(
+            Guid newId, 
+            Guid instanceId,
+            CreateWorkerHttpRequest request)
+        {
+            NewId = newId;
+            InstanceId = instanceId;
+            RoleId = request.RoleId;
+            Name = request.Name;
+            Comment = request.Comment;
+            Phone = request.Phone;
+            Email = request.Email;
+            Password = request.Password;
+            PasswordConfirm = request.PasswordConfirm;
+        }
     }
     
     public class CreateWorkerHandler : 
@@ -50,10 +77,12 @@ namespace Nano35.Instance.Api.Services.Requests
             {
                 return responseA.Message;
             }
-            else if (response.Is(out Response<ICreateWorkerErrorResultContract> responseB))
+            
+            if (response.Is(out Response<ICreateWorkerErrorResultContract> responseB))
             {
                 throw new Exception();
             }
+            
             throw new InvalidOperationException();
         }
     }

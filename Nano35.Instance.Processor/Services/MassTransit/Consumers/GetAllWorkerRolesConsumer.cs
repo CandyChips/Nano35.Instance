@@ -11,31 +11,31 @@ using Nano35.Instance.Processor.Services.Requests;
 
 namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
 {
-    public class GetAllWorkersConsumer : 
-        IConsumer<IGetAllWorkersRequestContract>
+    public class GetAllWorkerRolesConsumer : 
+        IConsumer<IGetAllWorkerRolesRequestContract>
     {
         private readonly MediatR.IMediator _mediator;
 
-        public GetAllWorkersConsumer(
+        public GetAllWorkerRolesConsumer(
             MediatR.IMediator mediator)
         {
             _mediator = mediator;
         }
         
         public async Task Consume(
-            ConsumeContext<IGetAllWorkersRequestContract> context)
+            ConsumeContext<IGetAllWorkerRolesRequestContract> context)
         {
             var result = await _mediator.Send(
-                new GetAllWorkersQuery(context.Message));
+                new GetAllWorkerRolesQuery(context.Message));
             
-            if (result is IGetAllWorkersSuccessResultContract)
+            if (result is IGetAllWorkerRolesSuccessResultContract)
             {
-                await context.RespondAsync<IGetAllWorkersSuccessResultContract>(result);
+                await context.RespondAsync<IGetAllWorkerRolesSuccessResultContract>(result);
             }
             
-            if (result is IGetAllWorkersErrorResultContract)
+            if (result is IGetAllWorkerRolesErrorResultContract)
             {
-                await context.RespondAsync<IGetAllWorkersErrorResultContract>(result);
+                await context.RespondAsync<IGetAllWorkerRolesErrorResultContract>(result);
             }
         }
     }

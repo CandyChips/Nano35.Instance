@@ -11,22 +11,22 @@ namespace Nano35.Instance.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InstancesController : ControllerBase
+    public class ClientsController : ControllerBase
     {
-        private readonly ILogger<InstancesController> _logger;
+        private readonly ILogger<ClientsController> _logger;
         private readonly IMediator _mediator;
 
-        public InstancesController(
-            ILogger<InstancesController> logger,
+        public ClientsController(
+            ILogger<ClientsController> logger,
             IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
-
+    
         [HttpGet]
-        [Route("GetAllInstances")]
-        public async Task<IActionResult> GetAllInstances(
+        [Route("GetAllClients")]
+        public async Task<IActionResult> GetAllClients(
             [FromQuery] Guid userId, 
             [FromQuery] Guid regionId,
             [FromQuery] Guid instanceTypeId)
@@ -48,49 +48,33 @@ namespace Nano35.Instance.Api.Controllers
             }
             return BadRequest();
         }
-
+    
         [HttpGet]
-        [Route("GetInstanceById/Id={id}")]
-        public async Task<IActionResult> GetInstanceById([FromRoute] Guid id)
+        [Route("GetAllClientTypes")]
+        public async Task<IActionResult> GetAllClientTypes()
         {
-            var result = await this._mediator.Send(new GetInstanceByIdQuery(id));
-            if (result is IGetInstanceByIdSuccessResultContract success)
+            var result = await this._mediator.Send(new GetAllClientTypesQuery());
+            if (result is IGetAllClientTypesSuccessResultContract success)
             {
                 return Ok(success.Data);
             }
-            if (result is IGetInstanceByIdErrorResultContract error)
+            if (result is IGetAllClientTypesErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }
             return BadRequest();
         }
-
+    
         [HttpGet]
-        [Route("GetAllInstanceTypes")]
-        public async Task<IActionResult> GetAllInstanceTypes()
+        [Route("GetAllClientStates")]
+        public async Task<IActionResult> GetAllClientStates()
         {
-            var result = await this._mediator.Send(new GetAllInstanceTypesQuery());
-            if (result is IGetAllInstanceTypesSuccessResultContract success)
+            var result = await this._mediator.Send(new GetAllClientStatesQuery());
+            if (result is IGetAllClientStatesSuccessResultContract success)
             {
                 return Ok(success.Data);
             }
-            if (result is IGetAllInstanceTypesErrorResultContract error)
-            {
-                return BadRequest(error.Message);
-            }
-            return BadRequest();
-        }
-
-        [HttpGet]
-        [Route("GetAllRegions")]
-        public async Task<IActionResult> GetAllRegions()
-        {
-            var result = await this._mediator.Send(new GetAllRegionsQuery());
-            if (result is IGetAllRegionsSuccessResultContract success)
-            {
-                return Ok(success.Data);
-            }
-            if (result is IGetAllRegionsErrorResultContract error)
+            if (result is IGetAllClientStatesErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }
@@ -98,16 +82,16 @@ namespace Nano35.Instance.Api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateInstance")]
-        public async Task<IActionResult> CreateInstance(
-            [FromBody]CreateInstanceCommand command)
+        [Route("CreateClient")]
+        public async Task<IActionResult> CreateClient(
+            [FromBody]CreateClientCommand command)
         {
             var result = await this._mediator.Send(command);
-            if (result is ICreateInstanceSuccessResultContract)
+            if (result is ICreateClientSuccessResultContract)
             {
                 return Ok();
             }
-            if (result is ICreateInstanceErrorResultContract error)
+            if (result is ICreateClientErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }

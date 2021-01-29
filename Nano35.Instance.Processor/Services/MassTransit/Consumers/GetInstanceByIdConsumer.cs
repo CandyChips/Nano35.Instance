@@ -15,7 +15,8 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
     {
         private readonly MediatR.IMediator _mediator;
 
-        public GetInstanceByIdConsumer(IMediator mediator)
+        public GetInstanceByIdConsumer(
+            IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -24,16 +25,15 @@ namespace Nano35.Instance.Processor.Services.MassTransit.Consumers
         public async Task Consume(ConsumeContext<IGetInstanceByIdRequestContract> context)
         {
             var result = await _mediator.Send(new GetInstanceByIdQuery(context.Message));
+            
             if (result is IGetInstanceByIdSuccessResultContract)
             {
                 await context.RespondAsync<IGetInstanceByIdSuccessResultContract>(result);
             }
+            
             if (result is IGetInstanceByIdErrorResultContract)
             {
-                if (result is IGetInstanceByIdNotFoundResultContract)
-                {
-                    await context.RespondAsync<IGetInstanceByIdNotFoundResultContract>(result);
-                }
+                await context.RespondAsync<IGetInstanceByIdErrorResultContract>(result);
             }
         }
     }

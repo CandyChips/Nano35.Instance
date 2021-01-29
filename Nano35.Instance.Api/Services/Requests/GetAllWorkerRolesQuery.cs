@@ -16,8 +16,6 @@ namespace Nano35.Instance.Api.Services.Requests
         IGetAllWorkerRolesRequestContract, 
         IQueryRequest<IGetAllWorkerRolesResultContract>
     {
-        public Guid InstanceTypeId { get; set; }
-
         public class GetAllWorkerRolesHandler 
             : IRequestHandler<GetAllWorkerRolesQuery, IGetAllWorkerRolesResultContract>
         {
@@ -45,7 +43,7 @@ namespace Nano35.Instance.Api.Services.Requests
                 }
                 else if (response.Is(out Response<IGetAllWorkerRolesErrorResultContract> responseB))
                 {
-                    throw new Exception();
+                    return responseB.Message;
                 }
                 throw new InvalidOperationException();
             }

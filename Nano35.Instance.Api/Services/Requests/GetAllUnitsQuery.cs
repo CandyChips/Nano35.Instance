@@ -12,41 +12,41 @@ using Nano35.Instance.Api.Services.Requests.Behaviours;
 
 namespace Nano35.Instance.Api.Services.Requests
 {
-    public class GetAllWorkersQuery : 
-        IGetAllWorkersRequestContract, 
-        IQueryRequest<IGetAllWorkersResultContract>
+    public class GetAllUnitsQuery : 
+        IGetAllUnitsRequestContract, 
+        IQueryRequest<IGetAllUnitsResultContract>
     {
-
         public Guid InstanceId { get; set; }
-        public Guid WorkersRoleId { get; set; }
-
-        public class GetAllWorkersHandler 
-            : IRequestHandler<GetAllWorkersQuery, IGetAllWorkersResultContract>
+        public Guid UnitTypeId { get; set; }
+        
+        public class GetAllUnitsHandler 
+            : IRequestHandler<GetAllUnitsQuery, IGetAllUnitsResultContract>
         {
             private readonly IBus _bus;
-            public GetAllWorkersHandler(IBus bus)
+            public GetAllUnitsHandler(IBus bus)
             {
                 _bus = bus;
             }
 
-            public async Task<IGetAllWorkersResultContract> Handle(
-                GetAllWorkersQuery message,
+            public async Task<IGetAllUnitsResultContract> Handle(
+                GetAllUnitsQuery message,
                 CancellationToken cancellationToken)
             {
-                var client = _bus.CreateRequestClient<IGetAllWorkersRequestContract>(TimeSpan.FromSeconds(10));
+                var client = _bus.CreateRequestClient<IGetAllUnitsRequestContract>(TimeSpan.FromSeconds(10));
                 var response = await client
-                    .GetResponse<IGetAllWorkersSuccessResultContract, IGetAllWorkersErrorResultContract>(message, cancellationToken);
+                    .GetResponse<IGetAllUnitsSuccessResultContract, IGetAllUnitsErrorResultContract>(message, cancellationToken);
 
-                if (response.Is(out Response<IGetAllWorkersSuccessResultContract> responseA))
+                if (response.Is(out Response<IGetAllUnitsSuccessResultContract> responseA))
                 {
                     return responseA.Message;
                 }
-                else if (response.Is(out Response<IGetAllWorkersErrorResultContract> responseB))
+                else if (response.Is(out Response<IGetAllUnitsErrorResultContract> responseB))
                 {
                     return responseB.Message;
                 }
                 throw new InvalidOperationException();
             }
         }
+
     }
 }

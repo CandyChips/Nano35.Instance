@@ -22,20 +22,30 @@ namespace Nano35.Instance.Api.Services.AppStart.Configurations
                         h.Password(ContractBase.RabbitMqPassword);
                     });
                 }));
+                x.AddRequestClient<ICreateClientRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateClientRequestContract"));
                 x.AddRequestClient<IGetAllWorkersRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkersRequestContract"));
+                x.AddRequestClient<IGetAllUnitsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllUnitsRequestContract"));
+                x.AddRequestClient<IGetAllUnitTypesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllUnitTypesRequestContract"));
                 x.AddRequestClient<ICreateWorkerRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateWorkerRequestContract"));
                 x.AddRequestClient<IGetAllInstancesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstancesRequestContract"));
                 x.AddRequestClient<ICreateInstanceRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateInstanceRequestContract"));
+                x.AddRequestClient<ICreateUnitRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateUnitRequestContract"));
                 x.AddRequestClient<IGetInstanceByIdRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetInstanceByIdRequestContract"));
                 x.AddRequestClient<IGetAllRegionsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllRegionsRequestContract"));
                 x.AddRequestClient<IGetAllInstanceTypesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstanceTypesRequestContract"));
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstanceTypesRequestContract")); 
+                x.AddRequestClient<IGetAllWorkerRolesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkerRolesRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

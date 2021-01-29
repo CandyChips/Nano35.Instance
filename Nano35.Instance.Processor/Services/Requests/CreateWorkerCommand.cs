@@ -40,18 +40,10 @@ namespace Nano35.Instance.Processor.Services.Requests
             Password = request.Password;
             PasswordConfirm = request.PasswordConfirm;
         }
-
-        public class CreateWorkerCommandValidator : 
-            AbstractValidator<CreateWorkerCommand>
-        {
-            public CreateWorkerCommandValidator()
-            {
-            }
-        }
         
         public class CreateWorkerSuccessResultContract : ICreateWorkerSuccessResultContract
         {
-            public Guid Id { get; set; }
+            
         }
         
         public class CreateWorkerErrorResultContract : ICreateWorkerErrorResultContract
@@ -59,13 +51,13 @@ namespace Nano35.Instance.Processor.Services.Requests
             public string Message { get; set; }
         }
 
-        public class CreateInstanceHandler : 
+        public class CreateWorkerHandler : 
             IRequestHandler<CreateWorkerCommand, ICreateWorkerResultContract>
         {
             private readonly ApplicationContext _context;
             private readonly IBus _bus;
             
-            public CreateInstanceHandler(
+            public CreateWorkerHandler(
                 ApplicationContext context, 
                 IBus bus)
             {
@@ -101,9 +93,9 @@ namespace Nano35.Instance.Processor.Services.Requests
                     };
                     await this._context.AddAsync(worker);
                     _context.SaveChanges();
-                    return new CreateWorkerSuccessResultContract() {Id = new Guid()};
+                    return new CreateWorkerSuccessResultContract();
                 }
-                return new CreateWorkerErrorResultContract() {};
+                return new CreateWorkerErrorResultContract();
             }
         }
     }

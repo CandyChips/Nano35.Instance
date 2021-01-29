@@ -15,7 +15,7 @@ namespace Nano35.Instance.Processor.Services.Requests
 {
     public class CreateInstanceCommand :
         ICreateInstanceRequestContract, 
-        ICommandRequest<ICreateInstanceSuccessResultContract>
+        ICommandRequest<ICreateInstanceResultContract>
     {
         public Guid NewId { get; set; }
         public Guid UserId { get; set; }
@@ -39,22 +39,19 @@ namespace Nano35.Instance.Processor.Services.Requests
             TypeId = request.TypeId;
             RegionId = request.RegionId;
         }
-
-        public class CreateInstanceCommandValidator : 
-            AbstractValidator<CreateInstanceCommand>
-        {
-            public CreateInstanceCommandValidator()
-            {
-            }
-        }
         
         public class CreateInstanceSuccessResultContract : ICreateInstanceSuccessResultContract
         {
-            public Guid Id { get; set; }
+            
+        }
+
+        public class CreateInstanceErrorResultContract : ICreateInstanceErrorResultContract
+        {
+            public string Message { get; set; }
         }
 
         public class CreateInstanceHandler : 
-            IRequestHandler<CreateInstanceCommand, ICreateInstanceSuccessResultContract>
+            IRequestHandler<CreateInstanceCommand, ICreateInstanceResultContract>
         {
             private readonly ApplicationContext _context;
             
@@ -64,34 +61,41 @@ namespace Nano35.Instance.Processor.Services.Requests
                 _context = context;
             }
         
-            public async Task<ICreateInstanceSuccessResultContract> Handle(
+            public async Task<ICreateInstanceResultContract> Handle(
                 CreateInstanceCommand message, 
                 CancellationToken cancellationToken)
             {
-                var instanceType = this._context.InstanceTypes.Find(message.TypeId);
-                var region = this._context.Regions.Find(message.RegionId);
-                var role = this._context.WorkerRoles.FirstOrDefault();
-                var instance = new Models.Instance(){
-                    Id = message.NewId,
-                    OrgEmail = message.Email,
-                    OrgName = message.Name,
-                    OrgRealName = message.RealName,
-                    CompanyInfo = message.Info,
-                    InstanceType = instanceType,
-                    InstanceTypeId = instanceType.Id,
-                    Region = region,
-                    RegionId = region.Id
-                };
-                await this._context.AddAsync(instance);
-                var defaultUser = new Worker(){
-                    Id = message.UserId,
-                    Instance = instance,
-                    WorkersRole = role,
-                    Name = "Администратор системы",
-                    Comment = ""
-                };
-                await this._context.AddAsync(defaultUser);
-                return new CreateInstanceSuccessResultContract() {Id = new Guid()};
+                try
+                {
+                    var instanceType = this._context.InstanceTypes.Find(message.TypeId);
+                    var region = this._context.Regions.Find(message.RegionId);
+                    var role = this._context.WorkerRoles.FirstOrDefault();
+                    var instance = new Models.Instance(){
+                        Id = message.NewId,
+                        OrgEmail = message.Email,
+                        OrgName = message.Name,
+                        OrgRealName = message.RealName,
+                        CompanyInfo = message.Info,
+                        InstanceType = instanceType,
+                        InstanceTypeId = instanceType.Id,
+                        Region = region,
+                        RegionId = region.Id
+                    };
+                    await this._context.AddAsync(instance);
+                    var defaultUser = new Worker(){
+                        Id = message.UserId,
+                        Instance = instance,
+                        WorkersRole = role,
+                        Name = "Администратор системы",
+                        Comment = ""
+                    };
+                    await this._context.AddAsync(defaultUser);
+                    return new CreateInstanceSuccessResultContract();
+                }
+                catch (Exception e)
+                {
+                    return new CreateInstanceErrorResultContract() {Message = "SAd"};
+                }
             }
         }
     }

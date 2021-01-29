@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +11,13 @@ namespace Nano35.Instance.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WorkersController : ControllerBase
+    public class UnitsController : ControllerBase
     {
-        private readonly ILogger<WorkersController> _logger;
+        private readonly ILogger<UnitsController> _logger;
         private readonly IMediator _mediator;
 
-        public WorkersController(
-            ILogger<WorkersController> logger,
+        public UnitsController(
+            ILogger<UnitsController> logger,
             IMediator mediator)
         {
             _logger = logger;
@@ -24,23 +25,24 @@ namespace Nano35.Instance.Api.Controllers
         }
     
         [HttpGet]
-        [Route("GetAllWorkers")]
-        public async Task<IActionResult> GetAllWorkers(
-            [FromQuery] Guid roleId,
-            [FromQuery] Guid instanceId)
+        [Route("GetAllUnits")]
+        public async Task<IActionResult> GetAllUnits(
+            [FromQuery] Guid instanceId,
+            [FromQuery] Guid unitTypeId)
         {
-            var request = new GetAllWorkersQuery()
+            var request = new GetAllUnitsQuery()
             {
                 InstanceId = instanceId,
-                WorkersRoleId = roleId
+                UnitTypeId = unitTypeId
             };
+            
             var result = await this._mediator.Send(request);
             
-            if (result is IGetAllWorkersSuccessResultContract success)
+            if (result is IGetAllUnitsSuccessResultContract success)
             {
                 return Ok(success.Data);
             }
-            if (result is IGetAllWorkersErrorResultContract error)
+            if (result is IGetAllUnitsErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }
@@ -48,37 +50,43 @@ namespace Nano35.Instance.Api.Controllers
         }
     
         [HttpGet]
-        [Route("GetAllWorkerRoles")]
-        public async Task<IActionResult> GetAllWorkerRoles()
+        [Route("GetAllUnitTypes")]
+        public async Task<IActionResult> GetAllUnitTypes()
         {
-            var request = new GetAllWorkerRolesQuery();
+            var request = new GetAllUnitTypesQuery();
+            
             var result = await this._mediator.Send(request);
             
-            if (result is IGetAllWorkerRolesSuccessResultContract success)
+            if (result is IGetAllUnitTypesSuccessResultContract success)
             {
                 return Ok(success.Data);
             }
-            if (result is IGetAllWorkerRolesErrorResultContract error)
+            
+            if (result is IGetAllUnitTypesErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }
+            
             return BadRequest();
         }
-        
+
         [HttpPost]
-        [Route("CreateWorker")]
-        public async Task<IActionResult> CreateWorker(
-            [FromBody] CreateWorkerCommand command)
+        [Route("CreateUnit")]
+        public async Task<IActionResult> CreateUnit(
+            [FromBody]CreateUnitCommand request)
         {
-            var result = await this._mediator.Send(command);
-            if (result is ICreateWorkerSuccessResultContract)
+            var result = await this._mediator.Send(request);
+            
+            if (result is ICreateUnitSuccessResultContract)
             {
                 return Ok();
             }
-            if (result is ICreateWorkerErrorResultContract error)
+            
+            if (result is ICreateUnitErrorResultContract error)
             {
                 return BadRequest(error.Message);
             }
+            
             return BadRequest();
         }
     }

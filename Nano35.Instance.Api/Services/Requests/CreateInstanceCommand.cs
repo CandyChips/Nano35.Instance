@@ -24,14 +24,6 @@ namespace Nano35.Instance.Api.Services.Requests
         public Guid TypeId { get; set; }
         public Guid RegionId { get; set; }
     }
-
-    public class CreateInstanceCommandValidator : 
-        AbstractValidator<CreateInstanceCommand>
-    {
-        public CreateInstanceCommandValidator()
-        {
-        }
-    }
     
     public class CreateInstanceHandler : 
         IRequestHandler<CreateInstanceCommand, ICreateInstanceResultContract>
@@ -58,10 +50,12 @@ namespace Nano35.Instance.Api.Services.Requests
             {
                 return responseA.Message;
             }
-            else if (response.Is(out Response<ICreateInstanceErrorResultContract> responseB))
+            
+            if (response.Is(out Response<ICreateInstanceErrorResultContract> responseB))
             {
                 throw new Exception();
             }
+            
             throw new InvalidOperationException();
         }
     }
