@@ -1,0 +1,49 @@
+﻿version: '3.4'
+services:
+  nano35_instance_nginx:
+    container_name: nano35_instance_nginx
+    image: nginx:latest
+    depends_on:
+      - nano35_instance_api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "5002:80"
+    environment:
+      - DOCKER_BUILDKIT=1
+    networks:
+      - nano35_network
+
+  nano35_instance_api:
+    container_name: nano35_instance_api
+    image: nano35_instance_api
+    build:
+      context: ./Nano35.Instance.Api
+      dockerfile: ./Dockerfile
+    networks:
+      - nano35_network
+    environment:
+      - DOCKER_BUILDKIT=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  nano35_instance_processor:
+    container_name: nano35_instance_processor
+    image: nano35_instance_processor
+    build:
+      context: ./Nano35.Instance.Processor
+      dockerfile: ./Dockerfile
+    networks:
+      - nano35_network
+    environment:
+      - DOCKER_BUILDKIT=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+      
+networks:
+  nano35_network:
+    driver: bridge
