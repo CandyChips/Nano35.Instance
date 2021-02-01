@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /src
-COPY . .
+RUN git clone https://github.com/CandyChips/Nano35.Instance ./Nano35.Instance.Processor/*
 RUN dotnet restore Nano35.Instance.Processor.csproj --configfile ./NuGet.config
 WORKDIR /src/.
 RUN dotnet build Nano35.Instance.Processor.csproj -c Release -o /app/build

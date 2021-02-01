@@ -1,5 +1,15 @@
 ﻿version: '3.4'
 services:
+  nano35_instance_redis:
+    image: redis
+    restart: always
+    volumes:
+      - ./storage/redis/data:/data
+    logging:
+    driver: none
+    networks:
+      - nano35_network
+    
   nano35_instance_nginx:
     container_name: nano35_instance_nginx
     image: nginx:latest
