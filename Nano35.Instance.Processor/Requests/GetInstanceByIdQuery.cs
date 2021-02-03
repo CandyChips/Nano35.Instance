@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Requests.Behaviours;
@@ -43,8 +44,8 @@ namespace Nano35.Instance.Processor.Requests
                 GetInstanceByIdQuery message,
                 CancellationToken cancellationToken)
             {
-                var result = this._context.Instances
-                        .FirstOrDefault(f => f.Id == message.InstanceId)
+                var result = (await _context.Instances
+                        .FirstOrDefaultAsync(f => f.Id == message.InstanceId, cancellationToken: cancellationToken))
                         .MapTo<IInstanceViewModel>();
                 return new GetInstanceByIdResultContract() {Data = result};
             }

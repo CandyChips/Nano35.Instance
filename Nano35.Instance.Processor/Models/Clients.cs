@@ -14,11 +14,9 @@ namespace Nano35.Instance.Processor.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public double Salle {get;set;}
         public bool Deleted { get; set; }
         //Forgein keys
-        public Guid SalleTypeId { get; set; }
-        public SalleType SalleType {get;set;}
-        
         public Guid ClientTypeId { get; set; }
         public ClientType ClientType { get; set; }
         
@@ -40,7 +38,7 @@ namespace Nano35.Instance.Processor.Models
             modelBuilder.Entity<Client>()
                 .HasOne(p => p.Instance)
                 .WithMany()
-                .HasForeignKey(p => p.InstanceId);
+                .HasForeignKey(p => new {p.InstanceId});
             
             //Data
             modelBuilder.Entity<Client>()
@@ -62,24 +60,22 @@ namespace Nano35.Instance.Processor.Models
                 .Property(b => b.Deleted)
                 .IsRequired();
             
-            //Forgein keys
             modelBuilder.Entity<Client>()
-                .HasOne(p => p.SalleType)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.SalleTypeId);
+                .Property(b => b.Salle)
+                .IsRequired();
             
+            //Forgein keys
             modelBuilder.Entity<Client>()
                 .HasOne(p => p.ClientType)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.ClientTypeId);
+                .HasForeignKey(p => new {p.ClientTypeId});
             
             modelBuilder.Entity<Client>()
                 .HasOne(p => p.ClientState)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.ClientStateId);
+                .HasForeignKey(p => new {p.ClientStateId});
             
             modelBuilder.Entity<Client>()
                 .HasOne(p => p.Creator)

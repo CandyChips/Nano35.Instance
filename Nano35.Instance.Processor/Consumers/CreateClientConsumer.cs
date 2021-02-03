@@ -29,6 +29,7 @@ namespace Nano35.Instance.Processor.Consumers
                 ClientStateId = message.ClientStateId,
                 ClientTypeId = message.ClientTypeId,
                 UserId = message.UserId,
+                Salle = message.Salle,
                 InstanceId = message.InstanceId
             };
             

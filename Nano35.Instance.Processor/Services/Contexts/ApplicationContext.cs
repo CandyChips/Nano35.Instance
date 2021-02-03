@@ -9,17 +9,17 @@ namespace Nano35.Instance.Processor.Services.Contexts
     public class ApplicationContext : DbContext
     {
         public DbSet<Models.Instance> Instances { get; set; }
-        public DbSet<Models.License> Licenses { get; set; }
-        public DbSet<Models.LicenseType> LicenseTypes { get; set; }
-        public DbSet<Models.Region> Regions {get;set;}
-        public DbSet<Models.Unit> Units { get; set; }
-        public DbSet<Models.UnitType> UnitTypes { get; set; }
-        public DbSet<Models.Worker> Workers { get; set; }
-        public DbSet<Models.WorkersRole> WorkerRoles { get; set; }
-        public DbSet<Models.InstanceType> InstanceTypes { get; set; }
-        public DbSet<Models.Client> Clients { get; set; }
-        public DbSet<Models.ClientState> ClientStates { get; set; }
-        public DbSet<Models.ClientType> ClientTypes { get; set; }
+        public DbSet<License> Licenses { get; set; }
+        public DbSet<LicenseType> LicenseTypes { get; set; }
+        public DbSet<Region> Regions {get;set;}
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
+        public DbSet<Worker> Workers { get; set; }
+        public DbSet<WorkersRole> WorkerRoles { get; set; }
+        public DbSet<InstanceType> InstanceTypes { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<ClientState> ClientStates { get; set; }
+        public DbSet<ClientType> ClientTypes { get; set; }
         
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -35,7 +35,6 @@ namespace Nano35.Instance.Processor.Services.Contexts
             FluentContext.InstanceType(modelBuilder);
             FluentContext.License(modelBuilder);
             FluentContext.LicenseType(modelBuilder);
-            FluentContext.SalleType(modelBuilder);
             FluentContext.Unit(modelBuilder);
             FluentContext.UnitType(modelBuilder);
             FluentContext.Worker(modelBuilder);

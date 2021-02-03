@@ -94,6 +94,7 @@ namespace Nano35.Instance.Processor.Configurations
                         e.Consumer<GetAllClientTypesConsumer>(provider);
                     });
                 }));
+                x.AddConsumer<CreateUnitConsumer>();
                 x.AddConsumer<CreateClientConsumer>();
                 x.AddConsumer<GetAllInstancesConsumer>();
                 x.AddConsumer<CreateInstanceConsumer>();

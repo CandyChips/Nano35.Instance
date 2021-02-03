@@ -78,8 +78,7 @@ namespace Nano35.Instance.Processor.Requests
                         Name = message.Name,
                         Comment = message.Comment
                     };
-                    await this._context.AddAsync(worker);
-                    _context.SaveChanges();
+                    await _context.AddAsync(worker, cancellationToken);
                     return new CreateWorkerSuccessResultContract();
                 }
                 return new CreateWorkerErrorResultContract();

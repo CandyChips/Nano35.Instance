@@ -67,7 +67,7 @@ namespace Nano35.Instance.Processor.Requests
                         Region = region,
                         RegionId = region.Id
                     };
-                    await this._context.AddAsync(instance);
+                    await _context.AddAsync(instance, cancellationToken);
                     var defaultUser = new Worker(){
                         Id = message.UserId,
                         Instance = instance,
@@ -75,7 +75,7 @@ namespace Nano35.Instance.Processor.Requests
                         Name = "Администратор системы",
                         Comment = ""
                     };
-                    await this._context.AddAsync(defaultUser);
+                    await _context.AddAsync(defaultUser, cancellationToken);
                     return new CreateInstanceSuccessResultContract();
                 }
                 catch (Exception e)

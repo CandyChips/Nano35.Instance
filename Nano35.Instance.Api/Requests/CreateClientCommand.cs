@@ -18,8 +18,7 @@ namespace Nano35.Instance.Api.Requests
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Guid SalleId { get; set; }
-        public float Salle { get; set; }
+        public double Salle { get; set; }
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         public Guid UserId { get; set; }

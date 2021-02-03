@@ -18,8 +18,7 @@ namespace Nano35.Instance.Processor.Requests
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Guid SalleId { get; set; }
-        public float Salle { get; set; }
+        public double Salle { get; set; }
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         public Guid UserId { get; set; }
@@ -35,7 +34,7 @@ namespace Nano35.Instance.Processor.Requests
             public string Message { get; set; }
         }
 
-        public class CreateClientHandler : 
+        public class CreateClientHandler :
             IRequestHandler<CreateClientCommand, ICreateClientResultContract>
         {
             private readonly ApplicationContext _context;
@@ -61,13 +60,13 @@ namespace Nano35.Instance.Processor.Requests
                         Name = message.Name,
                         Email = message.Email,
                         Phone = message.Phone,
+                        Salle = message.Salle,
                         Deleted = false,
                         WorkerId = message.UserId,
                         ClientStateId = message.ClientStateId,
                         ClientTypeId =  message.ClientTypeId
                     };
-                    await this._context.AddAsync(client);
-                    _context.SaveChanges();
+                    await _context.AddAsync(client, cancellationToken);
                     return new CreateClientSuccessResultContract();
                 }
                 catch (Exception e)

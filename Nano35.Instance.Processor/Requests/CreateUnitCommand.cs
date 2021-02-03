@@ -67,8 +67,7 @@ namespace Nano35.Instance.Processor.Requests
                         InstanceId = message.InstanceId,
                         UnitTypeId = message.UnitTypeId
                     };
-                    await this._context.AddAsync(unit);
-                    _context.SaveChanges();
+                    await _context.AddAsync(unit, cancellationToken);
                     return new CreateUnitSuccessResultContract();
                 }
                 catch (Exception e)
