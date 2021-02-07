@@ -1,11 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
+using Nano35.Instance.Api.Helpers;
+using Nano35.Instance.Api.Requests.CreateInstance;
+using Nano35.Instance.Api.Requests.GetAllInstances;
+using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
+using Nano35.Instance.Api.Requests.GetAllRegions;
+using Nano35.Instance.Api.Requests.GetInstanceById;
+using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -13,33 +18,31 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class InstancesController : ControllerBase
     {
-        private readonly ILogger<InstancesController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider  _services;
 
         public InstancesController(
-            ILogger<InstancesController> logger,
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
 
         [HttpGet]
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances(
-            [FromQuery] Guid userId, 
-            [FromQuery] Guid regionId,
-            [FromQuery] Guid instanceTypeId)
+            [FromQuery] GetAllInstancesHttpContext query)
         {
-            var request = new GetAllInstancesQuery()
-            {
-                UserId = userId,
-                RegionId = regionId,
-                InstanceTypeId = instanceTypeId
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllInstancesLogger>)_services.GetService(typeof(ILogger<GetAllInstancesLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllInstancesLogger(logger,
+                    new GetAllInstancesValidator(
+                        new GetAllInstancesRequest(bus))
+                    ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllInstancesSuccessResultContract success => Ok(success.Data),
@@ -51,12 +54,20 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetInstanceById/Id={id}")]
         public async Task<IActionResult> GetInstanceById(
-            [FromRoute] Guid id)
+            [FromRoute] GetInstanceByIdHttpContext query)
         {
-            var request = new GetInstanceByIdQuery() {InstanceId = id};
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetInstanceByIdLogger>)_services.GetService(typeof(ILogger<GetInstanceByIdLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result =
+                await new GetInstanceByIdLogger(logger,
+                    new GetInstanceByIdValidator(
+                        new GetInstanceByIdRequest(bus))
+                    ).Ask(query);
 
+            // Check response of get instance by id request
             return result switch
             {
                 IGetInstanceByIdSuccessResultContract success => Ok(success.Data),
@@ -69,10 +80,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllInstanceTypes")]
         public async Task<IActionResult> GetAllInstanceTypes()
         {
-            var request = new GetAllInstanceTypesQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllInstanceTypesLogger>)_services.GetService(typeof(ILogger<GetAllInstanceTypesLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result =
+                await new GetAllInstanceTypesLogger(logger,
+                    new GetAllInstanceTypesRequest(bus)
+                ).Ask(new GetAllInstanceTypesHttpContext());
 
+            // Check response of get all instance types request
             return result switch
             {
                 IGetAllInstanceTypesSuccessResultContract success => Ok(success.Data),
@@ -85,10 +103,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllRegions")]
         public async Task<IActionResult> GetAllRegions()
         {
-            var request = new GetAllRegionsQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllRegionsLogger>)_services.GetService(typeof(ILogger<GetAllRegionsLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result =
+                await new GetAllRegionsLogger(logger,
+                    new GetAllRegionsRequest(bus)
+                ).Ask(new GetAllRegionsHttpContext());
 
+            // Check responce
             return result switch
             {
                 IGetAllRegionsSuccessResultContract success => Ok(success.Data),
@@ -100,9 +125,21 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateInstance")]
         public async Task<IActionResult> CreateInstance(
-            [FromBody]CreateInstanceCommand command)
+            [FromBody]CreateInstanceHttpContext body)
         {
-            var result = await this._mediator.Send(command);
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<CreateInstanceLogger>)_services.GetService(typeof(ILogger<CreateInstanceLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateInstanceLogger(logger, 
+                    new CreateInstanceValidator(
+                        new CreateInstanceRequest(bus, auth))
+                    ).Ask(body);
+            
+            // Check responce
             return result switch
             {
                 ICreateInstanceSuccessResultContract => Ok(),

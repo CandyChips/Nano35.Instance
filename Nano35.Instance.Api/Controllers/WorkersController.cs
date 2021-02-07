@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Requests;
+using Nano35.Instance.Api.Requests.CreateWorker;
+using Nano35.Instance.Api.Requests.GetAllClients;
+using Nano35.Instance.Api.Requests.GetAllClientTypes;
+using Nano35.Instance.Api.Requests.GetAllWorkerRoles;
+using Nano35.Instance.Api.Requests.GetAllWorkers;
+using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -12,31 +19,31 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class WorkersController : ControllerBase
     {
-        private readonly ILogger<WorkersController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider  _services;
 
         public WorkersController(
-            ILogger<WorkersController> logger,
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
     
         [HttpGet]
         [Route("GetAllWorkers")]
         public async Task<IActionResult> GetAllWorkers(
-            [FromQuery] Guid roleId,
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllWorkersHttpContext query)
         {
-            var request = new GetAllWorkersQuery()
-            {
-                InstanceId = instanceId,
-                WorkersRoleId = roleId
-            };
-            
-            var result = await _mediator.Send(request);
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllWorkersLogger>)_services.GetService(typeof(ILogger<GetAllWorkersLogger>));
 
+            // Send request to pipeline
+            var result =
+                await new GetAllWorkersLogger(logger,
+                        new GetAllWorkersValidator(
+                            new GetAllWorkersRequest(bus))
+                    ).Ask(query);
+            
+            // Check response get all workers request
             return result switch
             {
                 IGetAllWorkersSuccessResultContract success => Ok(success.Data),
@@ -49,10 +56,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllWorkerRoles")]
         public async Task<IActionResult> GetAllWorkerRoles()
         {
-            var request = new GetAllWorkerRolesQuery();
-            
-            var result = await _mediator.Send(request);
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllWorkerRolesLogger>)_services.GetService(typeof(ILogger<GetAllWorkerRolesLogger>));
 
+            // Send request to pipeline
+            var result =
+                await new GetAllWorkerRolesLogger(logger,
+                    new GetAllWorkerRolesRequest(bus)
+                ).Ask(new GetAllWorkerRolesHttpContext());
+
+            // Check response of get all worker roles request
             return result switch
             {
                 IGetAllWorkerRolesSuccessResultContract success => Ok(success.Data),
@@ -60,14 +74,23 @@ namespace Nano35.Instance.Api.Controllers
                 _ => BadRequest()
             };
         }
-        
+
         [HttpPost]
         [Route("CreateWorker")]
         public async Task<IActionResult> CreateWorker(
-            [FromBody] CreateWorkerCommand command)
+            [FromBody]CreateWorkerHttpContext body)
         {
-            var result = await _mediator.Send(command);
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateWorkerLogger>)_services.GetService(typeof(ILogger<CreateWorkerLogger>));
+
+            // Send request to pipeline
+            var result = 
+                await new CreateWorkerLogger(logger, 
+                    new CreateWorkerValidator(
+                        new CreateWorkerRequest(bus))).Ask(body);
             
+            // Check response create worker request
             return result switch
             {
                 ICreateWorkerSuccessResultContract => Ok(),

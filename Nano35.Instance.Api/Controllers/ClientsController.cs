@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
+using Nano35.Instance.Api.Helpers;
+using Nano35.Instance.Api.Requests.CreateClient;
+using Nano35.Instance.Api.Requests.GetAllClients;
+using Nano35.Instance.Api.Requests.GetAllClientStates;
+using Nano35.Instance.Api.Requests.GetAllClientTypes;
+using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -13,33 +17,30 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
-        private readonly ILogger<ClientsController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider  _services;
 
-        public ClientsController(
-            ILogger<ClientsController> logger,
-            IMediator mediator)
+        public ClientsController(IServiceProvider  services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
     
         [HttpGet]
         [Route("GetAllClients")]
         public async Task<IActionResult> GetAllClients(
-            [FromQuery] Guid clientTypeId, 
-            [FromQuery] Guid clientStateId,
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllClientHttpContext query)
         {
-            var request = new GetAllClientsQuery()
-            {
-                ClientTypeId = clientTypeId,
-                ClientStateId = clientStateId,
-                InstanceId = instanceId
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllClientsLogger>)_services.GetService(typeof(ILogger<GetAllClientsLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result = 
+                await new GetAllClientsValidator(
+                    new GetAllClientsLogger(logger, 
+                        new GetAllClientsRequest(bus))
+                    ).Ask(query);
 
+            // Check response of get all clients request
             return result switch
             {
                 IGetAllClientsSuccessResultContract success => Ok(success.Data),
@@ -52,10 +53,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllClientTypes")]
         public async Task<IActionResult> GetAllClientTypes()
         {
-            var request = new GetAllClientTypesQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllClientTypesLogger>)_services.GetService(typeof(ILogger<GetAllClientTypesLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result = 
+                await new GetAllClientTypesLogger(logger, 
+                    new GetAllClientTypesRequest(bus)
+                    ).Ask(new GetAllClientTypesHttpContext());
 
+            // Check response of get all client types request
             return result switch
             {
                 IGetAllClientTypesSuccessResultContract success => Ok(success.Data),
@@ -68,10 +76,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllClientStates")]
         public async Task<IActionResult> GetAllClientStates()
         {
-            var request = new GetAllClientStatesQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllClientStatesLogger>)_services.GetService(typeof(ILogger<GetAllClientStatesLogger>));
             
-            var result = await _mediator.Send(request);
+            // Send request to pipeline
+            var result = 
+                await new GetAllClientStatesLogger(logger, 
+                    new GetAllClientStatesRequest(bus)
+                    ).Ask(new GetAllClientStatesHttpContext());
             
+            // Check response of get all client states request
             return result switch
             {
                 IGetAllClientStatesSuccessResultContract success => Ok(success.Data),
@@ -83,10 +98,21 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateClient")]
         public async Task<IActionResult> CreateClient(
-            [FromBody]CreateClientCommand command)
+            [FromBody]CreateClientHttpContext body)
         {
-            var result = await _mediator.Send(command);
+            // Setup configuration of pipeline
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<CreateClientLogger>) _services.GetService(typeof(ILogger<CreateClientLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateClientLogger(logger,  
+                    new CreateClientValidator(
+                        new CreateClientRequest(bus, auth))
+                    ).Ask(body);
 
+            // Check response of create client request
             return result switch
             {
                 ICreateClientSuccessResultContract => Ok(),

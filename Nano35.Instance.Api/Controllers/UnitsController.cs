@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests;
+using Nano35.Instance.Api.Requests.CreateUnit;
+using Nano35.Instance.Api.Requests.GetAllClients;
+using Nano35.Instance.Api.Requests.GetAllClientTypes;
+using Nano35.Instance.Api.Requests.GetAllUnits;
+using Nano35.Instance.Api.Requests.GetAllUnitTypes;
+using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -13,31 +21,31 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class UnitsController : ControllerBase
     {
-        private readonly ILogger<UnitsController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider  _services;
 
         public UnitsController(
-            ILogger<UnitsController> logger,
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
     
         [HttpGet]
         [Route("GetAllUnits")]
         public async Task<IActionResult> GetAllUnits(
-            [FromQuery] Guid instanceId,
-            [FromQuery] Guid unitTypeId)
+            [FromQuery] GetAllUnitsHttpContext query)
         {
-            var request = new GetAllUnitsQuery()
-            {
-                InstanceId = instanceId,
-                UnitTypeId = unitTypeId
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllUnitsLogger>)_services.GetService(typeof(ILogger<GetAllUnitsLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result =
+                await new GetAllUnitsLogger(logger,
+                    new GetAllUnitsValidator(
+                        new GetAllUnitsRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all units request
             return result switch
             {
                 IGetAllUnitsSuccessResultContract success => Ok(success.Data),
@@ -50,10 +58,17 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllUnitTypes")]
         public async Task<IActionResult> GetAllUnitTypes()
         {
-            var request = new GetAllUnitTypesQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllUnitTypesLogger>)_services.GetService(typeof(ILogger<GetAllUnitTypesLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result =
+                await new GetAllUnitTypesLogger(logger,
+                    new GetAllUnitTypesRequest(bus)
+                ).Ask(new GetAllGetAllUnitTypesHttpContext());
+            
+            // Check response of get all unit types request
             return result switch
             {
                 IGetAllUnitTypesSuccessResultContract success => Ok(success.Data),
@@ -65,10 +80,20 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateUnit")]
         public async Task<IActionResult> CreateUnit(
-            [FromBody]CreateUnitCommand request)
+            [FromBody]CreateUnitHttpContext body)
         {
-            var result = await _mediator.Send(request);
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<CreateUnitLogger>)_services.GetService(typeof(ILogger<CreateUnitLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateUnitLogger(logger, 
+                    new CreateUnitValidator(
+                        new CreateUnitRequest(bus, auth))).Ask(body);
 
+            // Check response of create unit request
             return result switch
             {
                 ICreateUnitSuccessResultContract => Ok(),
