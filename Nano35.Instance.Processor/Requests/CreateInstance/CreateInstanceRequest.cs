@@ -24,11 +24,10 @@ namespace Nano35.Instance.Processor.Requests.CreateInstance
             
         }
         
-        public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input,
+        public async Task<ICreateInstanceResultContract> Ask(
+            ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)
         {
-            var instanceType = this._context.InstanceTypes.Find(input.TypeId);
-            var region = this._context.Regions.Find(input.RegionId);
             var role = this._context.WorkerRoles.FirstOrDefault();
             var instance = new Models.Instance(){
                 Id = input.NewId,
@@ -36,12 +35,10 @@ namespace Nano35.Instance.Processor.Requests.CreateInstance
                 OrgName = input.Name,
                 OrgRealName = input.RealName,
                 CompanyInfo = input.Info,
-                InstanceType = instanceType,
-                InstanceTypeId = instanceType.Id,
-                Region = region,
-                RegionId = region.Id
+                InstanceTypeId = input.TypeId,
+                RegionId = input.RegionId
             };
-            await _context.AddAsync(instance);
+            await _context.AddAsync(instance, cancellationToken);
             var defaultUser = new Worker(){
                 Id = input.UserId,
                 Instance = instance,
@@ -49,7 +46,7 @@ namespace Nano35.Instance.Processor.Requests.CreateInstance
                 Name = "Администратор системы",
                 Comment = ""
             };
-            await _context.AddAsync(defaultUser);
+            await _context.AddAsync(defaultUser, cancellationToken);
             return new CreateInstanceSuccessResultContract();
         }
     }

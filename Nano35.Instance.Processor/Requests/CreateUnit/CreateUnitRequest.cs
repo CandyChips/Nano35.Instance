@@ -24,7 +24,8 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
             
         }
         
-        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+        public async Task<ICreateUnitResultContract> Ask(
+            ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             var unit = new Unit(){
@@ -39,7 +40,7 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
                 InstanceId = input.InstanceId,
                 UnitTypeId = input.UnitTypeId
             };
-            await _context.AddAsync(unit);
+            await _context.AddAsync(unit, cancellationToken);
             return new CreateUnitSuccessResultContract();
         }
     }

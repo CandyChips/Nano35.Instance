@@ -24,20 +24,21 @@ namespace Nano35.Instance.Processor.Requests.CreateInstance
             _context = context;
         }
 
-        public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input,
+        public async Task<ICreateInstanceResultContract> Ask(
+            ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            await using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var response = await _nextNode.Ask(input, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
                 return response;
             }
             catch
             {
-                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.RollbackAsync().ConfigureAwait(false);
                 return new CreateInstanceTransactionErrorResult{ Message = "Транзакция отменена"};
             }
         }

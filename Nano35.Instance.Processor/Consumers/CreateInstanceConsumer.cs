@@ -14,27 +14,29 @@ namespace Nano35.Instance.Processor.Consumers
         IConsumer<ICreateInstanceRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
         public CreateInstanceConsumer(
             IServiceProvider services)
         {
             _services = services;
         }
-        public async Task Consume(
-            ConsumeContext<ICreateInstanceRequestContract> context)
+        public async Task Consume(ConsumeContext<ICreateInstanceRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateInstanceLogger>)_services.GetService(typeof(ILogger<CreateInstanceLogger>));
-            
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateInstanceLogger>) _services.GetService(typeof(ILogger<CreateInstanceLogger>));
+
+            // Explore message of request
             var message = context.Message;
-            
-            var result =
-                await new CreateInstanceLogger(logger,
+
+            // Send request to pipeline
+            var result = 
+                await new CreateInstanceLogger(logger,  
                     new CreateInstanceValidator(
-                        new CreateInstanceTransaction(dbcontect,
-                            new CreateInstanceRequest(dbcontect)))
+                        new CreateInstanceTransaction(dbContext,
+                            new CreateInstanceRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             
+            // Check response of create instance request
             switch (result)
             {
                 case ICreateInstanceSuccessResultContract:

@@ -5,20 +5,27 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Requests.CreateWorker
 {
-    public class CreateWorkerTransactionErrorResult : ICreateWorkerErrorResultContract
+    public class CreateWorkerTransactionErrorResult :
+        ICreateWorkerErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class CreateWorkerTransaction :
-        IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>
+        IPipelineNode<
+            ICreateWorkerRequestContract, 
+            ICreateWorkerResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateWorkerRequestContract,
+            ICreateWorkerResultContract> _nextNode;
 
         public CreateWorkerTransaction(
             ApplicationContext context,
-            IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract> nextNode)
+            IPipelineNode<
+                ICreateWorkerRequestContract, 
+                ICreateWorkerResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;

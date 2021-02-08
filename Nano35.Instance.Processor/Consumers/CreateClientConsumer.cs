@@ -21,18 +21,22 @@ namespace Nano35.Instance.Processor.Consumers
         public async Task Consume(
             ConsumeContext<ICreateClientRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<CreateClientLogger>) _services.GetService(typeof(ILogger<CreateClientLogger>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new CreateClientLogger(logger,
-                    new CreateClientValidator(
-                        new CreateClientTransaction(dbcontect,
-                            new CreateClientRequest(dbcontect)))
-                ).Ask(message, context.CancellationToken);
 
+            // Explore message of request
+            var message = context.Message;
+
+            // Send request to pipeline
+            var result = 
+                await new CreateClientLogger(logger,  
+                    new CreateClientValidator(
+                        new CreateClientTransaction(dbContext,
+                            new CreateClientRequest(dbContext)))
+                    ).Ask(message, context.CancellationToken);
+            
+            // Check response of create client request
             switch (result)
             {
                 case ICreateClientSuccessResultContract:

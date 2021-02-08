@@ -17,7 +17,8 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
         private readonly IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> _nextNode;
 
         public CreateUnitTransaction(
-            IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> nextNode, ApplicationContext context)
+            ApplicationContext context,
+            IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
