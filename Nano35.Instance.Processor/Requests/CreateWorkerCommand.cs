@@ -56,8 +56,6 @@ namespace Nano35.Instance.Processor.Requests
                 CreateWorkerCommand message, 
                 CancellationToken cancellationToken)
             {
-                var instance = this._context.Instances.FirstOrDefault(f => f.Id == message.InstanceId);
-                var role = this._context.WorkerRoles.FirstOrDefault(f => f.Id == message.RoleId);
                 var client = _bus.CreateRequestClient<IRegisterRequestContract>(TimeSpan.FromSeconds(1000));
                 var response = await client
                     .GetResponse<IRegisterSuccessResultContract, IRegisterErrorResultContract>(new
@@ -69,19 +67,19 @@ namespace Nano35.Instance.Processor.Requests
                         PasswordConfirm = message.PasswordConfirm
                     }, cancellationToken);
 
-                if (response.Is(out Response<IRegisterSuccessResultContract> successResponse))
+                if (response.Is(out Response<IRegisterErrorResultContract> errorResponse))
                 {
-                    var worker = new Worker(){
-                        Id = message.NewId,
-                        InstanceId = instance.Id,
-                        WorkersRole = role,
-                        Name = message.Name,
-                        Comment = message.Comment
-                    };
-                    await _context.AddAsync(worker, cancellationToken);
-                    return new CreateWorkerSuccessResultContract();
+                    return new CreateWorkerErrorResultContract();
                 }
-                return new CreateWorkerErrorResultContract();
+                var worker = new Worker(){
+                    Id = message.NewId,
+                    InstanceId = message.InstanceId,
+                    WorkersRoleId = message.RoleId,
+                    Name = message.Name,
+                    Comment = message.Comment
+                };
+                await _context.AddAsync(worker, cancellationToken);
+                return new CreateWorkerSuccessResultContract();
             }
         }
     }

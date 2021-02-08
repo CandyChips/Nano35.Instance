@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests;
+using Nano35.Instance.Processor.Requests.CreateClient;
 
 namespace Nano35.Instance.Processor.Consumers
 {
