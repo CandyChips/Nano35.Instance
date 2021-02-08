@@ -1,12 +1,9 @@
-﻿using System;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Nano35.Contracts;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Processor.Services.Contexts;
 
-namespace Nano35.Instance.Processor.Requests.CreateClient
+namespace Nano35.Instance.Processor.Requests.CreateUnit
 {
     public class CreateUnitTransactionErrorResult : ICreateUnitErrorResultContract
     {
@@ -26,13 +23,13 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             _context = context;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(
-            ICreateUnitRequestContract input)
+        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+            CancellationToken cancellationToken)
         {
             await using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var response = await _nextNode.Ask(input);
+                var response = await _nextNode.Ask(input, cancellationToken);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return response;

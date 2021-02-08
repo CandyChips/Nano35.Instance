@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 
-namespace Nano35.Instance.Processor.Requests.CreateClient
+namespace Nano35.Instance.Processor.Requests.CreateUnit
 {
     public class CreateUnitRequest :
         IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract>
@@ -26,8 +24,8 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             
         }
         
-        public async Task<ICreateUnitResultContract> Ask(
-            ICreateUnitRequestContract input)
+        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+            CancellationToken cancellationToken)
         {
             var unit = new Unit(){
                 Id = input.Id,

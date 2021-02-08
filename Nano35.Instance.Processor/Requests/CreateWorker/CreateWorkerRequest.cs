@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Identity.Artifacts;
@@ -6,7 +7,7 @@ using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 
-namespace Nano35.Instance.Api.Requests.CreateWorker
+namespace Nano35.Instance.Processor.Requests.CreateWorker
 {
     public class CreateWorkerRequest :
         IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>
@@ -34,8 +35,8 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
             public string Message { get; set; }
         }
         
-        public async Task<ICreateWorkerResultContract> Ask(
-            ICreateWorkerRequestContract input)
+        public async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input,
+            CancellationToken cancellationToken)
         {
             var client = _bus.CreateRequestClient<IRegisterRequestContract>(TimeSpan.FromSeconds(1000));
             var response = await client

@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
 
-namespace Nano35.Instance.Api.Requests.CreateWorker
+namespace Nano35.Instance.Processor.Requests.CreateWorker
 {
     public class CreateWorkerValidatorErrorResult : ICreateWorkerErrorResultContract
     {
@@ -19,14 +20,14 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateWorkerResultContract> Ask(
-            ICreateWorkerRequestContract input)
+        public async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input,
+            CancellationToken cancellationToken)
         {
             if (false)
             {
                 return new CreateWorkerValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await _nextNode.Ask(input, cancellationToken);
         }
     }
 }

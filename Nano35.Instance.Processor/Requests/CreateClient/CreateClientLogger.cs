@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 
 namespace Nano35.Instance.Processor.Requests.CreateClient
 {
@@ -20,11 +20,11 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             _logger = logger;
         }
 
-        public async Task<ICreateClientResultContract> Ask(
-            ICreateClientRequestContract input)
+        public async Task<ICreateClientResultContract> Ask(ICreateClientRequestContract input,
+            CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateClientLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now}");
             return result;
         }

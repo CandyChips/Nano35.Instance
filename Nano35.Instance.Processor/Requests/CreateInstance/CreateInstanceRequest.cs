@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 
-namespace Nano35.Instance.Processor.Requests.CreateClient
+namespace Nano35.Instance.Processor.Requests.CreateInstance
 {
     public class CreateInstanceRequest :
         IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>
@@ -26,8 +24,8 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             
         }
         
-        public async Task<ICreateInstanceResultContract> Ask(
-            ICreateInstanceRequestContract input)
+        public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input,
+            CancellationToken cancellationToken)
         {
             var instanceType = this._context.InstanceTypes.Find(input.TypeId);
             var region = this._context.Regions.Find(input.RegionId);

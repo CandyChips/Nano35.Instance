@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 
 namespace Nano35.Instance.Processor.Requests.CreateUnit
 {
@@ -20,13 +20,12 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
             _logger = logger;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(
-            ICreateUnitRequestContract input)
+        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+            CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateUnitLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"CreateUnitLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
             return result;
         }
     }

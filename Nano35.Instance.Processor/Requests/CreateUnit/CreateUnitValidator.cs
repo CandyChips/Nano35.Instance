@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
 
-namespace Nano35.Instance.Api.Requests.CreateUnit
+namespace Nano35.Instance.Processor.Requests.CreateUnit
 {
     public class CreateUnitValidatorErrorResult : ICreateUnitErrorResultContract
     {
@@ -19,14 +20,14 @@ namespace Nano35.Instance.Api.Requests.CreateUnit
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(
-            ICreateUnitRequestContract input)
+        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+            CancellationToken cancellationToken)
         {
             if (false)
             {
                 return new CreateUnitValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await _nextNode.Ask(input, cancellationToken);
         }
     }
 }

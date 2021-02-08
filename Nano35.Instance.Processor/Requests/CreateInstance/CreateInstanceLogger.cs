@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 
-namespace Nano35.Instance.Processor.Requests.CreateClient
+namespace Nano35.Instance.Processor.Requests.CreateInstance
 {
     public class CreateInstanceLogger :
         IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>
@@ -20,11 +20,11 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             _logger = logger;
         }
 
-        public async Task<ICreateInstanceResultContract> Ask(
-            ICreateInstanceRequestContract input)
+        public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input,
+            CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateInstanceLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"CreateInstanceLogger ends on: {DateTime.Now}");
             return result;
         }

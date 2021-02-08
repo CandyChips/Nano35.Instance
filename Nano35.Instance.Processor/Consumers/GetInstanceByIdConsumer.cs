@@ -1,31 +1,40 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests;
+using Nano35.Instance.Processor.Requests.GetInstanceById;
+using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Consumers
 {
     public class GetInstanceByIdConsumer : 
         IConsumer<IGetInstanceByIdRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
-
+        private readonly IServiceProvider  _services;
+        
         public GetInstanceByIdConsumer(
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
 
 
         public async Task Consume(
             ConsumeContext<IGetInstanceByIdRequestContract> context)
         {
-            var message = context.Message;
-
-            var request = new GetInstanceByIdQuery(context.Message);
+            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<GetInstanceByIdLogger>) _services.GetService(typeof(ILogger<GetInstanceByIdLogger>));
             
-            var result = await _mediator.Send(request);
+            var message = context.Message;
+            
+            var result =
+                await new GetInstanceByIdLogger(logger,
+                    new GetInstanceByIdValidator(
+                        new GetInstanceByIdRequest(dbcontect))
+                ).Ask(message, context.CancellationToken);
             
             switch (result)
             {

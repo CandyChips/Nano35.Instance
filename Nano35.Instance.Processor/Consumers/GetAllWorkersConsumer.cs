@@ -1,29 +1,39 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests;
+using Nano35.Instance.Processor.Requests.GetAllWorkers;
+using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Consumers
 {
     public class GetAllWorkersConsumer : 
         IConsumer<IGetAllWorkersRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
-
+        private readonly IServiceProvider  _services;
+        
         public GetAllWorkersConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
         
         public async Task Consume(
             ConsumeContext<IGetAllWorkersRequestContract> context)
         {
-            var message = context.Message;
-
-            var request = new GetAllWorkersQuery(message);
+            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllWorkersLogger>) _services.GetService(typeof(ILogger<GetAllWorkersLogger>));
             
-            var result = await _mediator.Send(request);
+            var message = context.Message;
+            
+            var result =
+                await new GetAllWorkersLogger(logger,
+                    new GetAllWorkersValidator(
+                        new GetAllWorkersRequest(dbcontect, bus))
+                ).Ask(message, context.CancellationToken);
             
             switch (result)
             {

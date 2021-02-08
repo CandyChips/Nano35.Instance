@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 
 namespace Nano35.Instance.Processor.Requests.CreateClient
 {
@@ -20,14 +20,13 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateClientResultContract> Ask(
-            ICreateClientRequestContract input)
+        public async Task<ICreateClientResultContract> Ask(ICreateClientRequestContract input, CancellationToken cancellationToken)
         {
             if (false)
             {
                 return new CreateClientValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await _nextNode.Ask(input, cancellationToken);
         }
     }
 }

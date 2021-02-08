@@ -1,35 +1,39 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests;
+using Nano35.Instance.Processor.Requests.CreateClient;
+using Nano35.Instance.Processor.Requests.CreateInstance;
+using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Consumers
 {
     public class CreateInstanceConsumer : 
         IConsumer<ICreateInstanceRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider  _services;
+        
         public CreateInstanceConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
-        public async Task Consume(ConsumeContext<ICreateInstanceRequestContract> context)
+        public async Task Consume(
+            ConsumeContext<ICreateInstanceRequestContract> context)
         {
+            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateInstanceLogger>)_services.GetService(typeof(ILogger<CreateInstanceLogger>));
+            
             var message = context.Message;
-            var request = new CreateInstanceCommand()
-            {
-                NewId = message.NewId,
-                UserId = message.UserId,
-                Name = message.Name,
-                RealName = message.RealName,
-                Email = message.Email,
-                Info = message.Info,
-                Phone = message.Phone,
-                TypeId = message.TypeId,
-                RegionId = message.RegionId
-            };
-            var result = await _mediator.Send(request);
+            
+            var result =
+                await new CreateInstanceLogger(logger,
+                    new CreateInstanceValidator(
+                        new CreateInstanceTransaction(dbcontect,
+                            new CreateInstanceRequest(dbcontect)))
+                ).Ask(message, context.CancellationToken);
             
             switch (result)
             {

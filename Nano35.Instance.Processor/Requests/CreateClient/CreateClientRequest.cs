@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 
@@ -25,8 +25,8 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             
         }
         
-        public async Task<ICreateClientResultContract> Ask(
-            ICreateClientRequestContract input)
+        public async Task<ICreateClientResultContract> Ask(ICreateClientRequestContract input,
+            CancellationToken cancellationToken)
         {
             var client = new Client(){
                 Id = input.NewId,
