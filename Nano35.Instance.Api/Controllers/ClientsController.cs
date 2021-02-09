@@ -19,11 +19,24 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
+        /// <summary>
+        /// Controller provide IServiceProvider from asp net core DI
+        /// for registration services to pipe nodes
+        /// </summary>
         public ClientsController(IServiceProvider  services)
         {
             _services = services;
         }
     
+        /// <summary>
+        /// Controllers accept a HttpContext type
+        /// All controllers actions works by pipelines
+        /// Implementation works with 3 steps
+        /// 1. Setup DI services from IServiceProvider;
+        /// 2. Building pipeline like a onion
+        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
+        /// 3. Response pattern match of pipeline response;
+        /// </summary>
         [HttpGet]
         [Route("GetAllClients")]
         public async Task<IActionResult> GetAllClients(

@@ -22,10 +22,9 @@ namespace Nano35.Instance.Api.Requests.GetAllClients
         public async Task<IGetAllClientsResultContract> Ask(
             IGetAllClientsRequestContract input)
         {
-            _logger.LogInformation($"GetAllClientsLogger starts on: {DateTime.Now}");
+            _logger.LogInformation($"Get all clients logger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"GetAllClientsLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
+            _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with data {result}");
             return result;
         }
     }

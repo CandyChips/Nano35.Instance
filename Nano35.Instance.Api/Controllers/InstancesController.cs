@@ -20,12 +20,25 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
+        /// <summary>
+        /// Controller provide IServiceProvider from asp net core DI
+        /// for registration services to pipe nodes
+        /// </summary>
         public InstancesController(
             IServiceProvider services)
         {
             _services = services;
         }
-
+    
+        /// <summary>
+        /// Controllers accept a HttpContext type
+        /// All controllers actions works by pipelines
+        /// Implementation works with 3 steps
+        /// 1. Setup DI services from IServiceProvider;
+        /// 2. Building pipeline like a onion
+        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
+        /// 3. Response pattern match of pipeline response;
+        /// </summary>
         [HttpGet]
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances(
@@ -45,8 +58,10 @@ namespace Nano35.Instance.Api.Controllers
             // Check response of get all instances request
             return result switch
             {
-                IGetAllInstancesSuccessResultContract success => Ok(success.Data),
-                IGetAllInstancesErrorResultContract error => BadRequest(error.Message),
+                IGetAllInstancesSuccessResultContract success =>
+                    Ok(success.Data),
+                IGetAllInstancesErrorResultContract error => 
+                    BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
@@ -70,8 +85,10 @@ namespace Nano35.Instance.Api.Controllers
             // Check response of get instance by id request
             return result switch
             {
-                IGetInstanceByIdSuccessResultContract success => Ok(success.Data),
-                IGetInstanceByIdErrorResultContract error => BadRequest(error.Message),
+                IGetInstanceByIdSuccessResultContract success => 
+                    Ok(success.Data),
+                IGetInstanceByIdErrorResultContract error =>
+                    BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
@@ -93,8 +110,10 @@ namespace Nano35.Instance.Api.Controllers
             // Check response of get all instance types request
             return result switch
             {
-                IGetAllInstanceTypesSuccessResultContract success => Ok(success.Data),
-                IGetAllInstanceTypesErrorResultContract error => BadRequest(error.Message),
+                IGetAllInstanceTypesSuccessResultContract success => 
+                    Ok(success.Data),
+                IGetAllInstanceTypesErrorResultContract error => 
+                    BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
@@ -116,8 +135,10 @@ namespace Nano35.Instance.Api.Controllers
             // Check responce
             return result switch
             {
-                IGetAllRegionsSuccessResultContract success => Ok(success.Data),
-                IGetAllRegionsErrorResultContract error => BadRequest(error.Message),
+                IGetAllRegionsSuccessResultContract success => 
+                    Ok(success.Data),
+                IGetAllRegionsErrorResultContract error => 
+                    BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

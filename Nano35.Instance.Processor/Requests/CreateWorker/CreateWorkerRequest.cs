@@ -10,7 +10,9 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.Requests.CreateWorker
 {
     public class CreateWorkerRequest :
-        IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>
+        IPipelineNode<
+            ICreateWorkerRequestContract,
+            ICreateWorkerResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -35,19 +37,22 @@ namespace Nano35.Instance.Processor.Requests.CreateWorker
             public string Message { get; set; }
         }
         
-        public async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input,
+        public async Task<ICreateWorkerResultContract> Ask(
+            ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
             var client = _bus.CreateRequestClient<IRegisterRequestContract>(TimeSpan.FromSeconds(1000));
             var response = await client
-                .GetResponse<IRegisterSuccessResultContract, IRegisterErrorResultContract>(new
+                .GetResponse<
+                    IRegisterSuccessResultContract, 
+                    IRegisterErrorResultContract>(new
                 {
                     NewUserId = input.NewId,
                     Phone = input.Phone,
                     Email = input.Email,
                     Password = input.Password,
                     PasswordConfirm = input.PasswordConfirm
-                });
+                }, cancellationToken);
 
             if (response.Is(out Response<IRegisterErrorResultContract> errorResponse))
             {
@@ -60,7 +65,7 @@ namespace Nano35.Instance.Processor.Requests.CreateWorker
                 Name = input.Name,
                 Comment = input.Comment
             };
-            await _context.AddAsync(worker);
+            await _context.AddAsync(worker, cancellationToken);
             return new CreateWorkerSuccessResultContract();
         }
     }
