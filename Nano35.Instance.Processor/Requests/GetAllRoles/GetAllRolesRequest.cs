@@ -9,7 +9,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.GetAllRoles
 {
     public class GetAllRolesRequest :
-        IPipelineNode<IGetAllRolesRequestContract, IGetAllRolesResultContract>
+        IPipelineNode<
+            IGetAllRolesRequestContract, 
+            IGetAllRolesResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -25,13 +27,8 @@ namespace Nano35.Instance.Processor.Requests.GetAllRoles
             public IEnumerable<IRoleViewModel> Data { get; set; }
         }
 
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllRolesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-
-        public async Task<IGetAllRolesResultContract> Ask(IGetAllRolesRequestContract input,
+        public async Task<IGetAllRolesResultContract> Ask(
+            IGetAllRolesRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await this._context.Regions

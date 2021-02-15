@@ -8,12 +8,12 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
         public string Message { get; set; }
     }
     
-    public class GetAllUnitsValidator:
+    public class ValidatedGetAllUnitsRequest:
         IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
     {
         private readonly IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> _nextNode;
 
-        public GetAllUnitsValidator(
+        public ValidatedGetAllUnitsRequest(
             IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> nextNode)
         {
             _nextNode = nextNode;

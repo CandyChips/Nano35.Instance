@@ -5,14 +5,14 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllRegions
 {
-    public class GetAllRegionsLogger :
+    public class LoggedGetAllRegionsRequest :
         IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>
     {
-        private readonly ILogger<GetAllRegionsLogger> _logger;
+        private readonly ILogger<LoggedGetAllRegionsRequest> _logger;
         private readonly IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract> _nextNode;
 
-        public GetAllRegionsLogger(
-            ILogger<GetAllRegionsLogger> logger,
+        public LoggedGetAllRegionsRequest(
+            ILogger<LoggedGetAllRegionsRequest> logger,
             IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract> nextNode)
         {
             _nextNode = nextNode;

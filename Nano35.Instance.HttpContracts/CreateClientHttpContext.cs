@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.HttpContracts
@@ -13,6 +14,7 @@ namespace Nano35.Instance.HttpContracts
         public double Salle { get; set; }
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
+        [JsonIgnore]
         public Guid UserId { get; set; }
         public Guid InstanceId { get; set; }
     }

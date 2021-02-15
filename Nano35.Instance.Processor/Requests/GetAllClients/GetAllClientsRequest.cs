@@ -11,7 +11,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.GetAllClients
 {
     public class GetAllClientsRequest :
-        IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>
+        IPipelineNode<
+            IGetAllClientsRequestContract,
+            IGetAllClientsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -26,15 +28,10 @@ namespace Nano35.Instance.Processor.Requests.GetAllClients
         {
             public IEnumerable<IClientViewModel> Data { get; set; }
         }
-
-        private class GetAllClientsErrorResultContract : 
-            IGetAllClientsErrorResultContract
-        {
-            public string Message { get; set; }
-        }
         
-        public async Task<IGetAllClientsResultContract> Ask
-            (IGetAllClientsRequestContract input, CancellationToken cancellationToken)
+        public async Task<IGetAllClientsResultContract> Ask(
+            IGetAllClientsRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var result = await (_context.Clients
                 .Where(c => c.InstanceId == input.InstanceId)

@@ -5,14 +5,14 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllClients
 {
-    public class GetAllClientsLogger :
+    public class LoggedGetAllClientsRequest :
         IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>
     {
-        private readonly ILogger<GetAllClientsLogger> _logger;
+        private readonly ILogger<LoggedGetAllClientsRequest> _logger;
         private readonly IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> _nextNode;
 
-        public GetAllClientsLogger(
-            ILogger<GetAllClientsLogger> logger,
+        public LoggedGetAllClientsRequest(
+            ILogger<LoggedGetAllClientsRequest> logger,
             IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> nextNode)
         {
             _nextNode = nextNode;
@@ -24,7 +24,8 @@ namespace Nano35.Instance.Api.Requests.GetAllClients
         {
             _logger.LogInformation($"Get all clients logger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with data {result}");
+            // Check response of get all client types request
+            _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with responce {result}");
             return result;
         }
     }

@@ -8,12 +8,12 @@ namespace Nano35.Instance.Api.Requests.CreateInstance
         public string Message { get; set; }
     }
     
-    public class CreateInstanceValidator:
+    public class ValidatedCreateInstanceRequest:
         IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>
     {
         private readonly IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract> _nextNode;
 
-        public CreateInstanceValidator(
+        public ValidatedCreateInstanceRequest(
             IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract> nextNode)
         {
             _nextNode = nextNode;

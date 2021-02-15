@@ -1,17 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Requests.CreateWorker
 {
-    public class CreateWorkerTransactionErrorResult :
-        ICreateWorkerErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
-    public class CreateWorkerTransaction :
+    public class TransactedCreateWorkerRequest :
         IPipelineNode<
             ICreateWorkerRequestContract, 
             ICreateWorkerResultContract>
@@ -21,7 +16,7 @@ namespace Nano35.Instance.Processor.Requests.CreateWorker
             ICreateWorkerRequestContract,
             ICreateWorkerResultContract> _nextNode;
 
-        public CreateWorkerTransaction(
+        public TransactedCreateWorkerRequest(
             ApplicationContext context,
             IPipelineNode<
                 ICreateWorkerRequestContract, 
@@ -43,10 +38,10 @@ namespace Nano35.Instance.Processor.Requests.CreateWorker
                 await transaction.CommitAsync(cancellationToken);
                 return response;
             }
-            catch
+            catch(Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateWorkerTransactionErrorResult{ Message = "Транзакция отменена"};
+                throw new Exception("Транзакция отменена", ex);
             }
         }
     }

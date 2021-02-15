@@ -27,16 +27,16 @@ namespace Nano35.Instance.Processor.Consumers
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateWorkerLogger>) _services.GetService(typeof(ILogger<CreateWorkerLogger>));
+            var logger = (ILogger<LoggedCreateWorkerRequest>) _services.GetService(typeof(ILogger<LoggedCreateWorkerRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result = 
-                await new CreateWorkerLogger(logger,  
-                    new CreateWorkerValidator(
-                        new CreateWorkerTransaction(dbContext,
+                await new LoggedCreateWorkerRequest(logger,  
+                    new ValidatedCreateWorkerRequest(
+                        new TransactedCreateWorkerRequest(dbContext,
                             new CreateWorkerRequest(bus, dbContext)))
                     ).Ask(message, context.CancellationToken);
             

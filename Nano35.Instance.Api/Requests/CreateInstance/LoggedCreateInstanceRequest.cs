@@ -5,18 +5,18 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.CreateInstance
 {
-    public class CreateInstanceLogger :
+    public class LoggedCreateInstanceRequest :
         IPipelineNode<
             ICreateInstanceRequestContract, 
             ICreateInstanceResultContract>
     {
-        private readonly ILogger<CreateInstanceLogger> _logger;
+        private readonly ILogger<LoggedCreateInstanceRequest> _logger;
         private readonly IPipelineNode<
             ICreateInstanceRequestContract,
             ICreateInstanceResultContract> _nextNode;
 
-        public CreateInstanceLogger(
-            ILogger<CreateInstanceLogger> logger,
+        public LoggedCreateInstanceRequest(
+            ILogger<LoggedCreateInstanceRequest> logger,
             IPipelineNode<
                 ICreateInstanceRequestContract,
                 ICreateInstanceResultContract> nextNode)

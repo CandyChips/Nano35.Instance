@@ -49,12 +49,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllUnitsLogger>)_services.GetService(typeof(ILogger<GetAllUnitsLogger>));
+            var logger = (ILogger<LoggedGetAllUnitsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitsRequest>));
             
             // Send request to pipeline
             var result =
-                await new GetAllUnitsLogger(logger,
-                    new GetAllUnitsValidator(
+                await new LoggedGetAllUnitsRequest(logger,
+                    new ValidatedGetAllUnitsRequest(
                         new GetAllUnitsRequest(bus))
                 ).Ask(query);
             
@@ -73,11 +73,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllUnitTypesLogger>)_services.GetService(typeof(ILogger<GetAllUnitTypesLogger>));
+            var logger = (ILogger<LoggedGetAllUnitTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitTypesRequest>));
             
             // Send request to pipeline
             var result =
-                await new GetAllUnitTypesLogger(logger,
+                await new LoggedGetAllUnitTypesRequest(logger,
                     new GetAllUnitTypesRequest(bus)
                 ).Ask(new GetAllGetAllUnitTypesHttpContext());
             
@@ -98,13 +98,15 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
-            var logger = (ILogger<CreateUnitLogger>)_services.GetService(typeof(ILogger<CreateUnitLogger>));
+            var logger = (ILogger<LoggedCreateUnitRequest>)_services.GetService(typeof(ILogger<LoggedCreateUnitRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateUnitLogger(logger, 
-                    new CreateUnitValidator(
-                        new CreateUnitRequest(bus, auth))).Ask(body);
+                await new LoggedCreateUnitRequest(logger, 
+                    new ValidatedCreateUnitRequest(
+                        new CreateUnitRequest(bus, auth)
+                        )
+                    ).Ask(body);
 
             // Check response of create unit request
             return result switch

@@ -7,20 +7,27 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.GetAllClientsTypes
 {
     public class GetAllClientTypesLogger :
-        IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>
+        IPipelineNode<
+            IGetAllClientTypesRequestContract,
+            IGetAllClientTypesResultContract>
     {
         private readonly ILogger<GetAllClientTypesLogger> _logger;
-        private readonly IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllClientTypesRequestContract, 
+            IGetAllClientTypesResultContract> _nextNode;
 
         public GetAllClientTypesLogger(
             ILogger<GetAllClientTypesLogger> logger,
-            IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllClientTypesRequestContract, 
+                IGetAllClientTypesResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllClientTypesResultContract> Ask(IGetAllClientTypesRequestContract input,
+        public async Task<IGetAllClientTypesResultContract> Ask(
+            IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllClientTypesLogger starts on: {DateTime.Now}");

@@ -4,23 +4,31 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.GetAllInstanceTypes
 {
-    public class GetAllInstanceTypesValidatorErrorResult : IGetAllInstanceTypesErrorResultContract
+    public class GetAllInstanceTypesValidatorErrorResult : 
+        IGetAllInstanceTypesErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class GetAllInstanceTypesValidator:
-        IPipelineNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>
+        IPipelineNode<
+            IGetAllInstanceTypesRequestContract,
+            IGetAllInstanceTypesResultContract>
     {
-        private readonly IPipelineNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllInstanceTypesRequestContract, 
+            IGetAllInstanceTypesResultContract> _nextNode;
 
         public GetAllInstanceTypesValidator(
-            IPipelineNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllInstanceTypesRequestContract,
+                IGetAllInstanceTypesResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllInstanceTypesResultContract> Ask(IGetAllInstanceTypesRequestContract input,
+        public async Task<IGetAllInstanceTypesResultContract> Ask(
+            IGetAllInstanceTypesRequestContract input,
             CancellationToken cancellationToken)
         {
             if (false)

@@ -35,7 +35,7 @@ namespace Nano35.Instance.Processor.Models
         {
             //Primary key
             modelBuilder.Entity<Unit>()
-                .HasKey(u => u.Id);   
+                .HasKey(u => new { u.Id });   
             
             //Data
             modelBuilder.Entity<Unit>()

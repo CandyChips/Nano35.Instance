@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Api.Requests.CreateWorker;
 using Nano35.Instance.Api.Requests.GetAllClients;
@@ -47,14 +48,15 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllWorkersLogger>)_services.GetService(typeof(ILogger<GetAllWorkersLogger>));
+            var logger = (ILogger<LoggedGetAllWorkersRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
 
             // Send request to pipeline
             var result =
-                await new GetAllWorkersLogger(logger,
-                        new GetAllWorkersValidator(
-                            new GetAllWorkersRequest(bus))
-                    ).Ask(query);
+                await new LoggedGetAllWorkersRequest(logger,
+                        new ValidatedGetAllWorkersRequest(
+                            new GetAllWorkersRequest(bus)
+                            )
+                        ).Ask(query);
             
             // Check response get all workers request
             return result switch
@@ -71,11 +73,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllWorkerRolesLogger>)_services.GetService(typeof(ILogger<GetAllWorkerRolesLogger>));
+            var logger = (ILogger<LoggedGetAllWorkerRolesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkerRolesRequest>));
 
             // Send request to pipeline
             var result =
-                await new GetAllWorkerRolesLogger(logger,
+                await new LoggedGetAllWorkerRolesRequest(logger,
                     new GetAllWorkerRolesRequest(bus)
                 ).Ask(new GetAllWorkerRolesHttpContext());
 
@@ -95,13 +97,16 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateWorkerLogger>)_services.GetService(typeof(ILogger<CreateWorkerLogger>));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedCreateWorkerRequest>)_services.GetService(typeof(ILogger<LoggedCreateWorkerRequest>));
 
             // Send request to pipeline
             var result = 
-                await new CreateWorkerLogger(logger, 
-                    new CreateWorkerValidator(
-                        new CreateWorkerRequest(bus))).Ask(body);
+                await new LoggedCreateWorkerRequest(logger, 
+                    new ValidatedCreateWorkerRequest(
+                        new CreateWorkerRequest(bus, auth)
+                        )
+                    ).Ask(body);
             
             // Check response create worker request
             return result switch

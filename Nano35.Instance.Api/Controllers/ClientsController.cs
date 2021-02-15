@@ -44,12 +44,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllClientsLogger>)_services.GetService(typeof(ILogger<GetAllClientsLogger>));
+            var logger = (ILogger<LoggedGetAllClientsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientsRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllClientsValidator(
-                    new GetAllClientsLogger(logger, 
+                await new ValidatedGetAllClientsRequest(
+                    new LoggedGetAllClientsRequest(logger, 
                         new GetAllClientsRequest(bus))
                     ).Ask(query);
 
@@ -68,11 +68,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllClientTypesLogger>)_services.GetService(typeof(ILogger<GetAllClientTypesLogger>));
+            var logger = (ILogger<LoggedGetAllClientTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientTypesRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllClientTypesLogger(logger, 
+                await new LoggedGetAllClientTypesRequest(logger, 
                     new GetAllClientTypesRequest(bus)
                     ).Ask(new GetAllClientTypesHttpContext());
 
@@ -91,11 +91,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllClientStatesLogger>)_services.GetService(typeof(ILogger<GetAllClientStatesLogger>));
+            var logger = (ILogger<LoggedGetAllClientStates>)_services.GetService(typeof(ILogger<LoggedGetAllClientStates>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllClientStatesLogger(logger, 
+                await new LoggedGetAllClientStates(logger, 
                     new GetAllClientStatesRequest(bus)
                     ).Ask(new GetAllClientStatesHttpContext());
             
@@ -116,13 +116,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
-            var logger = (ILogger<CreateClientLogger>) _services.GetService(typeof(ILogger<CreateClientLogger>));
+            var logger = (ILogger<LoggedCreateClientRequest>) _services.GetService(typeof(ILogger<LoggedCreateClientRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateClientLogger(logger,  
-                    new CreateClientValidator(
-                        new CreateClientRequest(bus, auth))
+                await new LoggedCreateClientRequest(logger,  
+                    new ValidatedCreateClientRequest(
+                        new CreateClientRequest(bus, auth)
+                        )
                     ).Ask(body);
 
             // Check response of create client request

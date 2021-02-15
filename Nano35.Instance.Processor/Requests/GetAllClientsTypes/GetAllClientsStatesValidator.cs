@@ -4,23 +4,31 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.GetAllClientsTypes
 {
-    public class GetAllClientTypesValidatorErrorResult : IGetAllClientTypesErrorResultContract
+    public class GetAllClientTypesValidatorErrorResult : 
+        IGetAllClientTypesErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class GetAllClientTypesValidator:
-        IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>
+        IPipelineNode<
+            IGetAllClientTypesRequestContract, 
+            IGetAllClientTypesResultContract>
     {
-        private readonly IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllClientTypesRequestContract,
+            IGetAllClientTypesResultContract> _nextNode;
 
         public GetAllClientTypesValidator(
-            IPipelineNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllClientTypesRequestContract,
+                IGetAllClientTypesResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllClientTypesResultContract> Ask(IGetAllClientTypesRequestContract input,
+        public async Task<IGetAllClientTypesResultContract> Ask(
+            IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {
             if (false)

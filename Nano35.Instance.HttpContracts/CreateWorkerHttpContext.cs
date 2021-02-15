@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.HttpContracts
@@ -8,6 +9,8 @@ namespace Nano35.Instance.HttpContracts
     {
         public Guid NewId { get; set; }
         public Guid InstanceId { get; set; }
+        [JsonIgnore]
+        public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }

@@ -46,12 +46,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllInstancesLogger>)_services.GetService(typeof(ILogger<GetAllInstancesLogger>));
+            var logger = (ILogger<LoggedGetAllInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstancesRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllInstancesLogger(logger,
-                    new GetAllInstancesValidator(
+                await new LoggedGetAllInstancesRequest(logger,
+                    new ValidatedGetAllInstancesRequest(
                         new GetAllInstancesRequest(bus))
                     ).Ask(query);
             
@@ -73,12 +73,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetInstanceByIdLogger>)_services.GetService(typeof(ILogger<GetInstanceByIdLogger>));
+            var logger = (ILogger<LoggedGetInstanceByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetInstanceByIdRequest>));
             
             // Send request to pipeline
             var result =
-                await new GetInstanceByIdLogger(logger,
-                    new GetInstanceByIdValidator(
+                await new LoggedGetInstanceByIdRequest(logger,
+                    new ValidatedGetInstanceByIdRequest(
                         new GetInstanceByIdRequest(bus))
                     ).Ask(query);
 
@@ -99,11 +99,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllInstanceTypesLogger>)_services.GetService(typeof(ILogger<GetAllInstanceTypesLogger>));
+            var logger = (ILogger<LoggedGetAllInstanceTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstanceTypesRequest>));
             
             // Send request to pipeline
             var result =
-                await new GetAllInstanceTypesLogger(logger,
+                await new LoggedGetAllInstanceTypesRequest(logger,
                     new GetAllInstanceTypesRequest(bus)
                 ).Ask(new GetAllInstanceTypesHttpContext());
 
@@ -124,11 +124,11 @@ namespace Nano35.Instance.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllRegionsLogger>)_services.GetService(typeof(ILogger<GetAllRegionsLogger>));
+            var logger = (ILogger<LoggedGetAllRegionsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
             
             // Send request to pipeline
             var result =
-                await new GetAllRegionsLogger(logger,
+                await new LoggedGetAllRegionsRequest(logger,
                     new GetAllRegionsRequest(bus)
                 ).Ask(new GetAllRegionsHttpContext());
 
@@ -151,13 +151,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
-            var logger = (ILogger<CreateInstanceLogger>)_services.GetService(typeof(ILogger<CreateInstanceLogger>));
+            var logger = (ILogger<LoggedCreateInstanceRequest>)_services.GetService(typeof(ILogger<LoggedCreateInstanceRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateInstanceLogger(logger, 
-                    new CreateInstanceValidator(
-                        new CreateInstanceRequest(bus, auth))
+                await new LoggedCreateInstanceRequest(logger, 
+                    new ValidatedCreateInstanceRequest(
+                        new CreateInstanceRequest(bus, auth)
+                        )
                     ).Ask(body);
             
             // Check responce

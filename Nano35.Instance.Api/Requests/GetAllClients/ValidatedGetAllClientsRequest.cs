@@ -8,12 +8,12 @@ namespace Nano35.Instance.Api.Requests.GetAllClients
         public string Message { get; set; }
     }
     
-    public class GetAllClientsValidator:
+    public class ValidatedGetAllClientsRequest:
         IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>
     {
         private readonly IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> _nextNode;
 
-        public GetAllClientsValidator(
+        public ValidatedGetAllClientsRequest(
             IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> nextNode)
         {
             _nextNode = nextNode;

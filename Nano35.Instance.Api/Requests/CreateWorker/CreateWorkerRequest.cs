@@ -9,15 +9,18 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
     public class CreateWorkerRequest :
         IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>
     {
+        private readonly ICustomAuthStateProvider _auth;
         private readonly IBus _bus;
         
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
         public CreateWorkerRequest(
-            IBus bus)
+            IBus bus, 
+            ICustomAuthStateProvider auth)
         {
             _bus = bus;
+            _auth = auth;
         }
         
         /// <summary>

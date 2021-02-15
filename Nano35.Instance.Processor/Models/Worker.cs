@@ -33,7 +33,7 @@ namespace Nano35.Instance.Processor.Models
                 .HasOne(p => p.Instance)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.InstanceId);
+                .HasForeignKey(p => new { p.InstanceId });
             
             //Data
             modelBuilder.Entity<Worker>()
@@ -51,7 +51,7 @@ namespace Nano35.Instance.Processor.Models
                 .HasOne(p => p.WorkersRole)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.WorkersRoleId)
+                .HasForeignKey(p => new { p.WorkersRoleId })
                 .IsRequired();
         }
     }

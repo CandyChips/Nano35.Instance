@@ -8,6 +8,13 @@ namespace Nano35.Instance.Processor.Services.Contexts
 {
     public class ApplicationContext : DbContext
     {
+        public enum CashOperationTypes
+        {
+            Input = 1,
+            Output = 2,
+            Coming = 3,
+            Selle = 4
+        }
         public DbSet<Models.Instance> Instances { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<LicenseType> LicenseTypes { get; set; }
@@ -15,6 +22,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<CashOperation> CashOperations { get; set; }
         public DbSet<WorkersRole> WorkerRoles { get; set; }
         public DbSet<InstanceType> InstanceTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -39,10 +47,12 @@ namespace Nano35.Instance.Processor.Services.Contexts
             FluentContext.UnitType(modelBuilder);
             FluentContext.Worker(modelBuilder);
             FluentContext.WorkersRole(modelBuilder);
+            FluentContext.CashOperation(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
         public void Update()
         {
+            CashOperations.Load();
             Regions.Load();
             Units.Load();
             Licenses.Load();

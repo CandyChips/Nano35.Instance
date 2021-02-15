@@ -5,14 +5,14 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllUnits
 {
-    public class GetAllUnitsLogger :
+    public class LoggedGetAllUnitsRequest :
         IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
     {
-        private readonly ILogger<GetAllUnitsLogger> _logger;
+        private readonly ILogger<LoggedGetAllUnitsRequest> _logger;
         private readonly IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> _nextNode;
 
-        public GetAllUnitsLogger(
-            ILogger<GetAllUnitsLogger> logger,
+        public LoggedGetAllUnitsRequest(
+            ILogger<LoggedGetAllUnitsRequest> logger,
             IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> nextNode)
         {
             _nextNode = nextNode;

@@ -12,6 +12,7 @@ namespace Nano35.Instance.Api.Requests.CreateClient
             ICreateClientResultContract>
     {
         private readonly IBus _bus;
+        
         private readonly ICustomAuthStateProvider _auth;
 
         /// <summary>
