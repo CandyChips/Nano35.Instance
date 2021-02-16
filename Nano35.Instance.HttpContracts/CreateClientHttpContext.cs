@@ -11,7 +11,7 @@ namespace Nano35.Instance.HttpContracts
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public double Salle { get; set; }
+        public double Selle { get; set; }
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         [JsonIgnore]

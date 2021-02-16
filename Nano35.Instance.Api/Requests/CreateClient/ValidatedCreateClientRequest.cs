@@ -3,7 +3,7 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.CreateClient
 {
-    public class CreateClientValidatorErrorResult : ICreateClientErrorResultContract
+    public class CreateClientValidationErrorResult : ICreateClientErrorResultContract
     {
         public string Message { get; set; }
     }
@@ -24,7 +24,7 @@ namespace Nano35.Instance.Api.Requests.CreateClient
         {
             if (false)
             {
-                return new CreateClientValidatorErrorResult() {Message = "Ошибка валидации"};
+                return new CreateClientValidationErrorResult() {Message = "Ошибка валидации"};
             }
             return await _nextNode.Ask(input);
         }
