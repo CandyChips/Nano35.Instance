@@ -17,8 +17,4 @@
     <PackageReference Include="Nano35.Contracts" Version="1.4.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Requests\CreateCashOutput" />
-  </ItemGroup>
-
 </Project>
