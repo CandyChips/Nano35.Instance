@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 
-namespace Nano35.Instance.Processor.Requests.CreateCashOutput
+namespace Nano35.Instance.Api.Requests.CreateCashOutput
 {
-    public class LoggedCreateOutputCashOperationRequest :
+    public class LoggedCreateCashOutputRequest :
         IPipelineNode<
             ICreateCashOutputRequestContract,
             ICreateCashOutputResultContract>
     {
-        private readonly ILogger<LoggedCreateOutputCashOperationRequest> _logger;
+        private readonly ILogger<LoggedCreateCashOutputRequest> _logger;
         private readonly IPipelineNode<
             ICreateCashOutputRequestContract,
             ICreateCashOutputResultContract> _nextNode;
 
-        public LoggedCreateOutputCashOperationRequest(
-            ILogger<LoggedCreateOutputCashOperationRequest> logger,
+        public LoggedCreateCashOutputRequest(
+            ILogger<LoggedCreateCashOutputRequest> logger,
             IPipelineNode<
                 ICreateCashOutputRequestContract,
                 ICreateCashOutputResultContract> nextNode)
@@ -27,12 +27,11 @@ namespace Nano35.Instance.Processor.Requests.CreateCashOutput
         }
 
         public async Task<ICreateCashOutputResultContract> Ask(
-            ICreateCashOutputRequestContract input,
-            CancellationToken cancellationToken)
+            ICreateCashOutputRequestContract input)
         {
-            _logger.LogInformation($"CreateCashOutputLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
-            _logger.LogInformation($"CreateCashOutputLogger ends on: {DateTime.Now}");
+            _logger.LogInformation($"Create cash output logger starts on: {DateTime.Now}");
+            var result = await _nextNode.Ask(input);
+            _logger.LogInformation($"Create cash output logger ends on: {DateTime.Now}");
             return result;
         }
     }

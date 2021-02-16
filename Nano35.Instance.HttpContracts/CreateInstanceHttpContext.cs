@@ -18,4 +18,28 @@ namespace Nano35.Instance.HttpContracts
         public Guid TypeId { get; set; }
         public Guid RegionId { get; set; }
     }
+    
+    public class CreateCashOutputHttpContext :
+        ICreateCashOutputRequestContract
+    {
+        public Guid NewId { get; set; }
+        public Guid UnitId { get; set; }
+        public string Description { get; set; }
+        public Guid InstanceId { get; set; }
+        [JsonIgnore]
+        public Guid WorkerId { get; set; }
+        public double Cash { get; set; }
+    }
+    
+    public class CreateCashInputHttpContext :
+        ICreateCashInputRequestContract
+    {
+        public Guid NewId { get; set; }
+        public Guid UnitId { get; set; }
+        public string Description { get; set; }
+        public Guid InstanceId { get; set; }
+        [JsonIgnore]
+        public Guid WorkerId { get; set; }
+        public double Cash { get; set; }
+    }
 }

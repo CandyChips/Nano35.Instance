@@ -40,7 +40,7 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
                 ClientStateId = input.ClientStateId,
                 ClientTypeId =  input.ClientTypeId
             };
-            await _context.AddAsync(client);
+            await _context.AddAsync(client, cancellationToken);
             return new CreateClientSuccessResultContract();
         }
     }

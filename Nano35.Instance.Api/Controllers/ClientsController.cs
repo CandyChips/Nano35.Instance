@@ -19,6 +19,7 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
+        /// ToDo Hey Maslyonok
         /// <summary>
         /// Controller provide IServiceProvider from asp net core DI
         /// for registration services to pipe nodes
@@ -28,6 +29,7 @@ namespace Nano35.Instance.Api.Controllers
             _services = services;
         }
     
+        /// ToDo Hey Maslyonok
         /// <summary>
         /// Controllers accept a HttpContext type
         /// All controllers actions works by pipelines
@@ -42,10 +44,12 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllClients(
             [FromQuery] GetAllClientHttpContext query)
         {
+            // ToDo Hey Maslyonok
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientsRequest>));
             
+            // ToDo Hey Maslyonok
             // Send request to pipeline
             var result = 
                 await new ValidatedGetAllClientsRequest(
@@ -53,6 +57,7 @@ namespace Nano35.Instance.Api.Controllers
                         new GetAllClientsRequest(bus))
                     ).Ask(query);
 
+            // ToDo Hey Maslyonok
             // Check response of get all clients request
             return result switch
             {

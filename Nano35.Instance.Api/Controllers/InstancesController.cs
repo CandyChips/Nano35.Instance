@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
+using Nano35.Instance.Api.Requests.CreateCashInput;
+using Nano35.Instance.Api.Requests.CreateCashOutput;
 using Nano35.Instance.Api.Requests.CreateInstance;
 using Nano35.Instance.Api.Requests.GetAllInstances;
 using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
@@ -132,7 +134,7 @@ namespace Nano35.Instance.Api.Controllers
                     new GetAllRegionsRequest(bus)
                 ).Ask(new GetAllRegionsHttpContext());
 
-            // Check responce
+            // Check response
             return result switch
             {
                 IGetAllRegionsSuccessResultContract success => 
@@ -158,14 +160,64 @@ namespace Nano35.Instance.Api.Controllers
                 await new LoggedCreateInstanceRequest(logger, 
                     new ValidatedCreateInstanceRequest(
                         new CreateInstanceRequest(bus, auth)
-                        )
-                    ).Ask(body);
+                    )
+                ).Ask(body);
             
-            // Check responce
+            // Check response
             return result switch
             {
                 ICreateInstanceSuccessResultContract => Ok(),
                 ICreateInstanceErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPost]
+        [Route("CreateCashOutput")]
+        public async Task<IActionResult> CreateCashOutput(
+            [FromBody]CreateCashOutputHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedCreateCashOutputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashOutputRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedCreateCashOutputRequest(logger, 
+                    new CreateCashOutputRequest(bus, auth)
+                ).Ask(body);
+            
+            // Check response
+            return result switch
+            {
+                ICreateCashOutputSuccessResultContract => Ok(),
+                ICreateCashOutputErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPost]
+        [Route("CreateCashInput")]
+        public async Task<IActionResult> CreateCashInput(
+            [FromBody]CreateCashInputHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedCreateCashInputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashInputRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedCreateCashInputRequest(logger, 
+                    new CreateCashInputRequest(bus, auth)
+                ).Ask(body);
+            
+            // Check response
+            return result switch
+            {
+                ICreateCashInputSuccessResultContract => Ok(),
+                ICreateCashInputErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

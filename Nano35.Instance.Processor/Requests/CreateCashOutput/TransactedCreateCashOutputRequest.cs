@@ -8,7 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Requests.CreateCashOutput
 {
-    public class TransactedCreateOutputCashOperationRequest :
+    public class TransactedCreateCashOutputRequest :
         IPipelineNode<
             ICreateCashOutputRequestContract,
             ICreateCashOutputResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Instance.Processor.Requests.CreateCashOutput
             ICreateCashOutputRequestContract,
             ICreateCashOutputResultContract> _nextNode;
 
-        public TransactedCreateOutputCashOperationRequest(
+        public TransactedCreateCashOutputRequest(
             ApplicationContext context,
             IPipelineNode<
                 ICreateCashOutputRequestContract,

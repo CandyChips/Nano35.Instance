@@ -47,6 +47,10 @@ namespace Nano35.Instance.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstanceTypesRequestContract")); 
                 x.AddRequestClient<IGetAllWorkerRolesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkerRolesRequestContract"));
+                x.AddRequestClient<ICreateCashOutputRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCashOutputRequestContract")); 
+                x.AddRequestClient<ICreateCashInputRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCashInputRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

@@ -93,6 +93,16 @@ namespace Nano35.Instance.Processor.Configurations
                     {
                         e.Consumer<GetAllClientTypesConsumer>(provider);
                     });
+                    
+                    //cfg.ReceiveEndpoint("ICreateCashOutputRequestContract", e =>
+                    //{
+                    //    e.Consumer<GetAllClientStatesConsumer>(provider);
+                    //});
+                    //
+                    //cfg.ReceiveEndpoint("ICreateCashInputRequestContract", e =>
+                    //{
+                    //    e.Consumer<GetAllClientTypesConsumer>(provider);
+                    //});
                 }));
                 x.AddConsumer<CreateUnitConsumer>();
                 x.AddConsumer<CreateClientConsumer>();
@@ -109,6 +119,8 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<GetAllClientsConsumer>();
                 x.AddConsumer<GetAllClientStatesConsumer>();
                 x.AddConsumer<GetAllClientTypesConsumer>();
+                //x.AddConsumer<GetAllClientStatesConsumer>();
+                //x.AddConsumer<GetAllClientTypesConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });

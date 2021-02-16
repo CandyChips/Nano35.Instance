@@ -6,18 +6,18 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.CreateCashInput
 {
-    public class LoggedCreateInputCashOperationRequest :
+    public class LoggedCreateCashInputRequest :
         IPipelineNode<
             ICreateCashInputRequestContract, 
             ICreateCashInputResultContract>
     {
-        private readonly ILogger<LoggedCreateInputCashOperationRequest> _logger;
+        private readonly ILogger<LoggedCreateCashInputRequest> _logger;
         private readonly IPipelineNode<
             ICreateCashInputRequestContract, 
             ICreateCashInputResultContract> _nextNode;
 
-        public LoggedCreateInputCashOperationRequest(
-            ILogger<LoggedCreateInputCashOperationRequest> logger,
+        public LoggedCreateCashInputRequest(
+            ILogger<LoggedCreateCashInputRequest> logger,
             IPipelineNode<
                 ICreateCashInputRequestContract,
                 ICreateCashInputResultContract> nextNode)
