@@ -27,13 +27,13 @@ namespace Nano35.Instance.Processor.Consumers
         {
             var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetWorkerByIdLogger>) _services.GetService(typeof(ILogger<GetWorkerByIdLogger>));
+            var logger = (ILogger<LoggedGetWorkerByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetWorkerByIdRequest>));
             
             var message = context.Message;
             
             var result =
-                await new GetWorkerByIdLogger(logger,
-                    new GetWorkerByIdValidator(
+                await new LoggedGetWorkerByIdRequest(logger,
+                    new ValidatedGetWorkerByIdRequest(
                         new GetWorkerByIdRequest(dbcontect))
                 ).Ask(message, context.CancellationToken);
             

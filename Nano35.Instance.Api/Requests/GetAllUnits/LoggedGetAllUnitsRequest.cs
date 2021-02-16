@@ -25,7 +25,16 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
             _logger.LogInformation($"GetAllUnitsLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
             _logger.LogInformation($"GetAllUnitsLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
+            
+            switch (result)
+            {
+                case IGetAllUnitsSuccessResultContract success:
+                    _logger.LogInformation("with success");
+                    break;
+                case IGetAllUnitsErrorResultContract error:
+                    _logger.LogError($"with error {error.Message}");
+                    break;
+            }
             return result;
         }
     }

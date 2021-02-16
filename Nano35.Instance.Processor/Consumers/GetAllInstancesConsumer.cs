@@ -24,13 +24,13 @@ namespace Nano35.Instance.Processor.Consumers
             ConsumeContext<IGetAllInstancesRequestContract> context)
         {
             var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<GetAllInstancesLogger>) _services.GetService(typeof(ILogger<GetAllInstancesLogger>));
+            var logger = (ILogger<LoggedGetAllInstancesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllInstancesRequest>));
             
             var message = context.Message;
             
             var result =
-                await new GetAllInstancesLogger(logger,
-                    new GetAllInstancesValidator(
+                await new LoggedGetAllInstancesRequest(logger,
+                    new ValidatedGetAllInstancesRequest(
                         new GetAllInstancesRequest(dbcontect))
                 ).Ask(message, context.CancellationToken);
             

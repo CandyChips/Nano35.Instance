@@ -26,6 +26,15 @@ namespace Nano35.Instance.Api.Requests.GetAllClients
             var result = await _nextNode.Ask(input);
             // Check response of get all client types request
             _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with responce {result}");
+            switch (result)
+            {
+                case IGetAllRegionsSuccessResultContract success:
+                    _logger.LogInformation("with success");
+                    break;
+                case IGetAllRegionsErrorResultContract error:
+                    _logger.LogError($"with error {error.Message}");
+                    break;
+            }
             return result;
         }
     }

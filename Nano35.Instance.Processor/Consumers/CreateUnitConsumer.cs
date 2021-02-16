@@ -26,16 +26,16 @@ namespace Nano35.Instance.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateUnitLogger>) _services.GetService(typeof(ILogger<CreateUnitLogger>));
+            var logger = (ILogger<LoggedCreateUnitRequest>) _services.GetService(typeof(ILogger<LoggedCreateUnitRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result = 
-                await new CreateUnitLogger(logger,  
-                    new CreateUnitValidator(
-                        new CreateUnitTransaction(dbContext,
+                await new LoggedCreateUnitRequest(logger,  
+                    new ValidatedCreateUnitRequest(
+                        new TransactedCreateUnitRequest(dbContext,
                             new CreateUnitRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             

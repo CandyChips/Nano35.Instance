@@ -25,6 +25,16 @@ namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
             _logger.LogInformation($"GetAllInstanceTypesLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
             _logger.LogInformation($"GetAllInstanceTypesLogger ends on: {DateTime.Now}");
+            
+            switch (result)
+            {
+                case IGetAllInstanceTypesSuccessResultContract success:
+                    _logger.LogInformation("with success");
+                    break;
+                case IGetAllInstanceTypesErrorResultContract error:
+                    _logger.LogError($"with error {error.Message}");
+                    break;
+            }
             return result;
         }
     }

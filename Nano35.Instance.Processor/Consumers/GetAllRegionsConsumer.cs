@@ -23,13 +23,13 @@ namespace Nano35.Instance.Processor.Consumers
             ConsumeContext<IGetAllRegionsRequestContract> context)
         {
             var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<GetAllRegionsLogger>) _services.GetService(typeof(ILogger<GetAllRegionsLogger>));
+            var logger = (ILogger<LoggedGetAllRegionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
             
             var message = context.Message;
             
             var result =
-                await new GetAllRegionsLogger(logger,
-                    new GetAllRegionsValidator(
+                await new LoggedGetAllRegionsRequest(logger,
+                    new ValidatedGetAllRegionsRequest(
                         new GetAllRegionsRequest(dbcontect))
                 ).Ask(message, context.CancellationToken);
             

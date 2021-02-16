@@ -25,7 +25,16 @@ namespace Nano35.Instance.Api.Requests.GetAllWorkers
             _logger.LogInformation($"GetAllWorkersLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
             _logger.LogInformation($"GetAllWorkersLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
+
+            switch (result)
+            {
+                case IGetAllWorkersSuccessResultContract success:
+                    _logger.LogInformation("with success");
+                    break;
+                case IGetAllWorkersErrorResultContract error:
+                    _logger.LogError($"with error {error.Message}");
+                    break;
+            }
             return result;
         }
     }

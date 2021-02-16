@@ -33,6 +33,16 @@ namespace Nano35.Instance.Processor.Requests.CreateCashInput
             _logger.LogInformation($"CreateCashInputLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"CreateCashInputLogger ends on: {DateTime.Now}");
+            
+            switch (result)
+            {
+                case ICreateCashInputSuccessResultContract success:
+                    _logger.LogInformation("with success");
+                    break;
+                case ICreateCashInputErrorResultContract error:
+                    _logger.LogError($"with error {error.Message}");
+                    break;
+            }
             return result;
         }
     }
