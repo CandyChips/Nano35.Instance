@@ -94,15 +94,15 @@ namespace Nano35.Instance.Processor.Configurations
                         e.Consumer<GetAllClientTypesConsumer>(provider);
                     });
                     
-                    //cfg.ReceiveEndpoint("ICreateCashOutputRequestContract", e =>
-                    //{
-                    //    e.Consumer<GetAllClientStatesConsumer>(provider);
-                    //});
-                    //
-                    //cfg.ReceiveEndpoint("ICreateCashInputRequestContract", e =>
-                    //{
-                    //    e.Consumer<GetAllClientTypesConsumer>(provider);
-                    //});
+                    cfg.ReceiveEndpoint("IGetClientByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetClientByIdConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("IGetUnitByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetUnitByIdConsumer>(provider);
+                    });
                 }));
                 x.AddConsumer<CreateUnitConsumer>();
                 x.AddConsumer<CreateClientConsumer>();
@@ -119,8 +119,8 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<GetAllClientsConsumer>();
                 x.AddConsumer<GetAllClientStatesConsumer>();
                 x.AddConsumer<GetAllClientTypesConsumer>();
-                //x.AddConsumer<GetAllClientStatesConsumer>();
-                //x.AddConsumer<GetAllClientTypesConsumer>();
+                x.AddConsumer<GetClientByIdConsumer>();
+                x.AddConsumer<GetUnitByIdConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });
