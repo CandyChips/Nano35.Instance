@@ -22,4 +22,13 @@
     <ProjectReference Include="..\Nano35.Instance.HttpContracts\Nano35.Instance.HttpContracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Requests\CreatePaymentOfComing" />
+    <Folder Include="Requests\CreatePaymentOfSelle" />
+    <Folder Include="Requests\GetAllCashOperations" />
+    <Folder Include="Requests\GetAllRoles" />
+    <Folder Include="Requests\GetAvailableCashOfUnit" />
+    <Folder Include="Requests\GetWorkerById" />
+  </ItemGroup>
+
 </Project>

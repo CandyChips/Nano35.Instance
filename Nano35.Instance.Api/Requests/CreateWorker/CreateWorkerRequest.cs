@@ -32,6 +32,8 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
         /// </summary>
         public async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input)
         {
+            input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
+
             // Configure request client of input type
             var client = _bus.CreateRequestClient<ICreateWorkerRequestContract>(TimeSpan.FromSeconds(10));
             

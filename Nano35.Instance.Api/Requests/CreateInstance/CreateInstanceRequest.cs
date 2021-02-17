@@ -34,7 +34,8 @@ namespace Nano35.Instance.Api.Requests.CreateInstance
         public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input)
         {
             input.UserId = _auth.CurrentUserId;
-            
+            input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
+
             // Configure request client of input type
             var client = _bus.CreateRequestClient<ICreateInstanceRequestContract>(TimeSpan.FromSeconds(10));
             

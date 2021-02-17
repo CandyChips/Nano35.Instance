@@ -38,6 +38,7 @@ namespace Nano35.Instance.Api.Requests.CreateClient
             ICreateClientRequestContract input)
         {
             input.UserId = _auth.CurrentUserId;
+            input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
             
             // Configure request client of input type
             var client = _bus.CreateRequestClient<ICreateClientRequestContract>(TimeSpan.FromSeconds(10));
