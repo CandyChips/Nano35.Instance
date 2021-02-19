@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
+using Nano35.Instance.Api.HttpContext;
 using Nano35.Instance.Api.Requests.CreateCashInput;
 using Nano35.Instance.Api.Requests.CreateCashOutput;
 using Nano35.Instance.Api.Requests.CreateInstance;
@@ -12,7 +13,6 @@ using Nano35.Instance.Api.Requests.GetAllInstances;
 using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
 using Nano35.Instance.Api.Requests.GetAllRegions;
 using Nano35.Instance.Api.Requests.GetInstanceById;
-using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {

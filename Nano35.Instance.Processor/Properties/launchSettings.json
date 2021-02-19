@@ -3,7 +3,7 @@
     "Nano35.Instance.Processor": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:5052",
+      "applicationUrl": "http://localhost:6002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

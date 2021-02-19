@@ -6,12 +6,12 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore Nano35.Instance.Api.csproj --configfile ./NuGet.config
+RUN dotnet restore Nano35.Instance.Api/Nano35.Instance.Api.csproj --configfile ./Nano35.Instance.Api/NuGet.config
 WORKDIR /src/.
-RUN dotnet build Nano35.Instance.Api.csproj -c Release -o /app/build
+RUN dotnet build Nano35.Instance.Api/Nano35.Instance.Api.csproj -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish Nano35.Instance.Api.csproj -c Release -o /app/publish
+RUN dotnet publish Nano35.Instance.Api/Nano35.Instance.Api.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

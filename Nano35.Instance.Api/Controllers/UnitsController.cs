@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
+using Nano35.Instance.Api.HttpContext;
 using Nano35.Instance.Api.Requests;
 using Nano35.Instance.Api.Requests.CreateUnit;
 using Nano35.Instance.Api.Requests.GetAllClients;
 using Nano35.Instance.Api.Requests.GetAllClientTypes;
 using Nano35.Instance.Api.Requests.GetAllUnits;
 using Nano35.Instance.Api.Requests.GetAllUnitTypes;
-using Nano35.Instance.HttpContracts;
 
 namespace Nano35.Instance.Api.Controllers
 {
