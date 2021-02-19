@@ -4,23 +4,31 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.CreateUnit
 {
-    public class CreateUnitValidatorErrorResult : ICreateUnitErrorResultContract
+    public class CreateUnitValidatorErrorResult : 
+        ICreateUnitErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedCreateUnitRequest:
-        IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract>
+        IPipelineNode<
+            ICreateUnitRequestContract, 
+            ICreateUnitResultContract>
     {
-        private readonly IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateUnitRequestContract,
+            ICreateUnitResultContract> _nextNode;
 
         public ValidatedCreateUnitRequest(
-            IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> nextNode)
+            IPipelineNode<
+                ICreateUnitRequestContract, 
+                ICreateUnitResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+        public async Task<ICreateUnitResultContract> Ask(
+            ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             if (false)

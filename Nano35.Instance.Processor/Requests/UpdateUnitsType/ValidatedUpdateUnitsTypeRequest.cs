@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsType
     }
     
     public class ValidatedUpdateUnitsTypeRequest:
-        IPipelineNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>
+        IPipelineNode<
+            IUpdateUnitsTypeRequestContract,
+            IUpdateUnitsTypeResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateUnitsTypeRequestContract,
+            IUpdateUnitsTypeResultContract> _nextNode;
 
         public ValidatedUpdateUnitsTypeRequest(
-            IPipelineNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsTypeRequestContract,
+                IUpdateUnitsTypeResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

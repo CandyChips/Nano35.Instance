@@ -9,7 +9,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.GetInstanceById
 {
     public class GetInstanceByIdRequest :
-        IPipelineNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>
+        IPipelineNode<
+            IGetInstanceByIdRequestContract,
+            IGetInstanceByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -25,13 +27,8 @@ namespace Nano35.Instance.Processor.Requests.GetInstanceById
             public IInstanceViewModel Data { get; set; }
         }
 
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-
-        public async Task<IGetInstanceByIdResultContract> Ask(IGetInstanceByIdRequestContract input,
+        public async Task<IGetInstanceByIdResultContract> Ask(
+            IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = (await _context.Instances

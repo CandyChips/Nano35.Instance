@@ -10,7 +10,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.UpdateUnitsWorkingFormat
 {
     public class UpdateUnitsWorkingFormatRequest :
-        IPipelineNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>
+        IPipelineNode<
+            IUpdateUnitsWorkingFormatRequestContract,
+            IUpdateUnitsWorkingFormatResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -23,12 +25,7 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsWorkingFormat
         private class UpdateUnitsWorkingFormatSuccessResultContract : 
             IUpdateUnitsWorkingFormatSuccessResultContract
         {
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
+            
         }
 
         public async Task<IUpdateUnitsWorkingFormatResultContract> Ask(

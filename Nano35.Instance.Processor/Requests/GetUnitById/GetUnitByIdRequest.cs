@@ -9,7 +9,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.GetUnitById
 {
     public class GetUnitByIdRequest :
-        IPipelineNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>
+        IPipelineNode<
+            IGetUnitByIdRequestContract,
+            IGetUnitByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -25,13 +27,8 @@ namespace Nano35.Instance.Processor.Requests.GetUnitById
             public IUnitViewModel Data { get; set; }
         }
 
-        private class GetUnitByIdErrorResultContract : 
-            IGetUnitByIdErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-
-        public async Task<IGetUnitByIdResultContract> Ask(IGetUnitByIdRequestContract input,
+        public async Task<IGetUnitByIdResultContract> Ask(
+            IGetUnitByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = (await _context.Units

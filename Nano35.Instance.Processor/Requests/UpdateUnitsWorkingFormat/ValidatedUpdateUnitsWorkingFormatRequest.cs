@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsWorkingFormat
     }
     
     public class ValidatedUpdateUnitsWorkingFormatRequest:
-        IPipelineNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>
+        IPipelineNode<
+            IUpdateUnitsWorkingFormatRequestContract,
+            IUpdateUnitsWorkingFormatResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateUnitsWorkingFormatRequestContract, 
+            IUpdateUnitsWorkingFormatResultContract> _nextNode;
 
         public ValidatedUpdateUnitsWorkingFormatRequest(
-            IPipelineNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsWorkingFormatRequestContract,
+                IUpdateUnitsWorkingFormatResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.UpdateClientsPhone
 {
     public class LoggedUpdateClientsPhoneRequest :
-        IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract>
+        IPipelineNode<
+            IUpdateClientsPhoneRequestContract,
+            IUpdateClientsPhoneResultContract>
     {
         private readonly ILogger<LoggedUpdateClientsPhoneRequest> _logger;
-        private readonly IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IUpdateClientsPhoneRequestContract,
+            IUpdateClientsPhoneResultContract> _nextNode;
 
         public LoggedUpdateClientsPhoneRequest(
             ILogger<LoggedUpdateClientsPhoneRequest> logger,
-            IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract> nextNode)
+            IPipelineNode<
+                IUpdateClientsPhoneRequestContract,
+                IUpdateClientsPhoneResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateClientsPhoneResultContract> Ask(IUpdateClientsPhoneRequestContract input,
+        public async Task<IUpdateClientsPhoneResultContract> Ask(
+            IUpdateClientsPhoneRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateClientsPhone starts on: {DateTime.Now}");

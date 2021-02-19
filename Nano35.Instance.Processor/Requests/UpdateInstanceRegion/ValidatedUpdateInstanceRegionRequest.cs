@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceRegion
     }
     
     public class ValidatedUpdateInstanceRegionRequest:
-        IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>
+        IPipelineNode<
+            IUpdateInstanceRegionRequestContract,
+            IUpdateInstanceRegionResultContract>
     {
-        private readonly IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateInstanceRegionRequestContract, 
+            IUpdateInstanceRegionResultContract> _nextNode;
 
         public ValidatedUpdateInstanceRegionRequest(
-            IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract> nextNode)
+            IPipelineNode<
+                IUpdateInstanceRegionRequestContract,
+                IUpdateInstanceRegionResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

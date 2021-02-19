@@ -26,7 +26,8 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
             _context = context;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+        public async Task<ICreateUnitResultContract> Ask(
+            ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);

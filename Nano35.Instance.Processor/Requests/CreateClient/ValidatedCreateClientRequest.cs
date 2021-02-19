@@ -4,23 +4,32 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.CreateClient
 {
-    public class CreateClientValidatorErrorResult : ICreateClientErrorResultContract
+    public class CreateClientValidatorErrorResult : 
+        ICreateClientErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedCreateClientRequest:
-        IPipelineNode<ICreateClientRequestContract, ICreateClientResultContract>
+        IPipelineNode<
+            ICreateClientRequestContract, 
+            ICreateClientResultContract>
     {
-        private readonly IPipelineNode<ICreateClientRequestContract, ICreateClientResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateClientRequestContract, 
+            ICreateClientResultContract> _nextNode;
 
         public ValidatedCreateClientRequest(
-            IPipelineNode<ICreateClientRequestContract, ICreateClientResultContract> nextNode)
+            IPipelineNode<
+                ICreateClientRequestContract, 
+                ICreateClientResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateClientResultContract> Ask(ICreateClientRequestContract input, CancellationToken cancellationToken)
+        public async Task<ICreateClientResultContract> Ask(
+            ICreateClientRequestContract input,
+            CancellationToken cancellationToken)
         {
             if (false)
             {

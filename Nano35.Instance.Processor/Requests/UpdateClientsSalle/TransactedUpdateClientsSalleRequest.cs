@@ -13,7 +13,9 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsSalle
             IUpdateClientsSalleRequestContract,
             IUpdateClientsSalleResultContract>
     {
+        
         private readonly ApplicationContext _context;
+        
         private readonly IPipelineNode<
             IUpdateClientsSalleRequestContract,
             IUpdateClientsSalleResultContract> _nextNode;

@@ -9,7 +9,9 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.Requests.CreateClient
 {
     public class CreateClientRequest :
-        IPipelineNode<ICreateClientRequestContract, ICreateClientResultContract>
+        IPipelineNode<
+            ICreateClientRequestContract, 
+            ICreateClientResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -25,7 +27,8 @@ namespace Nano35.Instance.Processor.Requests.CreateClient
             
         }
         
-        public async Task<ICreateClientResultContract> Ask(ICreateClientRequestContract input,
+        public async Task<ICreateClientResultContract> Ask(
+            ICreateClientRequestContract input,
             CancellationToken cancellationToken)
         {
             var client = new Client(){

@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsEmail
     }
     
     public class ValidatedUpdateClientsEmailRequest:
-        IPipelineNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>
+        IPipelineNode<
+            IUpdateClientsEmailRequestContract, 
+            IUpdateClientsEmailResultContract>
     {
-        private readonly IPipelineNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateClientsEmailRequestContract, 
+            IUpdateClientsEmailResultContract> _nextNode;
 
         public ValidatedUpdateClientsEmailRequest(
-            IPipelineNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract> nextNode)
+            IPipelineNode<
+                IUpdateClientsEmailRequestContract, 
+                IUpdateClientsEmailResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

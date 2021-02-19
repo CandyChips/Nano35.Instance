@@ -10,7 +10,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.UpdateInstanceInfo
 {
     public class UpdateInstanceInfoRequest :
-        IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>
+        IPipelineNode<
+            IUpdateInstanceInfoRequestContract, 
+            IUpdateInstanceInfoResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -23,12 +25,7 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceInfo
         private class UpdateInstanceInfoSuccessResultContract : 
             IUpdateInstanceInfoSuccessResultContract
         {
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
+            
         }
 
         public async Task<IUpdateInstanceInfoResultContract> Ask(

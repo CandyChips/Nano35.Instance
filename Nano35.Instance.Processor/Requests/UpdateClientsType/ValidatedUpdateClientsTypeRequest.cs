@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsType
     }
     
     public class ValidatedUpdateClientsTypeRequest:
-        IPipelineNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>
+        IPipelineNode<
+            IUpdateClientsTypeRequestContract,
+            IUpdateClientsTypeResultContract>
     {
-        private readonly IPipelineNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateClientsTypeRequestContract,
+            IUpdateClientsTypeResultContract> _nextNode;
 
         public ValidatedUpdateClientsTypeRequest(
-            IPipelineNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract> nextNode)
+            IPipelineNode<
+                IUpdateClientsTypeRequestContract, 
+                IUpdateClientsTypeResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

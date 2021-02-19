@@ -12,6 +12,7 @@ namespace Nano35.Instance.Processor.Requests.CreatePaymentOfSelle
             ICreatePaymentOfSelleResultContract>
     {
         private readonly ILogger<LoggedCreatePaymentOfSelleRequest> _logger;
+        
         private readonly IPipelineNode<
             ICreatePaymentOfSelleRequestContract, 
             ICreatePaymentOfSelleResultContract> _nextNode;

@@ -10,17 +10,23 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsPhone
         IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>
     {
         private readonly ILogger<LoggedUpdateUnitsPhoneRequest> _logger;
-        private readonly IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IUpdateUnitsPhoneRequestContract, 
+            IUpdateUnitsPhoneResultContract> _nextNode;
 
         public LoggedUpdateUnitsPhoneRequest(
             ILogger<LoggedUpdateUnitsPhoneRequest> logger,
-            IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsPhoneRequestContract, 
+                IUpdateUnitsPhoneResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateUnitsPhoneResultContract> Ask(IUpdateUnitsPhoneRequestContract input,
+        public async Task<IUpdateUnitsPhoneResultContract> Ask(
+            IUpdateUnitsPhoneRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateUnitsPhone starts on: {DateTime.Now}");

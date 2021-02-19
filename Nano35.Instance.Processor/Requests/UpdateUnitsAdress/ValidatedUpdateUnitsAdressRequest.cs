@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsAdress
     }
     
     public class ValidatedUpdateUnitsAdressRequest:
-        IPipelineNode<IUpdateUnitsAdressRequestContract, IUpdateUnitsAdressResultContract>
+        IPipelineNode<
+            IUpdateUnitsAdressRequestContract,
+            IUpdateUnitsAdressResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsAdressRequestContract, IUpdateUnitsAdressResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateUnitsAdressRequestContract, 
+            IUpdateUnitsAdressResultContract> _nextNode;
 
         public ValidatedUpdateUnitsAdressRequest(
-            IPipelineNode<IUpdateUnitsAdressRequestContract, IUpdateUnitsAdressResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsAdressRequestContract,
+                IUpdateUnitsAdressResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

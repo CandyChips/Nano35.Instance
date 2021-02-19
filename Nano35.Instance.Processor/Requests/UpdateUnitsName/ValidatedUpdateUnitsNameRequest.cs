@@ -10,13 +10,19 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsName
         public string Message { get; set; }
     }
     
-    public class ValidatedUpdateUnitsNameRequest:
-        IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>
+    public class ValidatedUpdateUnitsNameRequest :
+        IPipelineNode<
+            IUpdateUnitsNameRequestContract,
+            IUpdateUnitsNameResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateUnitsNameRequestContract, 
+            IUpdateUnitsNameResultContract> _nextNode;
 
         public ValidatedUpdateUnitsNameRequest(
-            IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsNameRequestContract,
+                IUpdateUnitsNameResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

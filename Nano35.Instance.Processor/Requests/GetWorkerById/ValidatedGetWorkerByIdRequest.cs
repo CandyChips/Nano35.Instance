@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.GetWorkerById
     }
     
     public class ValidatedGetWorkerByIdRequest:
-        IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>
+        IPipelineNode<
+            IGetWorkerByIdRequestContract,
+            IGetWorkerByIdResultContract>
     {
-        private readonly IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetWorkerByIdRequestContract,
+            IGetWorkerByIdResultContract> _nextNode;
 
         public ValidatedGetWorkerByIdRequest(
-            IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract> nextNode)
+            IPipelineNode<
+                IGetWorkerByIdRequestContract,
+                IGetWorkerByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

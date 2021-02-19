@@ -26,7 +26,8 @@ namespace Nano35.Instance.Processor.Requests.CreateWorker
             _logger = logger;
         }
 
-        public async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input,
+        public async Task<ICreateWorkerResultContract> Ask(
+            ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateWorkerLogger starts on: {DateTime.Now}");

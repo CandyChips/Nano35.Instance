@@ -4,23 +4,32 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.Requests.CreateCashInput
 {
-    public class CreateCashInputValidatorErrorResult : ICreateCashInputErrorResultContract
+    public class CreateCashInputValidatorErrorResult : 
+        ICreateCashInputErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedCreateCashInputRequest:
-        IPipelineNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>
+        IPipelineNode<
+            ICreateCashInputRequestContract,
+            ICreateCashInputResultContract>
     {
-        private readonly IPipelineNode<ICreateCashInputRequestContract, ICreateCashInputResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateCashInputRequestContract, 
+            ICreateCashInputResultContract> _nextNode;
 
         public ValidatedCreateCashInputRequest(
-            IPipelineNode<ICreateCashInputRequestContract, ICreateCashInputResultContract> nextNode)
+            IPipelineNode<
+                ICreateCashInputRequestContract,
+                ICreateCashInputResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<ICreateCashInputResultContract> Ask(ICreateCashInputRequestContract input, CancellationToken cancellationToken)
+        public async Task<ICreateCashInputResultContract> Ask(
+            ICreateCashInputRequestContract input,
+            CancellationToken cancellationToken)
         {
             if (false)
             {

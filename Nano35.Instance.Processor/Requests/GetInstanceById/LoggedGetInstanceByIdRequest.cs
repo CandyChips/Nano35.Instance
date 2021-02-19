@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.GetInstanceById
 {
     public class LoggedGetInstanceByIdRequest :
-        IPipelineNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>
+        IPipelineNode<
+            IGetInstanceByIdRequestContract,
+            IGetInstanceByIdResultContract>
     {
         private readonly ILogger<LoggedGetInstanceByIdRequest> _logger;
-        private readonly IPipelineNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IGetInstanceByIdRequestContract,
+            IGetInstanceByIdResultContract> _nextNode;
 
         public LoggedGetInstanceByIdRequest(
             ILogger<LoggedGetInstanceByIdRequest> logger,
-            IPipelineNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract> nextNode)
+            IPipelineNode<
+                IGetInstanceByIdRequestContract,
+                IGetInstanceByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetInstanceByIdResultContract> Ask(IGetInstanceByIdRequestContract input,
+        public async Task<IGetInstanceByIdResultContract> Ask(
+            IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedGetInstanceById starts on: {DateTime.Now}");

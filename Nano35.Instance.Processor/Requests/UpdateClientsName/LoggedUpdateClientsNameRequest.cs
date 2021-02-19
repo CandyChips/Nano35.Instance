@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.UpdateClientsName
 {
     public class LoggedUpdateClientsNameRequest :
-        IPipelineNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>
+        IPipelineNode<
+            IUpdateClientsNameRequestContract,
+            IUpdateClientsNameResultContract>
     {
         private readonly ILogger<LoggedUpdateClientsNameRequest> _logger;
-        private readonly IPipelineNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IUpdateClientsNameRequestContract,
+            IUpdateClientsNameResultContract> _nextNode;
 
         public LoggedUpdateClientsNameRequest(
             ILogger<LoggedUpdateClientsNameRequest> logger,
-            IPipelineNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract> nextNode)
+            IPipelineNode<
+                IUpdateClientsNameRequestContract, 
+                IUpdateClientsNameResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateClientsNameResultContract> Ask(IUpdateClientsNameRequestContract input,
+        public async Task<IUpdateClientsNameResultContract> Ask(
+            IUpdateClientsNameRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateClientsName starts on: {DateTime.Now}");

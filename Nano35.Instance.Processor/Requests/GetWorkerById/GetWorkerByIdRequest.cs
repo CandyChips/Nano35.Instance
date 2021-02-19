@@ -9,7 +9,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.Requests.GetWorkerById
 {
     public class GetWorkerByIdRequest :
-        IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>
+        IPipelineNode<
+            IGetWorkerByIdRequestContract, 
+            IGetWorkerByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -23,12 +25,6 @@ namespace Nano35.Instance.Processor.Requests.GetWorkerById
             IGetWorkerByIdSuccessResultContract
         {
             public IWorkerViewModel Data { get; set; }
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
         }
 
         public async Task<IGetWorkerByIdResultContract> Ask(

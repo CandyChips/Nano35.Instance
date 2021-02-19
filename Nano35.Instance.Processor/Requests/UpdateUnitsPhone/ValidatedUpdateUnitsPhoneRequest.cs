@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsPhone
     }
     
     public class ValidatedUpdateUnitsPhoneRequest:
-        IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>
+        IPipelineNode<
+            IUpdateUnitsPhoneRequestContract,
+            IUpdateUnitsPhoneResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateUnitsPhoneRequestContract, 
+            IUpdateUnitsPhoneResultContract> _nextNode;
 
         public ValidatedUpdateUnitsPhoneRequest(
-            IPipelineNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsPhoneRequestContract,
+                IUpdateUnitsPhoneResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

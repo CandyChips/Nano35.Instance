@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.UpdateUnitsName
 {
     public class LoggedUpdateUnitsNameRequest :
-        IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>
+        IPipelineNode<
+            IUpdateUnitsNameRequestContract, 
+            IUpdateUnitsNameResultContract>
     {
         private readonly ILogger<LoggedUpdateUnitsNameRequest> _logger;
-        private readonly IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IUpdateUnitsNameRequestContract, 
+            IUpdateUnitsNameResultContract> _nextNode;
 
         public LoggedUpdateUnitsNameRequest(
             ILogger<LoggedUpdateUnitsNameRequest> logger,
-            IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> nextNode)
+            IPipelineNode<
+                IUpdateUnitsNameRequestContract,
+                IUpdateUnitsNameResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateUnitsNameResultContract> Ask(IUpdateUnitsNameRequestContract input,
+        public async Task<IUpdateUnitsNameResultContract> Ask(
+            IUpdateUnitsNameRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateUnitsName starts on: {DateTime.Now}");

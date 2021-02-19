@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceInfo
     }
     
     public class ValidatedUpdateInstanceInfoRequest:
-        IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>
+        IPipelineNode<
+            IUpdateInstanceInfoRequestContract,
+            IUpdateInstanceInfoResultContract>
     {
-        private readonly IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateInstanceInfoRequestContract,
+            IUpdateInstanceInfoResultContract> _nextNode;
 
         public ValidatedUpdateInstanceInfoRequest(
-            IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> nextNode)
+            IPipelineNode<
+                IUpdateInstanceInfoRequestContract,
+                IUpdateInstanceInfoResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

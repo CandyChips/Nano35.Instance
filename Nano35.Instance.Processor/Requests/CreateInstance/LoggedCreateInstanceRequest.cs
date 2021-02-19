@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.CreateInstance
 {
     public class LoggedCreateInstanceRequest :
-        IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>
+        IPipelineNode<
+            ICreateInstanceRequestContract, 
+            ICreateInstanceResultContract>
     {
         private readonly ILogger<LoggedCreateInstanceRequest> _logger;
-        private readonly IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            ICreateInstanceRequestContract, 
+            ICreateInstanceResultContract> _nextNode;
 
         public LoggedCreateInstanceRequest(
             ILogger<LoggedCreateInstanceRequest> logger,
-            IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract> nextNode)
+            IPipelineNode<
+                ICreateInstanceRequestContract, 
+                ICreateInstanceResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateInstanceResultContract> Ask(ICreateInstanceRequestContract input,
+        public async Task<ICreateInstanceResultContract> Ask(
+            ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateInstanceLogger starts on: {DateTime.Now}");

@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.Requests.UpdateInstanceEmail
 {
     public class LoggedUpdateInstanceEmailRequest :
-        IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>
+        IPipelineNode<
+            IUpdateInstanceEmailRequestContract,
+            IUpdateInstanceEmailResultContract>
     {
         private readonly ILogger<LoggedUpdateInstanceEmailRequest> _logger;
-        private readonly IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IUpdateInstanceEmailRequestContract,
+            IUpdateInstanceEmailResultContract> _nextNode;
 
         public LoggedUpdateInstanceEmailRequest(
             ILogger<LoggedUpdateInstanceEmailRequest> logger,
-            IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract> nextNode)
+            IPipelineNode<
+                IUpdateInstanceEmailRequestContract,
+                IUpdateInstanceEmailResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateInstanceEmailResultContract> Ask(IUpdateInstanceEmailRequestContract input,
+        public async Task<IUpdateInstanceEmailResultContract> Ask(
+            IUpdateInstanceEmailRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateInstanceEmail starts on: {DateTime.Now}");

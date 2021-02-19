@@ -11,12 +11,18 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceRealName
     }
     
     public class ValidatedUpdateInstanceRealNameRequest:
-        IPipelineNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>
+        IPipelineNode<
+            IUpdateInstanceRealNameRequestContract,
+            IUpdateInstanceRealNameResultContract>
     {
-        private readonly IPipelineNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IUpdateInstanceRealNameRequestContract,
+            IUpdateInstanceRealNameResultContract> _nextNode;
 
         public ValidatedUpdateInstanceRealNameRequest(
-            IPipelineNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract> nextNode)
+            IPipelineNode<
+                IUpdateInstanceRealNameRequestContract,
+                IUpdateInstanceRealNameResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

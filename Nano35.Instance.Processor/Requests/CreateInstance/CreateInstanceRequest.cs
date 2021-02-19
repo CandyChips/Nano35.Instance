@@ -8,7 +8,9 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.Requests.CreateInstance
 {
     public class CreateInstanceRequest :
-        IPipelineNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>
+        IPipelineNode<
+            ICreateInstanceRequestContract, 
+            ICreateInstanceResultContract>
     {
         private readonly ApplicationContext _context;
 
