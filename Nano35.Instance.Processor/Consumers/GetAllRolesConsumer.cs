@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Identity.Artifacts;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests.GetAllRoles;
 using Nano35.Instance.Processor.Services.Contexts;
 

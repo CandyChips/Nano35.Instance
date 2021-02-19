@@ -32,7 +32,7 @@ namespace Nano35.Instance.Processor.Requests.CreateUnit
                 Id = input.Id,
                 Name = input.Name,
                 WorkingFormat = input.WorkingFormat,
-                Adress = input.Adress,
+                Adress = input.Address,
                 Phone = input.Phone,
                 Date = DateTime.Now,
                 Deleted = false,

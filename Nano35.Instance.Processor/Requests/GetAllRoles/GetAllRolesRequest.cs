@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Nano35.Contracts.Identity.Artifacts;
-using Nano35.Contracts.Identity.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.MappingProfiles;
+using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Contracts.Instance.Models;
 
 namespace Nano35.Instance.Processor.Requests.GetAllRoles
 {
@@ -31,8 +32,8 @@ namespace Nano35.Instance.Processor.Requests.GetAllRoles
             IGetAllRolesRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await this._context.Regions
-                .MapAllToAsync<IRoleViewModel>();
+            var result = await (_context.WorkerRoles
+                .MapAllToAsync<IRoleViewModel>());
             return new GetAllRolesSuccessResultContract() {Data = result};
         }
     }
