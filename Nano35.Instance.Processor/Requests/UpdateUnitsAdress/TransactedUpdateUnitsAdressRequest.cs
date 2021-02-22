@@ -1,35 +1,33 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Nano35.Contracts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Requests.UpdateUnitsAdress
 {
-    public class TransactedUpdateUnitsAdressRequest :
+    public class TransactedUpdateUnitsAddressRequest :
         IPipelineNode<
-            IUpdateUnitsAdressRequestContract,
-            IUpdateUnitsAdressResultContract>
+            IUpdateUnitsAddressRequestContract,
+            IUpdateUnitsAddressResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IPipelineNode<
-            IUpdateUnitsAdressRequestContract,
-            IUpdateUnitsAdressResultContract> _nextNode;
+            IUpdateUnitsAddressRequestContract,
+            IUpdateUnitsAddressResultContract> _nextNode;
 
-        public TransactedUpdateUnitsAdressRequest(
+        public TransactedUpdateUnitsAddressRequest(
             ApplicationContext context,
             IPipelineNode<
-                IUpdateUnitsAdressRequestContract,
-                IUpdateUnitsAdressResultContract> nextNode)
+                IUpdateUnitsAddressRequestContract,
+                IUpdateUnitsAddressResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateUnitsAdressResultContract> Ask(
-            IUpdateUnitsAdressRequestContract input,
+        public async Task<IUpdateUnitsAddressResultContract> Ask(
+            IUpdateUnitsAddressRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);

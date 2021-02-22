@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
 
-namespace Nano35.Instance.Processor.Requests.UpdateUnitsAdress
+namespace Nano35.Instance.Api.Requests.UpdateUnitsAddress
 {
-    public class UpdateUnitsAddressValidatorErrorResult : 
+    public class UpdateUnitsAddressValidatorErrorResult :
         IUpdateUnitsAddressErrorResultContract
     {
         public string Message { get; set; }
@@ -12,7 +11,7 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsAdress
     
     public class ValidatedUpdateUnitsAddressRequest:
         IPipelineNode<
-            IUpdateUnitsAddressRequestContract,
+            IUpdateUnitsAddressRequestContract, 
             IUpdateUnitsAddressResultContract>
     {
         private readonly IPipelineNode<
@@ -28,14 +27,13 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsAdress
         }
 
         public async Task<IUpdateUnitsAddressResultContract> Ask(
-            IUpdateUnitsAddressRequestContract input,
-            CancellationToken cancellationToken)
+            IUpdateUnitsAddressRequestContract input)
         {
             if (false)
             {
                 return new UpdateUnitsAddressValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await _nextNode.Ask(input);
         }
     }
 }

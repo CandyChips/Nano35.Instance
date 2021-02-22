@@ -15,7 +15,7 @@ namespace Nano35.Instance.Api.HttpContext
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         [JsonIgnore]
-        public Guid UserId { get; set; }
+        public Guid UpdaterId { get; set; }
         public Guid InstanceId { get; set; }
     }
 }

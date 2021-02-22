@@ -4,12 +4,12 @@ using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
 
-namespace Nano35.Instance.Api.Requests.UpdateClientsPhone
+namespace Nano35.Instance.Api.Requests.UpdateClientsSelle
 {
-    public class UpdateClientsPhoneRequest :
+    public class UpdateClientsSelleRequest :
         IPipelineNode<
-            IUpdateClientsPhoneRequestContract, 
-            IUpdateClientsPhoneResultContract>
+            IUpdateClientsSelleRequestContract,
+            IUpdateClientsSelleResultContract>
     {
         private readonly IBus _bus;
 
@@ -18,8 +18,8 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsPhone
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
-        public UpdateClientsPhoneRequest(
-            IBus bus,
+        public UpdateClientsSelleRequest(
+            IBus bus, 
             ICustomAuthStateProvider auth)
         {
             _bus = bus;
@@ -33,23 +33,23 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsPhone
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateClientsPhoneResultContract> Ask(
-            IUpdateClientsPhoneRequestContract input)
+        public async Task<IUpdateClientsSelleResultContract> Ask(
+            IUpdateClientsSelleRequestContract input)
         {
             input.UpdaterId = _auth.CurrentUserId;
 
             // Configure request client of input type
-            var client = _bus.CreateRequestClient<IUpdateClientsPhoneRequestContract>(TimeSpan.FromSeconds(10));
+            var client = _bus.CreateRequestClient<IUpdateClientsSelleRequestContract>(TimeSpan.FromSeconds(10));
             
             // Receive response of processor magic
             var response = await client
-                .GetResponse<IUpdateClientsPhoneSuccessResultContract, IUpdateClientsPhoneErrorResultContract>(input);
+                .GetResponse<IUpdateClientsSelleSuccessResultContract, IUpdateClientsSelleErrorResultContract>(input);
             
             // Checking response status
-            if (response.Is(out Response<IUpdateClientsPhoneSuccessResultContract> successResponse))
+            if (response.Is(out Response<IUpdateClientsSelleSuccessResultContract> successResponse))
                 return successResponse.Message;
             
-            if (response.Is(out Response<IUpdateClientsPhoneErrorResultContract> errorResponse))
+            if (response.Is(out Response<IUpdateClientsSelleErrorResultContract> errorResponse))
                 return errorResponse.Message;
             
             throw new InvalidOperationException();

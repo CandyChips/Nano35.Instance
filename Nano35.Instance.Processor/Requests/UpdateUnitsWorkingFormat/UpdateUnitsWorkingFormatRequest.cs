@@ -32,11 +32,10 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsWorkingFormat
             IUpdateUnitsWorkingFormatRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Units
-                    .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken)
-                );
-
+            var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
             result.WorkingFormat = input.WorkingFormat;
+            result.CreatorId = input.UpdaterId;
+                
             return new UpdateUnitsWorkingFormatSuccessResultContract() ;
         }
     }

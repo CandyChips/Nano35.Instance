@@ -32,11 +32,9 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceRegion
             IUpdateInstanceRegionRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Instances
-                    .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken)
-                );
+            var result = await (_context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken));
+            result.RegionId = input.RegionId;
 
-            result.RegionId = input.Region;
             return new UpdateInstanceRegionSuccessResultContract();
         }
     }

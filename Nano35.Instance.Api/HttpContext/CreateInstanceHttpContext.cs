@@ -27,7 +27,7 @@ namespace Nano35.Instance.Api.HttpContext
         public string Description { get; set; }
         public Guid InstanceId { get; set; }
         [JsonIgnore]
-        public Guid WorkerId { get; set; }
+        public Guid UpdaterId { get; set; }
         public double Cash { get; set; }
     }
     
@@ -39,7 +39,7 @@ namespace Nano35.Instance.Api.HttpContext
         public string Description { get; set; }
         public Guid InstanceId { get; set; }
         [JsonIgnore]
-        public Guid WorkerId { get; set; }
+        public Guid UpdaterId { get; set; }
         public double Cash { get; set; }
     }
 }

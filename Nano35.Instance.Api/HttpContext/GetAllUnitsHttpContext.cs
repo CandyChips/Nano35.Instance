@@ -9,4 +9,9 @@ namespace Nano35.Instance.Api.HttpContext
         public Guid InstanceId { get; set; }
         public Guid UnitTypeId { get; set; }
     }
+    
+    public class GetUnitByIdHttpContext : IGetUnitByIdRequestContract
+    {
+        public Guid UnitId { get; set; }
+    }
 }

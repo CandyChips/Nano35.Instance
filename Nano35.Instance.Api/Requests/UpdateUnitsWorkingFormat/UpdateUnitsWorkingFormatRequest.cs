@@ -2,21 +2,28 @@
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateUnitsWorkingFormat
 {
     public class UpdateUnitsWorkingFormatRequest :
-        IPipelineNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>
+        IPipelineNode<
+            IUpdateUnitsWorkingFormatRequestContract,
+            IUpdateUnitsWorkingFormatResultContract>
     {
         private readonly IBus _bus;
+
+        private readonly ICustomAuthStateProvider _auth;
 
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
         public UpdateUnitsWorkingFormatRequest(
-            IBus bus)
+            IBus bus, 
+            ICustomAuthStateProvider auth)
         {
             _bus = bus;
+            _auth = auth;
         }
         
         /// <summary>
@@ -26,8 +33,11 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsWorkingFormat
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateUnitsWorkingFormatResultContract> Ask(IUpdateUnitsWorkingFormatRequestContract input)
+        public async Task<IUpdateUnitsWorkingFormatResultContract> Ask(
+            IUpdateUnitsWorkingFormatRequestContract input)
         {
+            input.UpdaterId = _auth.CurrentUserId;
+            
             // Configure request client of input type
             var client = _bus.CreateRequestClient<IUpdateUnitsWorkingFormatRequestContract>(TimeSpan.FromSeconds(10));
             

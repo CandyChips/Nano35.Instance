@@ -34,10 +34,8 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsEmail
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Clients
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken)
-                );
-
+            var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
+            result.WorkerId = input.UpdaterId;
             result.Email = input.Email;
 
             return new UpdateClientsEmailSuccessResultContract();

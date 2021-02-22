@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Nano35.Contracts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Services.Contexts;
 
-namespace Nano35.Instance.Processor.Requests.UpdateClientsSalle
+namespace Nano35.Instance.Processor.Requests.UpdateClientsSelle
 {
-    public class TransactedUpdateClientsSalleRequest :
+    public class TransactedUpdateClientsSelleRequest :
         IPipelineNode<
-            IUpdateClientsSalleRequestContract,
-            IUpdateClientsSalleResultContract>
+            IUpdateClientsSelleRequestContract,
+            IUpdateClientsSelleResultContract>
     {
         
         private readonly ApplicationContext _context;
         
         private readonly IPipelineNode<
-            IUpdateClientsSalleRequestContract,
-            IUpdateClientsSalleResultContract> _nextNode;
+            IUpdateClientsSelleRequestContract,
+            IUpdateClientsSelleResultContract> _nextNode;
 
-        public TransactedUpdateClientsSalleRequest(
+        public TransactedUpdateClientsSelleRequest(
             ApplicationContext context,
             IPipelineNode<
-                IUpdateClientsSalleRequestContract,
-                IUpdateClientsSalleResultContract> nextNode)
+                IUpdateClientsSelleRequestContract,
+                IUpdateClientsSelleResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateClientsSalleResultContract> Ask(
-            IUpdateClientsSalleRequestContract input,
+        public async Task<IUpdateClientsSelleResultContract> Ask(
+            IUpdateClientsSelleRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);

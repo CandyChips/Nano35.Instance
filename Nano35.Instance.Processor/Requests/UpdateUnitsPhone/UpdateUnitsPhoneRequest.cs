@@ -32,11 +32,10 @@ namespace Nano35.Instance.Processor.Requests.UpdateUnitsPhone
             IUpdateUnitsPhoneRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Units
-                    .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken)
-                );
-
+            var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
             result.Phone = input.Phone;
+            result.CreatorId = input.UpdaterId;
+            
             return new UpdateUnitsPhoneSuccessResultContract() ;
         }
     }
