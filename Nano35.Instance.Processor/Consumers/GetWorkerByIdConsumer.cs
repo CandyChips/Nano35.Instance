@@ -25,8 +25,7 @@ namespace Nano35.Instance.Processor.Consumers
         public async Task Consume(
             ConsumeContext<IGetWorkerByIdRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var bus = (IBus)_services.GetService(typeof(IBus));
+            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
             var logger = (ILogger<LoggedGetWorkerByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetWorkerByIdRequest>));
             
             var message = context.Message;
