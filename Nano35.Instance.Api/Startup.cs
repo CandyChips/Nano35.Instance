@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Instance.Api.Configurations;
-using Nano35.Instance.Api.ConfigureMiddleWares;
+using Nano35.Instance.Api.Middlewares;
 
 namespace Nano35.Instance.Api
 {

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateInstancePhone
 {
@@ -26,7 +27,8 @@ namespace Nano35.Instance.Api.Requests.UpdateInstancePhone
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateInstancePhoneResultContract> Ask(IUpdateInstancePhoneRequestContract input)
+        public async Task<IUpdateInstancePhoneResultContract> Ask(
+            IUpdateInstancePhoneRequestContract input)
         {
             // Configure request client of input type
             var client = _bus.CreateRequestClient<IUpdateInstancePhoneRequestContract>(TimeSpan.FromSeconds(10));

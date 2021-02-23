@@ -2,11 +2,14 @@
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateInstanceEmail
 {
     public class UpdateInstanceEmailRequest :
-        IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>
+        IPipelineNode<
+            IUpdateInstanceEmailRequestContract,
+            IUpdateInstanceEmailResultContract>
     {
         private readonly IBus _bus;
 
@@ -26,7 +29,8 @@ namespace Nano35.Instance.Api.Requests.UpdateInstanceEmail
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateInstanceEmailResultContract> Ask(IUpdateInstanceEmailRequestContract input)
+        public async Task<IUpdateInstanceEmailResultContract> Ask(
+            IUpdateInstanceEmailRequestContract input)
         {
             // Configure request client of input type
             var client = _bus.CreateRequestClient<IUpdateInstanceEmailRequestContract>(TimeSpan.FromSeconds(10));

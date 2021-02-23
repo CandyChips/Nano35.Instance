@@ -14,7 +14,7 @@ namespace Nano35.Instance.Api.Models
                 RuleFor(x => 
                     x.NewId).Must(CheckGuid).WithMessage("Ошибка валидации");  
                 RuleFor(x => 
-                    x.UpdaterId).Must(CheckGuid).WithMessage("Ошибка валидации");  
+                    x.UserId).Must(CheckGuid).WithMessage("Ошибка валидации");  
                 RuleFor(x => 
                     x.InstanceId).Must(CheckGuid).WithMessage("Ошибка валидации");  
             });    

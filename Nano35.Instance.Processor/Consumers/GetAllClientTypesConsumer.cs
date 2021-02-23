@@ -23,7 +23,7 @@ namespace Nano35.Instance.Processor.Consumers
         public async Task Consume(
             ConsumeContext<IGetAllClientTypesRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllClientTypesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllClientTypesRequest>));
             
             var message = context.Message;
@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.Consumers
             var result =
                 await new LoggedGetAllClientTypesRequest(logger,
                     new ValidatedGetAllClientTypesRequest(
-                        new GetAllClientTypesRequest(dbcontect))
+                        new GetAllClientTypesRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

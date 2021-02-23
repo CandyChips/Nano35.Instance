@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsState
         {
             var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
             result.WorkerId = input.UpdaterId;
-            result.ClientStateId = input.ClientStateId;
+            result.ClientStateId = input.StateId;
             
             return new UpdateClientsStateSuccessResultContract() ;
         }

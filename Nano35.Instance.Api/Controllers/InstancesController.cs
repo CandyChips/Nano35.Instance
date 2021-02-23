@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,12 @@ using Nano35.Instance.Api.Requests.GetAllInstances;
 using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
 using Nano35.Instance.Api.Requests.GetAllRegions;
 using Nano35.Instance.Api.Requests.GetInstanceById;
+using Nano35.Instance.Api.Requests.UpdateInstanceEmail;
+using Nano35.Instance.Api.Requests.UpdateInstanceInfo;
+using Nano35.Instance.Api.Requests.UpdateInstanceName;
+using Nano35.Instance.Api.Requests.UpdateInstancePhone;
+using Nano35.Instance.Api.Requests.UpdateInstanceRealName;
+using Nano35.Instance.Api.Requests.UpdateInstanceRegion;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -20,6 +27,55 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class InstancesController : ControllerBase
     {
+
+        public class UpdateInstanceEmailHttpContext : IUpdateInstanceEmailRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public string Email { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+
+        public class UpdateInstanceInfoHttpContext : IUpdateInstanceInfoRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public string Info { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+
+        public class UpdateInstanceNameHttpContext : IUpdateInstanceNameRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public string Name { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+
+        public class UpdateInstancePhoneHttpContext : IUpdateInstancePhoneRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public string Phone { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+
+        public class UpdateInstanceRealNameHttpContext : IUpdateInstanceRealNameRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public string RealName { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+
+        public class UpdateInstanceRegionHttpContext : IUpdateInstanceRegionRequestContract
+        {
+            public Guid InstanceId { get; set; }
+            public Guid RegionId { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+        }
+        
         private readonly IServiceProvider  _services;
 
         /// <summary>
@@ -137,10 +193,8 @@ namespace Nano35.Instance.Api.Controllers
             // Check response
             return result switch
             {
-                IGetAllRegionsSuccessResultContract success => 
-                    Ok(success.Data),
-                IGetAllRegionsErrorResultContract error => 
-                    BadRequest(error.Message),
+                IGetAllRegionsSuccessResultContract success => Ok(success.Data),
+                IGetAllRegionsErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
@@ -218,6 +272,157 @@ namespace Nano35.Instance.Api.Controllers
             {
                 ICreateCashInputSuccessResultContract => Ok(),
                 ICreateCashInputErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstanceEmail")]
+        public async Task<IActionResult> UpdateInstanceEmail(
+            [FromBody] UpdateInstanceEmailHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateInstanceEmailRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceEmailRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstanceEmailRequest(logger, 
+                        new ValidatedUpdateInstanceEmailRequest(
+                            new UpdateInstanceEmailRequest(bus)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstanceEmailSuccessResultContract => Ok(),
+                IUpdateInstanceEmailErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstanceInfo")]
+        public async Task<IActionResult> UpdateInstanceInfo(
+            [FromBody] UpdateInstanceInfoHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateInstanceInfoRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceInfoRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstanceInfoRequest(logger, 
+                        new ValidatedUpdateInstanceInfoRequest(
+                            new UpdateInstanceInfoRequest(bus)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstanceInfoSuccessResultContract => Ok(),
+                IUpdateInstanceInfoErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstanceName")]
+        public async Task<IActionResult> UpdateInstanceName(
+            [FromBody] UpdateInstanceNameHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateInstanceNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceNameRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstanceNameRequest(logger, 
+                        new ValidatedUpdateInstanceNameRequest(
+                            new UpdateInstanceNameRequest(bus)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstanceNameSuccessResultContract => Ok(),
+                IUpdateInstanceNameErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstancePhone")]
+        public async Task<IActionResult> UpdateInstancePhone(
+            [FromBody] UpdateInstancePhoneHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateInstancePhoneRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstancePhoneRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstancePhoneRequest(logger, 
+                        new ValidatedUpdateInstancePhoneRequest(
+                            new UpdateInstancePhoneRequest(bus)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstancePhoneSuccessResultContract => Ok(),
+                IUpdateInstancePhoneErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstanceRealName")]
+        public async Task<IActionResult> UpdateInstanceRealName(
+            [FromBody] UpdateInstanceRealNameHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateInstanceRealNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRealNameRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstanceRealNameRequest(logger, 
+                        new ValidatedUpdateInstanceRealNameRequest(
+                            new UpdateInstanceRealNameRequest(bus)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstanceRealNameSuccessResultContract => Ok(),
+                IUpdateInstanceRealNameErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateInstanceRegion")]
+        public async Task<IActionResult> UpdateInstanceRegion(
+            [FromBody] UpdateInstanceRegionHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedUpdateInstanceRegionRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRegionRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateInstanceRegionRequest(logger, 
+                        new ValidatedUpdateInstanceRegionRequest(
+                            new UpdateInstanceRegionRequest(bus, auth)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateInstanceRegionSuccessResultContract => Ok(),
+                IUpdateInstanceRegionErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

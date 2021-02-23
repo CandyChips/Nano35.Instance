@@ -32,11 +32,9 @@ namespace Nano35.Instance.Processor.Requests.UpdateInstanceEmail
             IUpdateInstanceEmailRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Instances
-                    .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken)
-                );
-
+            var result = await _context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
             result.OrgEmail = input.Email;
+            
             return new UpdateInstanceEmailSuccessResultContract();
         }
     }

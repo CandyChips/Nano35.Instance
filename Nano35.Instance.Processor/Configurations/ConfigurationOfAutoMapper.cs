@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.Configurations
                 mc.AddProfile(new WorkersAutoMapperProfile());
                 mc.AddProfile(new WorkersRoleAutoMapperProfile());
             });
-            IMapper mapper = mapperConfig.CreateMapper();
+            var mapper = mapperConfig.CreateMapper();
             MappingPipe.Mapper = mapper;
             services.AddSingleton(mapper);
         }

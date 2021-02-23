@@ -63,7 +63,7 @@ namespace Nano35.Instance.Api.Controllers
             public Guid ClientId { get; set; }
             [JsonIgnore]
             public Guid UpdaterId { get; set; }
-            public Guid ClientStateId { get; set; }
+            public Guid StateId { get; set; }
         }
 
         public class UpdateClientsTypeHttpContext : IUpdateClientsTypeRequestContract
@@ -71,7 +71,7 @@ namespace Nano35.Instance.Api.Controllers
             public Guid ClientId { get; set; }
             [JsonIgnore]
             public Guid UpdaterId { get; set; }
-            public Guid ClientTypeId { get; set; }
+            public Guid TypeId { get; set; }
         }
 
         public class GetClientByIdRequestContract : IGetClientByIdRequestContract
@@ -226,7 +226,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsEmail")]
         public async Task<IActionResult> UpdateClientsEmail(
             [FromBody] UpdateClientsEmailHttpContext body)
@@ -253,7 +253,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsName")]
         public async Task<IActionResult> UpdateClientsName(
             [FromBody] UpdateClientsNameHttpContext body)
@@ -279,7 +279,7 @@ namespace Nano35.Instance.Api.Controllers
                 _ => BadRequest()
             };
         }
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsPhone")]
         public async Task<IActionResult> UpdateClientsPhone(
             [FromBody] UpdateClientsPhoneHttpContext body)
@@ -306,7 +306,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsSelle")]
         public async Task<IActionResult> UpdateClientsSelle(
             [FromBody] UpdateClientsSelleHttpContext body)
@@ -333,7 +333,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsState")]
         public async Task<IActionResult> UpdateClientsState(
             [FromBody] UpdateClientsStateHttpContext body)
@@ -360,7 +360,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateClientsType")]
         public async Task<IActionResult> UpdateClientsType(
             [FromBody] UpdateClientsTypeHttpContext body)

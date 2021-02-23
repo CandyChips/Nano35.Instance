@@ -16,7 +16,7 @@ namespace Nano35.Instance.Processor.Models
         public string Name { get; set; }
         public string Comment { get; set; }
         
-        //Forgein keys
+        //Forein keys
         public Guid WorkersRoleId { get; set; }
         public WorkersRole WorkersRole { get; set; }
     }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateInstanceRegion
 {
@@ -10,13 +11,17 @@ namespace Nano35.Instance.Api.Requests.UpdateInstanceRegion
     {
         private readonly IBus _bus;
 
+        private readonly ICustomAuthStateProvider _auth;
+
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
         public UpdateInstanceRegionRequest(
-            IBus bus)
+            IBus bus, 
+            ICustomAuthStateProvider auth)
         {
             _bus = bus;
+            _auth = auth;
         }
         
         /// <summary>
@@ -28,6 +33,8 @@ namespace Nano35.Instance.Api.Requests.UpdateInstanceRegion
         /// </summary>
         public async Task<IUpdateInstanceRegionResultContract> Ask(IUpdateInstanceRegionRequestContract input)
         {
+            input.UpdaterId = _auth.CurrentUserId;
+
             // Configure request client of input type
             var client = _bus.CreateRequestClient<IUpdateInstanceRegionRequestContract>(TimeSpan.FromSeconds(10));
             

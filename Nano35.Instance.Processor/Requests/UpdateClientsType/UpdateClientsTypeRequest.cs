@@ -32,9 +32,9 @@ namespace Nano35.Instance.Processor.Requests.UpdateClientsType
             IUpdateClientsTypeRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
+            var result = await _context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken);
             result.WorkerId = input.UpdaterId;
-            result.ClientTypeId = input.ClientTypeId;
+            result.ClientTypeId = input.TypeId;
             
             return new UpdateClientsTypeSuccessResultContract() ;
         }

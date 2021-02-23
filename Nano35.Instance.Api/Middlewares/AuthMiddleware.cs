@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Nano35.Instance.Api.ConfigureMiddleWares.Middlewares
+namespace Nano35.Instance.Api.Middlewares
 {
     public class UseAuthMiddleware
     {    

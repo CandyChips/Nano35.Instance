@@ -1,21 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using MassTransit;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Instance.Processor.Requests;
 using Nano35.Instance.Processor.Requests.UpdateUnitsAdress;
 using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Consumers
 {
-    public class UpdateUnitsAdressConsumer : 
-        IConsumer<IUpdateUnitsAdressRequestContract>
+    public class UpdateUnitsAddressConsumer : 
+        IConsumer<IUpdateUnitsAddressRequestContract>
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateUnitsAdressConsumer(
+        public UpdateUnitsAddressConsumer(
             IServiceProvider services)
         {
             _services = services;
@@ -23,27 +21,27 @@ namespace Nano35.Instance.Processor.Consumers
 
 
         public async Task Consume(
-            ConsumeContext<IUpdateUnitsAdressRequestContract> context)
+            ConsumeContext<IUpdateUnitsAddressRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateUnitsAdressRequest>) _services.GetService(typeof(ILogger<LoggedUpdateUnitsAdressRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<LoggedUpdateUnitsAddressRequest>) _services.GetService(typeof(ILogger<LoggedUpdateUnitsAddressRequest>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateUnitsAdressRequest(logger,
-                    new ValidatedUpdateUnitsAdressRequest(
-                        new TransactedUpdateUnitsAdressRequest(dbcontect,
-                            new UpdateUnitsAdressRequest(dbcontect)))
+                await new LoggedUpdateUnitsAddressRequest(logger,
+                    new ValidatedUpdateUnitsAddressRequest(
+                        new TransactedUpdateUnitsAddressRequest(dbContext,
+                            new UpdateUnitsAddressRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)
             {
-                case IUpdateUnitsAdressSuccessResultContract:
-                    await context.RespondAsync<IUpdateUnitsAdressSuccessResultContract>(result);
+                case IUpdateUnitsAddressSuccessResultContract:
+                    await context.RespondAsync<IUpdateUnitsAddressSuccessResultContract>(result);
                     break;
-                case IUpdateUnitsAdressErrorResultContract:
-                    await context.RespondAsync<IUpdateUnitsAdressErrorResultContract>(result);
+                case IUpdateUnitsAddressErrorResultContract:
+                    await context.RespondAsync<IUpdateUnitsAddressErrorResultContract>(result);
                     break;
             }
         }

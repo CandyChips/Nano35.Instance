@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,9 @@ using Nano35.Instance.Api.HttpContext;
 using Nano35.Instance.Api.Requests.CreateWorker;
 using Nano35.Instance.Api.Requests.GetAllWorkerRoles;
 using Nano35.Instance.Api.Requests.GetAllWorkers;
+using Nano35.Instance.Api.Requests.UpdateWorkersComment;
+using Nano35.Instance.Api.Requests.UpdateWorkersName;
+using Nano35.Instance.Api.Requests.UpdateWorkersRole;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -16,6 +20,31 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class WorkersController : ControllerBase
     {
+        public class UpdateWorkersRoleHttpContext : IUpdateWorkersRoleRequestContract
+        {
+            public Guid WorkersId { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+            public Guid RoleId { get; set; }
+        }
+
+        public class UpdateWorkersNameHttpContext : IUpdateWorkersNameRequestContract
+        {
+            public Guid WorkersId { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        public class UpdateWorkersCommentHttpContext : IUpdateWorkersCommentRequestContract
+        {
+            public Guid WorkersId { get; set; }
+            [JsonIgnore]
+            public Guid UpdaterId { get; set; }
+            public string Comment { get; set; }
+        }
+        
         private readonly IServiceProvider  _services;
 
         /// <summary>
@@ -109,6 +138,84 @@ namespace Nano35.Instance.Api.Controllers
             {
                 ICreateWorkerSuccessResultContract => Ok(),
                 ICreateWorkerErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPatch]
+        [Route("UpdateWorkersRole")]
+        public async Task<IActionResult> UpdateWorkersRole(
+            [FromBody] UpdateWorkersRoleHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedUpdateWorkersRoleRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersRoleRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateWorkersRoleRequest(logger, 
+                        new ValidatedUpdateWorkersRoleRequest(
+                            new UpdateWorkersRoleRequest(bus, auth)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateWorkersRoleSuccessResultContract => Ok(),
+                IUpdateWorkersRoleErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPatch]
+        [Route("UpdateWorkersName")]
+        public async Task<IActionResult> UpdateWorkersName(
+            [FromBody] UpdateWorkersNameHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedUpdateWorkersNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersNameRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateWorkersNameRequest(logger, 
+                        new ValidatedUpdateWorkersNameRequest(
+                            new UpdateWorkersNameRequest(bus, auth)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateWorkersNameSuccessResultContract => Ok(),
+                IUpdateWorkersNameErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPatch]
+        [Route("UpdateWorkersComment")]
+        public async Task<IActionResult> UpdateWorkersComment(
+            [FromBody] UpdateWorkersCommentHttpContext body)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedUpdateWorkersCommentRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersCommentRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedUpdateWorkersCommentRequest(logger, 
+                        new ValidatedUpdateWorkersCommentRequest(
+                            new UpdateWorkersCommentRequest(bus, auth)))
+                    .Ask(body);
+
+            // Check response of create unit request
+            return result switch
+            {
+                IUpdateWorkersCommentSuccessResultContract => Ok(),
+                IUpdateWorkersCommentErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

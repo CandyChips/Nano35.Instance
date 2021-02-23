@@ -184,7 +184,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateUnitsName")]
         public async Task<IActionResult> UpdateUnitsName(
             [FromBody] UpdateUnitsNameHttpContext body)
@@ -210,7 +210,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateUnitsPhone")]
         public async Task<IActionResult> UpdateUnitsPhone(
             [FromBody] UpdateUnitsPhoneHttpContext body)
@@ -236,7 +236,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateUnitsAddress")]
         public async Task<IActionResult> UpdateUnitsAddress(
             [FromBody] UpdateUnitsAddressHttpContext body)
@@ -262,7 +262,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateUnitsType")]
         public async Task<IActionResult> UpdateUnitsType(
             [FromBody] UpdateUnitsTypeHttpContext body)
@@ -288,7 +288,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("UpdateUnitsWorkingFormat")]
         public async Task<IActionResult> UpdateUnitsWorkingFormat(
             [FromBody] UpdateUnitsWorkingFormatHttpContext body)

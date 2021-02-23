@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
-using Nano35.Instance.Api.ConfigureMiddleWares.Middlewares;
 
-namespace Nano35.Instance.Api.ConfigureMiddleWares
+namespace Nano35.Instance.Api.Middlewares
 {
     public class ConfigureCommon
     {

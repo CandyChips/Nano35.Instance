@@ -5,17 +5,17 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Requests;
-using Nano35.Instance.Processor.Requests.UpdateClientsSalle;
+using Nano35.Instance.Processor.Requests.UpdateClientsSelle;
 using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.Consumers
 {
-    public class UpdateClientsSalleConsumer : 
-        IConsumer<IUpdateClientsSalleRequestContract>
+    public class UpdateClientsSelleConsumer : 
+        IConsumer<IUpdateClientsSelleRequestContract>
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateClientsSalleConsumer(
+        public UpdateClientsSelleConsumer(
             IServiceProvider services)
         {
             _services = services;
@@ -23,27 +23,27 @@ namespace Nano35.Instance.Processor.Consumers
 
 
         public async Task Consume(
-            ConsumeContext<IUpdateClientsSalleRequestContract> context)
+            ConsumeContext<IUpdateClientsSelleRequestContract> context)
         {
             var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateClientsSalleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsSalleRequest>));
+            var logger = (ILogger<LoggedUpdateClientsSelleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsSelleRequest>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateClientsSalleRequest(logger,
-                    new ValidatedUpdateClientsSalleRequest(
-                        new TransactedUpdateClientsSalleRequest(dbcontect,
-                            new UpdateClientsSalleRequest(dbcontect)))
+                await new LoggedUpdateClientsSelleRequest(logger,
+                    new ValidatedUpdateClientsSelleRequest(
+                        new TransactedUpdateClientsSelleRequest(dbcontect,
+                            new UpdateClientsSelleRequest(dbcontect)))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)
             {
-                case IUpdateClientsSalleSuccessResultContract:
-                    await context.RespondAsync<IUpdateClientsSalleSuccessResultContract>(result);
+                case IUpdateClientsSelleSuccessResultContract:
+                    await context.RespondAsync<IUpdateClientsSelleSuccessResultContract>(result);
                     break;
-                case IUpdateClientsSalleErrorResultContract:
-                    await context.RespondAsync<IUpdateClientsSalleErrorResultContract>(result);
+                case IUpdateClientsSelleErrorResultContract:
+                    await context.RespondAsync<IUpdateClientsSelleErrorResultContract>(result);
                     break;
             }
         }
