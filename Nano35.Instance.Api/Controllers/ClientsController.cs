@@ -5,8 +5,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Helpers;
-using Nano35.Instance.Api.HttpContext;
 using Nano35.Instance.Api.Requests.CreateClient;
 using Nano35.Instance.Api.Requests.GetAllClients;
 using Nano35.Instance.Api.Requests.GetAllClientStates;
@@ -25,59 +25,6 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
-
-        public class UpdateClientsEmailHttpContext : IUpdateClientsEmailRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public string Email { get; set; }
-        }
-
-        public class UpdateClientsNameHttpContext : IUpdateClientsNameRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public string Name { get; set; }
-        }
-
-        public class UpdateClientsPhoneHttpContext : IUpdateClientsPhoneRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public string Phone { get; set; }
-        }
-
-        public class UpdateClientsSelleHttpContext : IUpdateClientsSelleRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public decimal Selle { get; set; }
-        }
-
-        public class UpdateClientsStateHttpContext : IUpdateClientsStateRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public Guid StateId { get; set; }
-        }
-
-        public class UpdateClientsTypeHttpContext : IUpdateClientsTypeRequestContract
-        {
-            public Guid ClientId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public Guid TypeId { get; set; }
-        }
-
-        public class GetClientByIdRequestContract : IGetClientByIdRequestContract
-        {
-            public Guid UnitId { get; set; }
-        }
         
         private readonly IServiceProvider  _services;
 
@@ -226,7 +173,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsEmail")]
         public async Task<IActionResult> UpdateClientsEmail(
             [FromBody] UpdateClientsEmailHttpContext body)
@@ -253,7 +200,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsName")]
         public async Task<IActionResult> UpdateClientsName(
             [FromBody] UpdateClientsNameHttpContext body)
@@ -279,7 +226,7 @@ namespace Nano35.Instance.Api.Controllers
                 _ => BadRequest()
             };
         }
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsPhone")]
         public async Task<IActionResult> UpdateClientsPhone(
             [FromBody] UpdateClientsPhoneHttpContext body)
@@ -306,7 +253,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsSelle")]
         public async Task<IActionResult> UpdateClientsSelle(
             [FromBody] UpdateClientsSelleHttpContext body)
@@ -333,7 +280,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsState")]
         public async Task<IActionResult> UpdateClientsState(
             [FromBody] UpdateClientsStateHttpContext body)
@@ -360,7 +307,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("UpdateClientsType")]
         public async Task<IActionResult> UpdateClientsType(
             [FromBody] UpdateClientsTypeHttpContext body)

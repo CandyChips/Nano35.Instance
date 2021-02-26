@@ -33,7 +33,7 @@ namespace Nano35.Instance.Api.Requests.CreateCashOutput
         public async Task<ICreateCashOutputResultContract> Ask(
             ICreateCashOutputRequestContract input)
         {
-            input.WorkerId = _auth.CurrentUserId;
+            input.UpdaterId = _auth.CurrentUserId;
             
             // Configure request client of input type
             var client = _bus.CreateRequestClient<ICreateCashOutputRequestContract>(TimeSpan.FromSeconds(10));

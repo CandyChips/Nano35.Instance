@@ -14,8 +14,13 @@
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.4-develop.3245" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
-    <PackageReference Include="Nano35.Contracts" Version="1.6.4" />
+    <PackageReference Include="Nano35.Contracts" Version="1.6.6" />
+    <PackageReference Include="Nano35.HttpContext" Version="1.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HttpContext" />
   </ItemGroup>
 
 </Project>

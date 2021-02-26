@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
-using Nano35.Instance.Api.HttpContext;
 using Nano35.Instance.Api.Requests.CreateUnit;
 using Nano35.Instance.Api.Requests.GetAllUnits;
 using Nano35.Instance.Api.Requests.GetAllUnitTypes;
@@ -15,6 +14,7 @@ using Nano35.Instance.Api.Requests.UpdateUnitsPhone;
 using Nano35.Instance.Api.Requests.UpdateUnitsType;
 using Nano35.Instance.Api.Requests.UpdateUnitsWorkingFormat;
 using System.Text.Json.Serialization;
+using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Requests.GetUnitById;
 
 namespace Nano35.Instance.Api.Controllers
@@ -23,47 +23,6 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class UnitsController : ControllerBase
     {
-        public class UpdateUnitsNameHttpContext : IUpdateUnitsNameRequestContract
-        {
-            public Guid UnitId { get; set; }
-            public string Name { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateUnitsPhoneHttpContext : IUpdateUnitsPhoneRequestContract
-        {
-            public Guid UnitId { get; set; }
-            public string Phone { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateUnitsAddressHttpContext : IUpdateUnitsAddressRequestContract
-        {
-            public Guid UnitId { get; set; }
-            public string Address { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateUnitsTypeHttpContext : IUpdateUnitsTypeRequestContract
-        {
-            public Guid UnitId { get; set; }
-            public Guid TypeId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateUnitsWorkingFormatHttpContext : IUpdateUnitsWorkingFormatRequestContract
-        {
-            public Guid UnitId { get; set; }
-            public string WorkingFormat { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        
         private readonly IServiceProvider  _services;
 
         /// <summary>
