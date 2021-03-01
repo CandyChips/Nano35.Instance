@@ -20,31 +20,6 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class WorkersController : ControllerBase
     {
-        public class UpdateWorkersRoleHttpContext : IUpdateWorkersRoleRequestContract
-        {
-            public Guid WorkersId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public Guid RoleId { get; set; }
-        }
-
-        public class UpdateWorkersNameHttpContext : IUpdateWorkersNameRequestContract
-        {
-            public Guid WorkersId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-
-            public string Name { get; set; }
-        }
-
-        public class UpdateWorkersCommentHttpContext : IUpdateWorkersCommentRequestContract
-        {
-            public Guid WorkersId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-            public string Comment { get; set; }
-        }
-        
         private readonly IServiceProvider  _services;
 
         /// <summary>
@@ -69,19 +44,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllWorkers")]
         public async Task<IActionResult> GetAllWorkers(
-            [FromQuery] GetAllWorkersHttpContext query)
+            [FromQuery] GetAllWorkersHttpContext.GetAllWorkersQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkersRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
 
+            var request = new GetAllWorkersRequestContract()
+            {
+                InstanceId = query.InstanceId,
+                WorkersRoleId = query.WorkersRoleId
+            };
+            
             // Send request to pipeline
             var result =
                 await new LoggedGetAllWorkersRequest(logger,
                         new ValidatedGetAllWorkersRequest(
-                            new GetAllWorkersRequest(bus)
-                            )
-                        ).Ask(query);
+                            new GetAllWorkersRequest(bus)))
+                    .Ask(request);
             
             // Check response get all workers request
             return result switch
@@ -100,11 +80,13 @@ namespace Nano35.Instance.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkerRolesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkerRolesRequest>));
 
+            var request = new GetAllWorkerRolesRequestContract();
+            
             // Send request to pipeline
             var result =
                 await new LoggedGetAllWorkerRolesRequest(logger,
-                    new GetAllWorkerRolesRequest(bus)
-                ).Ask(new GetAllWorkerRolesHttpContext());
+                    new GetAllWorkerRolesRequest(bus))
+                    .Ask(request);
 
             // Check response of get all worker roles request
             return result switch
@@ -118,20 +100,32 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateWorker")]
         public async Task<IActionResult> CreateWorker(
-            [FromBody]CreateWorkerHttpContext body)
+            [FromBody]CreateWorkerHttpContext.CreateWorkerBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateWorkerRequest>)_services.GetService(typeof(ILogger<LoggedCreateWorkerRequest>));
 
+            var request = new CreateWorkerRequestContract()
+            {
+                Comment = body.Comment,
+                Email = body.Email,
+                InstanceId = body.InstanceId,
+                Name = body.Name,
+                NewId = body.NewId,
+                Password = body.Password,
+                PasswordConfirm = body.PasswordConfirm,
+                Phone = body.Phone,
+                RoleId = body.RoleId
+            };
+            
             // Send request to pipeline
             var result = 
                 await new LoggedCreateWorkerRequest(logger, 
                     new ValidatedCreateWorkerRequest(
-                        new CreateWorkerRequest(bus, auth)
-                        )
-                    ).Ask(body);
+                        new CreateWorkerRequest(bus, auth)))
+                    .Ask(request);
             
             // Check response create worker request
             return result switch
@@ -145,19 +139,25 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersRole")]
         public async Task<IActionResult> UpdateWorkersRole(
-            [FromBody] UpdateWorkersRoleHttpContext body)
+            [FromBody] UpdateWorkersRoleHttpContext.UpdateWorkersRoleBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersRoleRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersRoleRequest>));
+
+            var request = new UpdateWorkersRoleRequestContract()
+            {
+                WorkersId = body.WorkersId,
+                RoleId = body.RoleId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersRoleRequest(logger, 
                         new ValidatedUpdateWorkersRoleRequest(
                             new UpdateWorkersRoleRequest(bus, auth)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -171,19 +171,25 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersName")]
         public async Task<IActionResult> UpdateWorkersName(
-            [FromBody] UpdateWorkersNameHttpContext body)
+            [FromBody] UpdateWorkersNameHttpContext.UpdateWorkersNameBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersNameRequest>));
+
+            var request = new UpdateWorkersNameRequestContract()
+            {
+                Name = body.Name,
+                WorkersId = body.WorkersId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersNameRequest(logger, 
                         new ValidatedUpdateWorkersNameRequest(
                             new UpdateWorkersNameRequest(bus, auth)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -197,19 +203,25 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersComment")]
         public async Task<IActionResult> UpdateWorkersComment(
-            [FromBody] UpdateWorkersCommentHttpContext body)
+            [FromBody] UpdateWorkersCommentHttpContext.UpdateWorkersCommentBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersCommentRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersCommentRequest>));
+
+            var request = new UpdateWorkersCommentRequestContract()
+            {
+                Comment = body.Comment,
+                WorkersId = body.WorkersId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersCommentRequest(logger, 
                         new ValidatedUpdateWorkersCommentRequest(
                             new UpdateWorkersCommentRequest(bus, auth)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch

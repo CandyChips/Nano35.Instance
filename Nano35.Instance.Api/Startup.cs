@@ -25,6 +25,8 @@ namespace Nano35.Instance.Api
             new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
             new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
+            
+            services.AddHealthChecks();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

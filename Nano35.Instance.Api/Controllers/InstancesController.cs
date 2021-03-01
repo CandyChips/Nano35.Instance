@@ -27,55 +27,6 @@ namespace Nano35.Instance.Api.Controllers
     [Route("[controller]")]
     public class InstancesController : ControllerBase
     {
-
-        public class UpdateInstanceEmailHttpContext : IUpdateInstanceEmailRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public string Email { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateInstanceInfoHttpContext : IUpdateInstanceInfoRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public string Info { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateInstanceNameHttpContext : IUpdateInstanceNameRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public string Name { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateInstancePhoneHttpContext : IUpdateInstancePhoneRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public string Phone { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateInstanceRealNameHttpContext : IUpdateInstanceRealNameRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public string RealName { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-
-        public class UpdateInstanceRegionHttpContext : IUpdateInstanceRegionRequestContract
-        {
-            public Guid InstanceId { get; set; }
-            public Guid RegionId { get; set; }
-            [JsonIgnore]
-            public Guid UpdaterId { get; set; }
-        }
-        
         private readonly IServiceProvider  _services;
 
         /// <summary>
@@ -100,18 +51,25 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances(
-            [FromQuery] GetAllInstancesHttpContext query)
+            [FromQuery] GetAllInstancesHttpContext.GetAllInstancesQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstancesRequest>));
+
+            var request = new GetAllInstancesRequestContract()
+            {
+                InstanceTypeId = query.InstanceTypeId,
+                RegionId = query.RegionId,
+                UserId = query.UserId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedGetAllInstancesRequest(logger,
                     new ValidatedGetAllInstancesRequest(
-                        new GetAllInstancesRequest(bus))
-                    ).Ask(query);
+                        new GetAllInstancesRequest(bus)))
+                    .Ask(request);
             
             // Check response of get all instances request
             return result switch
@@ -127,18 +85,23 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetInstanceById/Id={id}")]
         public async Task<IActionResult> GetInstanceById(
-            [FromRoute] GetInstanceByIdHttpContext query)
+            [FromRoute] GetInstanceByIdHttpContext.GetInstanceByIdQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetInstanceByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetInstanceByIdRequest>));
+
+            var request = new GetInstanceByIdRequestContract()
+            {
+                InstanceId = query.InstanceId
+            };
             
             // Send request to pipeline
             var result =
                 await new LoggedGetInstanceByIdRequest(logger,
                     new ValidatedGetInstanceByIdRequest(
-                        new GetInstanceByIdRequest(bus))
-                    ).Ask(query);
+                        new GetInstanceByIdRequest(bus)))
+                    .Ask(request);
 
             // Check response of get instance by id request
             return result switch
@@ -158,12 +121,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllInstanceTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstanceTypesRequest>));
+
+            var request = new GetAllInstanceTypesRequestContract();
             
             // Send request to pipeline
             var result =
                 await new LoggedGetAllInstanceTypesRequest(logger,
-                    new GetAllInstanceTypesRequest(bus)
-                ).Ask(new GetAllInstanceTypesHttpContext());
+                    new GetAllInstanceTypesRequest(bus))
+                    .Ask(request);
 
             // Check response of get all instance types request
             return result switch
@@ -183,12 +148,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllRegionsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
+
+            var request = new GetAllRegionsRequestContract();
             
             // Send request to pipeline
             var result =
                 await new LoggedGetAllRegionsRequest(logger,
-                    new GetAllRegionsRequest(bus)
-                ).Ask(new GetAllRegionsHttpContext());
+                    new GetAllRegionsRequest(bus))
+                    .Ask(request);
 
             // Check response
             return result switch
@@ -202,20 +169,32 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateInstance")]
         public async Task<IActionResult> CreateInstance(
-            [FromBody]CreateInstanceHttpContext body)
+            [FromBody]CreateInstanceHttpContext.CreateInstanceBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateInstanceRequest>)_services.GetService(typeof(ILogger<LoggedCreateInstanceRequest>));
+
+            var request = new CreateInstanceRequestContract()
+            {
+                Email = body.Email,
+                Info = body.Info,
+                Name = body.Name,
+                RealName = body.RealName,
+                NewId = body.NewId,
+                Phone = body.Phone,
+                RegionId = body.RegionId,
+                TypeId = body.TypeId,
+                UserId = body.UserId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedCreateInstanceRequest(logger, 
                     new ValidatedCreateInstanceRequest(
-                        new CreateInstanceRequest(bus, auth)
-                    )
-                ).Ask(body);
+                        new CreateInstanceRequest(bus, auth)))
+                    .Ask(request);
             
             // Check response
             return result switch
@@ -229,18 +208,28 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateCashOutput")]
         public async Task<IActionResult> CreateCashOutput(
-            [FromBody]CreateCashOutputHttpContext body)
+            [FromBody] CreateCashOutputHttpContext.CreateCashOutputBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateCashOutputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashOutputRequest>));
+
+            var request = new CreateCashOutputRequestContract()
+            {
+                Cash = body.Cash,
+                Description = body.Description,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
+                UnitId = body.UnitId,
+                WorkerId = body.UpdaterId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedCreateCashOutputRequest(logger, 
-                    new CreateCashOutputRequest(bus, auth)
-                ).Ask(body);
+                    new CreateCashOutputRequest(bus, auth))
+                    .Ask(request);
             
             // Check response
             return result switch
@@ -254,18 +243,28 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateCashInput")]
         public async Task<IActionResult> CreateCashInput(
-            [FromBody]CreateCashInputHttpContext body)
+            [FromBody]CreateCashInputHttpContext.CreateCashInputBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateCashInputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashInputRequest>));
             
+            var request = new CreateCashInputRequestContract()
+            {
+                Cash = body.Cash,
+                Description = body.Description,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
+                UnitId = body.UnitId,
+                WorkerId = body.UpdaterId
+            };
+            
             // Send request to pipeline
             var result = 
                 await new LoggedCreateCashInputRequest(logger, 
-                    new CreateCashInputRequest(bus, auth)
-                ).Ask(body);
+                    new CreateCashInputRequest(bus, auth))
+                    .Ask(request);
             
             // Check response
             return result switch
@@ -279,18 +278,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceEmail")]
         public async Task<IActionResult> UpdateInstanceEmail(
-            [FromBody] UpdateInstanceEmailHttpContext body)
+            [FromBody] UpdateInstanceEmailHttpContext.UpdateInstanceEmailBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceEmailRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceEmailRequest>));
+
+            var request = new UpdateInstanceEmailRequestContract()
+            {
+                Email = body.Email, 
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceEmailRequest(logger, 
                         new ValidatedUpdateInstanceEmailRequest(
                             new UpdateInstanceEmailRequest(bus)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -304,18 +309,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceInfo")]
         public async Task<IActionResult> UpdateInstanceInfo(
-            [FromBody] UpdateInstanceInfoHttpContext body)
+            [FromBody] UpdateInstanceInfoHttpContext.UpdateInstanceInfoBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceInfoRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceInfoRequest>));
+
+            var request = new UpdateInstanceInfoRequestContract()
+            {
+                Info = body.Info,
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceInfoRequest(logger, 
                         new ValidatedUpdateInstanceInfoRequest(
                             new UpdateInstanceInfoRequest(bus)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -329,18 +340,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceName")]
         public async Task<IActionResult> UpdateInstanceName(
-            [FromBody] UpdateInstanceNameHttpContext body)
+            [FromBody] UpdateInstanceNameHttpContext.UpdateInstanceNameBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceNameRequest>));
+
+            var request = new UpdateInstanceNameRequestContract()
+            {
+                Name = body.Name,
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceNameRequest(logger, 
                         new ValidatedUpdateInstanceNameRequest(
                             new UpdateInstanceNameRequest(bus)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -354,18 +371,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstancePhone")]
         public async Task<IActionResult> UpdateInstancePhone(
-            [FromBody] UpdateInstancePhoneHttpContext body)
+            [FromBody] UpdateInstancePhoneHttpContext.UpdateInstancePhoneBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstancePhoneRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstancePhoneRequest>));
+
+            var request = new UpdateInstancePhoneRequestContract()
+            {
+                Phone = body.Phone,
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstancePhoneRequest(logger, 
                         new ValidatedUpdateInstancePhoneRequest(
                             new UpdateInstancePhoneRequest(bus)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -379,18 +402,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceRealName")]
         public async Task<IActionResult> UpdateInstanceRealName(
-            [FromBody] UpdateInstanceRealNameHttpContext body)
+            [FromBody] UpdateInstanceRealNameHttpContext.UpdateInstanceRealNameBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceRealNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRealNameRequest>));
+
+            var request = new UpdateInstanceRealNameRequestContract()
+            {
+                RealName = body.RealName,
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceRealNameRequest(logger, 
                         new ValidatedUpdateInstanceRealNameRequest(
                             new UpdateInstanceRealNameRequest(bus)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch
@@ -404,19 +433,25 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceRegion")]
         public async Task<IActionResult> UpdateInstanceRegion(
-            [FromBody] UpdateInstanceRegionHttpContext body)
+            [FromBody] UpdateInstanceRegionHttpContext.UpdateInstanceRegionBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateInstanceRegionRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRegionRequest>));
+
+            var request = new UpdateInstanceRegionRequestContract()
+            {
+                RegionId = body.RegionId,
+                InstanceId = body.InstanceId
+            };
             
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceRegionRequest(logger, 
                         new ValidatedUpdateInstanceRegionRequest(
                             new UpdateInstanceRegionRequest(bus, auth)))
-                    .Ask(body);
+                    .Ask(request);
 
             // Check response of create unit request
             return result switch

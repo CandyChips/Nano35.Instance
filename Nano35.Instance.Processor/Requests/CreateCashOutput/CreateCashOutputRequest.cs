@@ -39,7 +39,7 @@ namespace Nano35.Instance.Processor.Requests.CreateCashOutput
                 Description = input.Description,
                 Cash = input.Cash,
                 Date = DateTime.Now,
-                WorkerId = input.UpdaterId
+                WorkerId = input.WorkerId
             };
             await _context.CashOperations.AddAsync(operation, cancellationToken);
             return new CreateCashOutputSuccessResultContract();

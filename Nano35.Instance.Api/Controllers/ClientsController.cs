@@ -53,12 +53,19 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllClients")]
         public async Task<IActionResult> GetAllClients(
-            [FromQuery] GetAllClientHttpContext query)
+            [FromQuery] GetAllClientsHttpContext.GetAllClientsQuery query)
         {
             // ToDo Hey Maslyonok
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientsRequest>));
+
+            var request = new GetAllClientsRequestContract()
+            {
+                InstanceId = query.InstanceId,
+                ClientStateId = query.ClientStateId,
+                ClientTypeId = query.ClientTypeId
+            };
             
             // ToDo Hey Maslyonok
             // Send request to pipeline
@@ -66,7 +73,7 @@ namespace Nano35.Instance.Api.Controllers
                 await new ValidatedGetAllClientsRequest(
                     new LoggedGetAllClientsRequest(logger, 
                         new GetAllClientsRequest(bus))
-                ).Ask(query);
+                ).Ask(request);
 
             // ToDo Hey Maslyonok
             // Check response of get all clients request
@@ -81,16 +88,21 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetClientById")]
         public async Task<IActionResult> GetClientById(
-            [FromQuery] GetClientByIdRequestContract query)
+            [FromQuery] GetClientByIdHttpContext.GetClientByIdQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetClientByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
+
+            var request = new GetClientByIdRequestContract()
+            {
+                UnitId = query.UnitId
+            };
             
             var result = 
                 await new ValidatedGetClientByIdRequest(
                     new LoggedGetClientByIdRequest(logger, 
                         new GetClientByIdRequest(bus))
-                ).Ask(query);
+                ).Ask(request);
 
             return result switch
             {
@@ -107,12 +119,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientTypesRequest>));
+
+            var request = new GetAllClientTypesRequestContract();
             
             // Send request to pipeline
             var result = 
                 await new LoggedGetAllClientTypesRequest(logger, 
                     new GetAllClientTypesRequest(bus)
-                    ).Ask(new GetAllClientTypesHttpContext());
+                    ).Ask(request);
 
             // Check response of get all client types request
             return result switch
@@ -130,12 +144,14 @@ namespace Nano35.Instance.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientStates>)_services.GetService(typeof(ILogger<LoggedGetAllClientStates>));
+
+            var request = new GetAllClientStatesRequestContract();
             
             // Send request to pipeline
             var result = 
                 await new LoggedGetAllClientStates(logger, 
                     new GetAllClientStatesRequest(bus)
-                    ).Ask(new GetAllClientStatesHttpContext());
+                    ).Ask(request);
             
             // Check response of get all client states request
             return result switch
@@ -149,12 +165,24 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateClient")]
         public async Task<IActionResult> CreateClient(
-            [FromBody]CreateClientHttpContext body)
+            [FromBody]CreateClientHttpContext.CreateClientBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateClientRequest>) _services.GetService(typeof(ILogger<LoggedCreateClientRequest>));
+
+            var request = new CreateClientRequestContract()
+            {
+                Name = body.Name,
+                Email = body.Email,
+                Phone = body.Phone,
+                Selle = body.Selle,
+                InstanceId = body.InstanceId,
+                ClientStateId = body.ClientStateId,
+                ClientTypeId = body.ClientTypeId,
+                NewId = body.NewId
+            };
             
             // Send request to pipeline
             var result = 
@@ -162,7 +190,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedCreateClientRequest(
                         new CreateClientRequest(bus, auth)
                         )
-                    ).Ask(body);
+                    ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -176,12 +204,18 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsEmail")]
         public async Task<IActionResult> UpdateClientsEmail(
-            [FromBody] UpdateClientsEmailHttpContext body)
+            [FromBody] UpdateClientsEmailHttpContext.UpdateClientsEmailBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsEmailRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsEmailRequest>));
+
+            var request = new UpdateClientsEmailRequestContract()
+            {
+                ClientId = body.ClientId,
+                Email = body.Email
+            };
             
             // Send request to pipeline
             var result = 
@@ -189,7 +223,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedUpdateClientsEmailRequest(
                         new UpdateClientsEmailRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -203,12 +237,18 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsName")]
         public async Task<IActionResult> UpdateClientsName(
-            [FromBody] UpdateClientsNameHttpContext body)
+            [FromBody] UpdateClientsNameHttpContext.UpdateClientsNameBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsNameRequest>));
+            
+            var request = new UpdateClientsNameRequestContract()
+            {
+                ClientId = body.ClientId,
+                Name = body.Name
+            };
             
             // Send request to pipeline
             var result = 
@@ -216,7 +256,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedUpdateClientsNameRequest(
                         new UpdateClientsNameRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -229,12 +269,18 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsPhone")]
         public async Task<IActionResult> UpdateClientsPhone(
-            [FromBody] UpdateClientsPhoneHttpContext body)
+            [FromBody] UpdateClientsPhoneHttpContext.UpdateClientsPhoneBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsPhoneRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsPhoneRequest>));
+            
+            var request = new UpdateClientsPhoneRequestContract()
+            {
+                ClientId = body.ClientId,
+                Phone = body.Phone
+            };
             
             // Send request to pipeline
             var result = 
@@ -242,7 +288,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedUpdateClientsPhoneRequest(
                         new UpdateClientsPhoneRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -256,12 +302,18 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsSelle")]
         public async Task<IActionResult> UpdateClientsSelle(
-            [FromBody] UpdateClientsSelleHttpContext body)
+            [FromBody] UpdateClientsSelleHttpContext.UpdateClientsSelleBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsSelleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsSelleRequest>));
+            
+            var request = new UpdateClientsSelleRequestContract()
+            {
+                ClientId = body.ClientId,
+                Selle = body.Selle
+            };
             
             // Send request to pipeline
             var result = 
@@ -269,7 +321,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedUpdateClientsSelleRequest(
                         new UpdateClientsSelleRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -283,12 +335,18 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsState")]
         public async Task<IActionResult> UpdateClientsState(
-            [FromBody] UpdateClientsStateHttpContext body)
+            [FromBody] UpdateClientsStateHttpContext.UpdateClientsStateBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsStateRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsStateRequest>));
+            
+            var request = new UpdateClientsStateRequestContract()
+            {
+                ClientId = body.ClientId,
+                StateId = body.StateId
+            };
             
             // Send request to pipeline
             var result = 
@@ -296,7 +354,7 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedUpdateClientsStateRequest(
                         new UpdateClientsStateRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
@@ -310,20 +368,26 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsType")]
         public async Task<IActionResult> UpdateClientsType(
-            [FromBody] UpdateClientsTypeHttpContext body)
+            [FromBody] UpdateClientsTypeHttpContext.UpdateClientsTypeBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsTypeRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsTypeRequest>));
             
+            var request = new UpdateClientsTypeRequestContract()
+            {
+                ClientId = body.ClientId,
+                TypeId = body.TypeId
+            };
+
             // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsTypeRequest(logger,  
                     new ValidatedUpdateClientsTypeRequest(
                         new UpdateClientsTypeRequest(bus, auth)
                     )
-                ).Ask(body);
+                ).Ask(request);
 
             // Check response of create client request
             return result switch
