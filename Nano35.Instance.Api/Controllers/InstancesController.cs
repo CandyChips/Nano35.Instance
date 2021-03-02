@@ -10,6 +10,7 @@ using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests.CreateCashInput;
 using Nano35.Instance.Api.Requests.CreateCashOutput;
 using Nano35.Instance.Api.Requests.CreateInstance;
+using Nano35.Instance.Api.Requests.GetAllCurrentInstances;
 using Nano35.Instance.Api.Requests.GetAllInstances;
 using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
 using Nano35.Instance.Api.Requests.GetAllRegions;
@@ -67,9 +68,36 @@ namespace Nano35.Instance.Api.Controllers
             // Send request to pipeline
             var result = 
                 await new LoggedGetAllInstancesRequest(logger,
-                    new ValidatedGetAllInstancesRequest(
-                        new GetAllInstancesRequest(bus)))
+                        new ValidatedGetAllInstancesRequest(
+                            new GetAllInstancesRequest(bus)))
                     .Ask(request);
+            
+            // Check response of get all instances request
+            return result switch
+            {
+                IGetAllInstancesSuccessResultContract success =>
+                    Ok(success.Data),
+                IGetAllInstancesErrorResultContract error => 
+                    BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpGet]
+        [Route("GetAllCurrentInstances")]
+        public async Task<IActionResult> GetAllCurrentInstances()
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
+            var logger = (ILogger<LoggedGetAllCurrentInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCurrentInstancesRequest>));
+
+            // Send request to pipeline
+            var result = 
+                await new LoggedGetAllCurrentInstancesRequest(logger,
+                        new ValidatedGetAllCurrentInstancesRequest(
+                            new GetAllCurrentInstancesRequest(bus, auth)))
+                    .Ask(new GetAllInstancesRequestContract());
             
             // Check response of get all instances request
             return result switch
