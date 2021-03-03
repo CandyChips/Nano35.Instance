@@ -52,7 +52,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances(
-            [FromQuery] GetAllInstancesHttpContext.GetAllInstancesQuery query)
+            [FromQuery] GetAllInstancesHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -113,7 +113,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetInstanceById/Id={id}")]
         public async Task<IActionResult> GetInstanceById(
-            [FromRoute] GetInstanceByIdHttpContext.GetInstanceByIdQuery query)
+            [FromRoute] GetInstanceByIdHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -197,7 +197,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateInstance")]
         public async Task<IActionResult> CreateInstance(
-            [FromBody]CreateInstanceHttpContext.CreateInstanceBody body)
+            [FromBody] CreateInstanceHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -236,7 +236,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateCashOutput")]
         public async Task<IActionResult> CreateCashOutput(
-            [FromBody] CreateCashOutputHttpContext.CreateCashOutputBody body)
+            [FromBody] CreateCashOutputHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -271,7 +271,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateCashInput")]
         public async Task<IActionResult> CreateCashInput(
-            [FromBody]CreateCashInputHttpContext.CreateCashInputBody body)
+            [FromBody] CreateCashInputHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -306,7 +306,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceEmail")]
         public async Task<IActionResult> UpdateInstanceEmail(
-            [FromBody] UpdateInstanceEmailHttpContext.UpdateInstanceEmailBody body)
+            [FromBody] UpdateInstanceEmailHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -337,7 +337,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceInfo")]
         public async Task<IActionResult> UpdateInstanceInfo(
-            [FromBody] UpdateInstanceInfoHttpContext.UpdateInstanceInfoBody body)
+            [FromBody] UpdateInstanceInfoHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -368,7 +368,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceName")]
         public async Task<IActionResult> UpdateInstanceName(
-            [FromBody] UpdateInstanceNameHttpContext.UpdateInstanceNameBody body)
+            [FromBody] UpdateInstanceNameHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -399,7 +399,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstancePhone")]
         public async Task<IActionResult> UpdateInstancePhone(
-            [FromBody] UpdateInstancePhoneHttpContext.UpdateInstancePhoneBody body)
+            [FromBody] UpdateInstancePhoneHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -430,7 +430,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceRealName")]
         public async Task<IActionResult> UpdateInstanceRealName(
-            [FromBody] UpdateInstanceRealNameHttpContext.UpdateInstanceRealNameBody body)
+            [FromBody] UpdateInstanceRealNameHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -461,7 +461,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateInstanceRegion")]
         public async Task<IActionResult> UpdateInstanceRegion(
-            [FromBody] UpdateInstanceRegionHttpContext.UpdateInstanceRegionBody body)
+            [FromBody] UpdateInstanceRegionHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));

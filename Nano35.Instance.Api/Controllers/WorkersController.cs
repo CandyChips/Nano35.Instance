@@ -44,7 +44,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllWorkers")]
         public async Task<IActionResult> GetAllWorkers(
-            [FromQuery] GetAllWorkersHttpContext.GetAllWorkersQuery query)
+            [FromQuery] GetAllWorkersHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -100,7 +100,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateWorker")]
         public async Task<IActionResult> CreateWorker(
-            [FromBody]CreateWorkerHttpContext.CreateWorkerBody body)
+            [FromBody] CreateWorkerHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -139,7 +139,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersRole")]
         public async Task<IActionResult> UpdateWorkersRole(
-            [FromBody] UpdateWorkersRoleHttpContext.UpdateWorkersRoleBody body)
+            [FromBody] UpdateWorkersRoleHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -171,7 +171,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersName")]
         public async Task<IActionResult> UpdateWorkersName(
-            [FromBody] UpdateWorkersNameHttpContext.UpdateWorkersNameBody body)
+            [FromBody] UpdateWorkersNameHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -203,7 +203,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateWorkersComment")]
         public async Task<IActionResult> UpdateWorkersComment(
-            [FromBody] UpdateWorkersCommentHttpContext.UpdateWorkersCommentBody body)
+            [FromBody] UpdateWorkersCommentHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));

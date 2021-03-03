@@ -53,7 +53,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllClients")]
         public async Task<IActionResult> GetAllClients(
-            [FromQuery] GetAllClientsHttpContext.GetAllClientsQuery query)
+            [FromQuery] GetAllClientsHttpQuery query)
         {
             // ToDo Hey Maslyonok
             // Setup configuration of pipeline
@@ -88,7 +88,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetClientById")]
         public async Task<IActionResult> GetClientById(
-            [FromQuery] GetClientByIdHttpContext.GetClientByIdQuery query)
+            [FromQuery] GetClientByIdHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetClientByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
@@ -165,7 +165,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateClient")]
         public async Task<IActionResult> CreateClient(
-            [FromBody]CreateClientHttpContext.CreateClientBody body)
+            [FromBody]CreateClientHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -204,7 +204,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsEmail")]
         public async Task<IActionResult> UpdateClientsEmail(
-            [FromBody] UpdateClientsEmailHttpContext.UpdateClientsEmailBody body)
+            [FromBody] UpdateClientsEmailHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -237,7 +237,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsName")]
         public async Task<IActionResult> UpdateClientsName(
-            [FromBody] UpdateClientsNameHttpContext.UpdateClientsNameBody body)
+            [FromBody] UpdateClientsNameHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -269,7 +269,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsPhone")]
         public async Task<IActionResult> UpdateClientsPhone(
-            [FromBody] UpdateClientsPhoneHttpContext.UpdateClientsPhoneBody body)
+            [FromBody] UpdateClientsPhoneHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -302,7 +302,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsSelle")]
         public async Task<IActionResult> UpdateClientsSelle(
-            [FromBody] UpdateClientsSelleHttpContext.UpdateClientsSelleBody body)
+            [FromBody] UpdateClientsSelleHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -335,7 +335,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsState")]
         public async Task<IActionResult> UpdateClientsState(
-            [FromBody] UpdateClientsStateHttpContext.UpdateClientsStateBody body)
+            [FromBody] UpdateClientsStateHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
@@ -368,7 +368,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPut]
         [Route("UpdateClientsType")]
         public async Task<IActionResult> UpdateClientsType(
-            [FromBody] UpdateClientsTypeHttpContext.UpdateClientsTypeBody body)
+            [FromBody] UpdateClientsTypeHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));

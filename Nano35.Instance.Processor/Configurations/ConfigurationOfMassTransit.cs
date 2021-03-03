@@ -3,7 +3,23 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Contracts.Identity.Artifacts;
-using Nano35.Instance.Processor.Consumers;
+using Nano35.Instance.Processor.UseCases.CreateClient;
+using Nano35.Instance.Processor.UseCases.CreateInstance;
+using Nano35.Instance.Processor.UseCases.CreateUnit;
+using Nano35.Instance.Processor.UseCases.CreateWorker;
+using Nano35.Instance.Processor.UseCases.GetAllClients;
+using Nano35.Instance.Processor.UseCases.GetAllClientsStates;
+using Nano35.Instance.Processor.UseCases.GetAllClientsTypes;
+using Nano35.Instance.Processor.UseCases.GetAllInstances;
+using Nano35.Instance.Processor.UseCases.GetAllInstanceTypes;
+using Nano35.Instance.Processor.UseCases.GetAllRegions;
+using Nano35.Instance.Processor.UseCases.GetAllUnits;
+using Nano35.Instance.Processor.UseCases.GetAllUnitTypes;
+using Nano35.Instance.Processor.UseCases.GetAllWorkerRoles;
+using Nano35.Instance.Processor.UseCases.GetAllWorkers;
+using Nano35.Instance.Processor.UseCases.GetClientById;
+using Nano35.Instance.Processor.UseCases.GetInstanceById;
+using Nano35.Instance.Processor.UseCases.GetUnitById;
 
 namespace Nano35.Instance.Processor.Configurations
 {

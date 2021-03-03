@@ -47,7 +47,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetAllUnits")]
         public async Task<IActionResult> GetAllUnits(
-            [FromQuery] GetAllUnitsHttpContext.GetAllUnitsQuery query)
+            [FromQuery] GetAllUnitsHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -78,7 +78,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Route("GetUnitById")]
         public async Task<IActionResult> GetUnitById(
-            [FromQuery] GetUnitByIdHttpContext.GetUnitByIdQuery query)
+            [FromQuery] GetUnitByIdHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -133,7 +133,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Route("CreateUnit")]
         public async Task<IActionResult> CreateUnit(
-            [FromBody]CreateUnitHttpContext.CreateUnitBody body)
+            [FromBody] CreateUnitHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -171,7 +171,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateUnitsName")]
         public async Task<IActionResult> UpdateUnitsName(
-            [FromBody] UpdateUnitsNameHttpContext.UpdateUnitsNameBody body)
+            [FromBody] UpdateUnitsNameHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -203,7 +203,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateUnitsPhone")]
         public async Task<IActionResult> UpdateUnitsPhone(
-            [FromBody] UpdateUnitsPhoneHttpContext.UpdateUnitsPhoneBody body)
+            [FromBody] UpdateUnitsPhoneHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -235,7 +235,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateUnitsAddress")]
         public async Task<IActionResult> UpdateUnitsAddress(
-            [FromBody] UpdateUnitsAddressHttpContext.UpdateUnitsAddressBody body)
+            [FromBody] UpdateUnitsAddressHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -267,7 +267,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateUnitsType")]
         public async Task<IActionResult> UpdateUnitsType(
-            [FromBody] UpdateUnitsTypeHttpContext.UpdateUnitsTypeBody body)
+            [FromBody] UpdateUnitsTypeHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -299,7 +299,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch]
         [Route("UpdateUnitsWorkingFormat")]
         public async Task<IActionResult> UpdateUnitsWorkingFormat(
-            [FromBody] UpdateUnitsWorkingFormatHttpContext.UpdateUnitsWorkingFormatBody body)
+            [FromBody] UpdateUnitsWorkingFormatHttpBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
