@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         public async Task Consume(
             ConsumeContext<IGetAllWorkersRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkersRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
             
@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             var result =
                 await new LoggedGetAllWorkersRequest(logger,
                     new ValidatedGetAllWorkersRequest(
-                        new GetAllWorkersRequest(dbcontect, bus))
+                        new GetAllWorkersRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

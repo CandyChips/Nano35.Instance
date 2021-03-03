@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
         public async Task Consume(
             ConsumeContext<IGetAllRolesRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllRolesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllRolesRequest>));
             
             var message = context.Message;
@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
             var result =
                 await new LoggedGetAllRolesRequest(logger,
                     new ValidatedGetAllRolesRequest(
-                        new GetAllRolesRequest(dbcontect))
+                        new GetAllRolesRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

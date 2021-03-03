@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
         public async Task Consume(
             ConsumeContext<IGetAllInstanceTypesRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllInstanceTypesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllInstanceTypesRequest>));
             
             var message = context.Message;
@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
             var result =
                 await new LoggedGetAllInstanceTypesRequest(logger,
                     new ValidatedGetAllInstanceTypesRequest(
-                        new GetAllInstanceTypesRequest(dbcontect))
+                        new GetAllInstanceTypesRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

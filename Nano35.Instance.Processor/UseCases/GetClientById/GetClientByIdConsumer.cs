@@ -22,7 +22,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
         public async Task Consume(
             ConsumeContext<IGetClientByIdRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetClientByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
             
             var message = context.Message;
@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
             var result =
                 await new LoggedGetClientByIdRequest(logger,
                     new ValidatedGetClientByIdRequest(
-                        new GetClientByIdRequest(dbcontect))
+                        new GetClientByIdRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

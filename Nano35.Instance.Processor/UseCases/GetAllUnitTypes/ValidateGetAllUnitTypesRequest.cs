@@ -4,23 +4,31 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
 {
-    public class GetAllUnitTypesValidatorErrorResult : IGetAllUnitTypesErrorResultContract
+    public class GetAllUnitTypesValidatorErrorResult :
+        IGetAllUnitTypesErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidateGetAllUnitTypesRequest:
-        IPipelineNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>
+        IPipelineNode<
+            IGetAllUnitTypesRequestContract, 
+            IGetAllUnitTypesResultContract>
     {
-        private readonly IPipelineNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllUnitTypesRequestContract, 
+            IGetAllUnitTypesResultContract> _nextNode;
 
         public ValidateGetAllUnitTypesRequest(
-            IPipelineNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllUnitTypesRequestContract,
+                IGetAllUnitTypesResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllUnitTypesResultContract> Ask(IGetAllUnitTypesRequestContract input,
+        public async Task<IGetAllUnitTypesResultContract> Ask(
+            IGetAllUnitTypesRequestContract input,
             CancellationToken cancellationToken)
         {
             if (false)

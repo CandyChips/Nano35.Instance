@@ -22,7 +22,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
         public async Task Consume(
             ConsumeContext<IGetUnitByIdRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetUnitByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetUnitByIdRequest>));
             
             var message = context.Message;
@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
             var result =
                 await new LoggedGetUnitByIdRequest(logger,
                     new ValidatedGetUnitByIdRequest(
-                        new GetUnitByIdRequest(dbcontect))
+                        new GetUnitByIdRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

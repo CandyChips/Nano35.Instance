@@ -22,7 +22,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
         public async Task Consume(
             ConsumeContext<IGetWorkerByIdRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
             var logger = (ILogger<LoggedGetWorkerByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetWorkerByIdRequest>));
             
             var message = context.Message;
@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
             var result =
                 await new LoggedGetWorkerByIdRequest(logger,
                     new ValidatedGetWorkerByIdRequest(
-                        new GetWorkerByIdRequest(dbcontect))
+                        new GetWorkerByIdRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

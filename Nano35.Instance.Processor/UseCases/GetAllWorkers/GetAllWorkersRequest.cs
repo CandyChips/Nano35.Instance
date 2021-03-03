@@ -13,7 +13,9 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
     public class GetAllWorkersRequest :
-        IPipelineNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>
+        IPipelineNode<
+            IGetAllWorkersRequestContract, 
+            IGetAllWorkersResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;

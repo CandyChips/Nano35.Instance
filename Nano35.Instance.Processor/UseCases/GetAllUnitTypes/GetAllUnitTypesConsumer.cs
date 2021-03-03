@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
         public async Task Consume(
             ConsumeContext<IGetAllUnitTypesRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllUnitTypesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllUnitTypesRequest>));
             
             var message = context.Message;
@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
             var result =
                 await new LoggedGetAllUnitTypesRequest(logger,
                     new ValidateGetAllUnitTypesRequest(
-                        new GetAllUnitTypesRequest(dbcontect))
+                        new GetAllUnitTypesRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

@@ -7,20 +7,28 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
 {
     public class LoggedGetAllWorkerRolesRequest :
-        IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
+        IPipelineNode<
+            IGetAllWorkerRolesRequestContract,
+            IGetAllWorkerRolesResultContract>
     {
         private readonly ILogger<LoggedGetAllWorkerRolesRequest> _logger;
-        private readonly IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IGetAllWorkerRolesRequestContract, 
+            IGetAllWorkerRolesResultContract> _nextNode;
 
         public LoggedGetAllWorkerRolesRequest(
             ILogger<LoggedGetAllWorkerRolesRequest> logger,
-            IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllWorkerRolesRequestContract,
+                IGetAllWorkerRolesResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllWorkerRolesResultContract> Ask(IGetAllWorkerRolesRequestContract input,
+        public async Task<IGetAllWorkerRolesResultContract> Ask(
+            IGetAllWorkerRolesRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllWorkerRolesLogger starts on: {DateTime.Now}");

@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
         public async Task Consume(
             ConsumeContext<IGetAllRegionsRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllRegionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
             
             var message = context.Message;
@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             var result =
                 await new LoggedGetAllRegionsRequest(logger,
                     new ValidatedGetAllRegionsRequest(
-                        new GetAllRegionsRequest(dbcontect))
+                        new GetAllRegionsRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)
