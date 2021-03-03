@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
@@ -38,6 +39,9 @@ namespace Nano35.Instance.Api.Controllers
     
         [HttpGet]
         [Route("GetAllInstances")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllInstances(
             [FromQuery] GetAllInstancesHttpQuery query)
         {
@@ -67,6 +71,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpGet]
         [Route("GetAllCurrentInstances")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetAllCurrentInstances()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -88,7 +95,10 @@ namespace Nano35.Instance.Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetInstanceById/Id={id}")]
+        [Route("GetInstanceById/Id={InstanceId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetInstanceById(
             [FromRoute] GetInstanceByIdHttpQuery query)
         {
@@ -115,6 +125,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Route("GetAllInstanceTypes")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstanceTypesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllInstanceTypes()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -137,6 +150,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Route("GetAllRegions")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllRegions()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -159,6 +175,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Route("CreateInstance")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateInstanceErrorHttpResponse))] 
         public async Task<IActionResult> CreateInstance(
             [FromBody] CreateInstanceHttpBody body)
         {
@@ -195,6 +214,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Route("CreateCashOutput")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashOutputSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashOutputErrorHttpResponse))] 
         public async Task<IActionResult> CreateCashOutput(
             [FromBody] CreateCashOutputHttpBody body)
         {
@@ -227,6 +249,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Route("CreateCashInput")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashInputSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashInputErrorHttpResponse))] 
         public async Task<IActionResult> CreateCashInput(
             [FromBody] CreateCashInputHttpBody body)
         {
@@ -259,6 +284,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstanceEmail")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceEmailErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstanceEmail(
             [FromBody] UpdateInstanceEmailHttpBody body)
         {
@@ -287,6 +315,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstanceInfo")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceInfoErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstanceInfo(
             [FromBody] UpdateInstanceInfoHttpBody body)
         {
@@ -315,6 +346,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstanceName")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceNameErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstanceName(
             [FromBody] UpdateInstanceNameHttpBody body)
         {
@@ -343,6 +377,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstancePhone")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstancePhoneErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstancePhone(
             [FromBody] UpdateInstancePhoneHttpBody body)
         {
@@ -371,6 +408,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstanceRealName")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRealNameErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstanceRealName(
             [FromBody] UpdateInstanceRealNameHttpBody body)
         {
@@ -399,6 +439,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateInstanceRegion")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRegionErrorHttpResponse))] 
         public async Task<IActionResult> UpdateInstanceRegion(
             [FromBody] UpdateInstanceRegionHttpBody body)
         {

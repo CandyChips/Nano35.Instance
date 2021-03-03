@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
@@ -29,6 +30,9 @@ namespace Nano35.Instance.Api.Controllers
         
         [HttpGet]
         [Route("GetAllWorkers")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWorkersSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkersErrorHttpResponse))] 
         public async Task<IActionResult> GetAllWorkers(
             [FromQuery] GetAllWorkersHttpQuery query)
         {
@@ -57,6 +61,9 @@ namespace Nano35.Instance.Api.Controllers
     
         [HttpGet]
         [Route("GetAllWorkerRoles")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWorkerRolesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkerRolesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllWorkerRoles()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -79,6 +86,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Route("CreateWorker")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateWorkerSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateWorkerErrorHttpResponse))] 
         public async Task<IActionResult> CreateWorker(
             [FromBody] CreateWorkerHttpBody body)
         {
@@ -115,6 +125,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch]
         [Route("UpdateWorkersRole")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersRoleSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersRoleErrorHttpResponse))] 
         public async Task<IActionResult> UpdateWorkersRole(
             [FromBody] UpdateWorkersRoleHttpBody body)
         {
@@ -144,6 +157,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch]
         [Route("UpdateWorkersName")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersNameErrorHttpResponse))] 
         public async Task<IActionResult> UpdateWorkersName(
             [FromBody] UpdateWorkersNameHttpBody body)
         {
@@ -173,6 +189,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch]
         [Route("UpdateWorkersComment")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersCommentSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersCommentErrorHttpResponse))] 
         public async Task<IActionResult> UpdateWorkersComment(
             [FromBody] UpdateWorkersCommentHttpBody body)
         {

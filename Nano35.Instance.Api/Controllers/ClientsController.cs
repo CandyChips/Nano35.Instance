@@ -2,8 +2,10 @@
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Helpers;
@@ -52,6 +54,9 @@ namespace Nano35.Instance.Api.Controllers
         /// 
         [HttpGet]
         [Route("GetAllClients")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllClients(
             [FromQuery] GetAllClientsHttpQuery query)
         {
@@ -87,6 +92,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Route("GetClientById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetClientByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetClientByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetClientById(
             [FromQuery] GetClientByIdHttpQuery query)
         {
@@ -114,6 +122,9 @@ namespace Nano35.Instance.Api.Controllers
     
         [HttpGet]
         [Route("GetAllClientTypes")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientTypesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientTypesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllClientTypes()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -136,6 +147,9 @@ namespace Nano35.Instance.Api.Controllers
     
         [HttpGet]
         [Route("GetAllClientStates")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientStatesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientStatesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllClientStates()
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -158,6 +172,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Route("CreateClient")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateClientSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateClientErrorHttpResponse))]
         public async Task<IActionResult> CreateClient(
             [FromBody]CreateClientHttpBody body)
         {
@@ -194,6 +211,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPut]
         [Route("UpdateClientsEmail")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsEmailSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsEmailErrorHttpResponse))]
         public async Task<IActionResult> UpdateClientsEmail(
             [FromBody] UpdateClientsEmailHttpBody body)
         {
@@ -224,6 +244,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPut]
         [Route("UpdateClientsName")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsNameErrorHttpResponse))]
         public async Task<IActionResult> UpdateClientsName(
             [FromBody] UpdateClientsNameHttpBody body)
         {
@@ -253,6 +276,9 @@ namespace Nano35.Instance.Api.Controllers
         }
         [HttpPut]
         [Route("UpdateClientsPhone")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsPhoneSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsPhoneErrorHttpResponse))]
         public async Task<IActionResult> UpdateClientsPhone(
             [FromBody] UpdateClientsPhoneHttpBody body)
         {
@@ -283,6 +309,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPut]
         [Route("UpdateClientsSelle")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsSelleSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsSelleErrorHttpResponse))] 
         public async Task<IActionResult> UpdateClientsSelle(
             [FromBody] UpdateClientsSelleHttpBody body)
         {
@@ -313,6 +342,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPut]
         [Route("UpdateClientsState")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsStateSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsStateErrorHttpResponse))] 
         public async Task<IActionResult> UpdateClientsState(
             [FromBody] UpdateClientsStateHttpBody body)
         {
@@ -343,6 +375,9 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPut]
         [Route("UpdateClientsType")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsTypeSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsTypeErrorHttpResponse))] 
         public async Task<IActionResult> UpdateClientsType(
             [FromBody] UpdateClientsTypeHttpBody body)
         {
