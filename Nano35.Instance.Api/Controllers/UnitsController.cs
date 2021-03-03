@@ -25,31 +25,17 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public UnitsController(
             IServiceProvider services)
         {
             _services = services;
         }
         
-        /// <summary>
-        /// Controllers accept a HttpContext type
-        /// All controllers actions works by pipelines
-        /// Implementation works with 3 steps
-        /// 1. Setup DI services from IServiceProvider;
-        /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-        /// 3. Response pattern match of pipeline response;
-        /// </summary>
         [HttpGet]
         [Route("GetAllUnits")]
         public async Task<IActionResult> GetAllUnits(
             [FromQuery] GetAllUnitsHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllUnitsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitsRequest>));
 
@@ -59,18 +45,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitTypeId = query.UnitTypeId
             };
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllUnitsRequest(logger,
                         new ValidatedGetAllUnitsRequest(
                             new GetAllUnitsRequest(bus)))
                     .Ask(request);
             
-            // Check response of get all units request
             return result switch
             {
-                IGetAllUnitsSuccessResultContract success => Ok(success.Data),
-                IGetAllUnitsErrorResultContract error => BadRequest(error.Message),
+                IGetAllUnitsSuccessResultContract success => Ok(success),
+                IGetAllUnitsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -80,7 +64,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetUnitById(
             [FromQuery] GetUnitByIdHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetUnitByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetUnitByIdRequest>));
 
@@ -89,18 +72,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = query.UnitId
             };
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetUnitByIdRequest(logger,
                         new ValidatedGetUnitByIdRequest(
                             new GetUnitByIdRequest(bus)))
                     .Ask(request);
             
-            // Check response of get all units request
             return result switch
             {
-                IGetUnitByIdSuccessResultContract success => Ok(success.Data),
-                IGetUnitByIdErrorResultContract error => BadRequest(error.Message),
+                IGetUnitByIdSuccessResultContract success => Ok(success),
+                IGetUnitByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -109,23 +90,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllUnitTypes")]
         public async Task<IActionResult> GetAllUnitTypes()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllUnitTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitTypesRequest>));
 
             var request = new GetAllUnitTypesRequestContract();
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllUnitTypesRequest(logger,
                     new GetAllUnitTypesRequest(bus))
                     .Ask(request);
             
-            // Check response of get all unit types request
             return result switch
             {
-                IGetAllUnitTypesSuccessResultContract success => Ok(success.Data),
-                IGetAllUnitTypesErrorResultContract error => BadRequest(error.Message),
+                IGetAllUnitTypesSuccessResultContract success => Ok(success),
+                IGetAllUnitTypesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -135,7 +113,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateUnit(
             [FromBody] CreateUnitHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateUnitRequest>)_services.GetService(typeof(ILogger<LoggedCreateUnitRequest>));
@@ -152,18 +129,16 @@ namespace Nano35.Instance.Api.Controllers
                 WorkingFormat = body.WorkingFormat
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateUnitRequest(logger, 
                     new ValidatedCreateUnitRequest(
                         new CreateUnitRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                ICreateUnitSuccessResultContract => Ok(),
-                ICreateUnitErrorResultContract error => BadRequest(error.Message),
+                ICreateUnitSuccessResultContract success => Ok(success),
+                ICreateUnitErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -173,7 +148,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateUnitsName(
             [FromBody] UpdateUnitsNameHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsNameRequest>));
@@ -184,18 +158,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateUnitsNameRequest(logger, 
                     new ValidatedUpdateUnitsNameRequest(
                         new UpdateUnitsNameRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateUnitsNameSuccessResultContract => Ok(),
-                IUpdateUnitsNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateUnitsNameSuccessResultContract success => Ok(success),
+                IUpdateUnitsNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -205,7 +177,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateUnitsPhone(
             [FromBody] UpdateUnitsPhoneHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsPhoneRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsPhoneRequest>));
@@ -216,18 +187,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateUnitsPhoneRequest(logger, 
                     new ValidatedUpdateUnitsPhoneRequest(
                         new UpdateUnitsPhoneRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateUnitsPhoneSuccessResultContract => Ok(),
-                IUpdateUnitsPhoneErrorResultContract error => BadRequest(error.Message),
+                IUpdateUnitsPhoneSuccessResultContract success => Ok(success),
+                IUpdateUnitsPhoneErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -237,7 +206,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateUnitsAddress(
             [FromBody] UpdateUnitsAddressHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsAddressRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsAddressRequest>));
@@ -248,18 +216,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateUnitsAddressRequest(logger, 
                     new ValidatedUpdateUnitsAddressRequest(
                         new UpdateUnitsAddressRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateUnitsAddressSuccessResultContract => Ok(),
-                IUpdateUnitsAddressErrorResultContract error => BadRequest(error.Message),
+                IUpdateUnitsAddressSuccessResultContract success => Ok(success),
+                IUpdateUnitsAddressErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -269,7 +235,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateUnitsType(
             [FromBody] UpdateUnitsTypeHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsTypeRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsTypeRequest>));
@@ -280,18 +245,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateUnitsTypeRequest(logger, 
                     new ValidatedUpdateUnitsTypeRequest(
                         new UpdateUnitsTypeRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateUnitsTypeSuccessResultContract => Ok(),
-                IUpdateUnitsTypeErrorResultContract error => BadRequest(error.Message),
+                IUpdateUnitsTypeSuccessResultContract success => Ok(success),
+                IUpdateUnitsTypeErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -301,7 +264,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateUnitsWorkingFormat(
             [FromBody] UpdateUnitsWorkingFormatHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsWorkingFormatRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsWorkingFormatRequest>));
@@ -312,18 +274,16 @@ namespace Nano35.Instance.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateUnitsWorkingFormatRequest(logger, 
                     new ValidatedUpdateUnitsWorkingFormatRequest(
                         new UpdateUnitsWorkingFormatRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateUnitsWorkingFormatSuccessResultContract => Ok(),
-                IUpdateUnitsWorkingFormatErrorResultContract error => BadRequest(error.Message),
+                IUpdateUnitsWorkingFormatSuccessResultContract success => Ok(success),
+                IUpdateUnitsWorkingFormatErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

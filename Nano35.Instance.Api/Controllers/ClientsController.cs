@@ -79,8 +79,8 @@ namespace Nano35.Instance.Api.Controllers
             // Check response of get all clients request
             return result switch
             {
-                IGetAllClientsSuccessResultContract success => Ok(success.Data),
-                IGetAllClientsErrorResultContract error => BadRequest(error.Message),
+                IGetAllClientsSuccessResultContract success => Ok(success),
+                IGetAllClientsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -106,8 +106,8 @@ namespace Nano35.Instance.Api.Controllers
 
             return result switch
             {
-                IGetClientByIdSuccessResultContract success => Ok(success.Data),
-                IGetClientByIdErrorResultContract error => BadRequest(error.Message),
+                IGetClientByIdSuccessResultContract success => Ok(success),
+                IGetClientByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -116,23 +116,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllClientTypes")]
         public async Task<IActionResult> GetAllClientTypes()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientTypesRequest>));
 
             var request = new GetAllClientTypesRequestContract();
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllClientTypesRequest(logger, 
                     new GetAllClientTypesRequest(bus)
                     ).Ask(request);
 
-            // Check response of get all client types request
             return result switch
             {
-                IGetAllClientTypesSuccessResultContract success => Ok(success.Data),
-                IGetAllClientTypesErrorResultContract error => BadRequest(error.Message),
+                IGetAllClientTypesSuccessResultContract success => Ok(success),
+                IGetAllClientTypesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -141,23 +138,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllClientStates")]
         public async Task<IActionResult> GetAllClientStates()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientStates>)_services.GetService(typeof(ILogger<LoggedGetAllClientStates>));
 
             var request = new GetAllClientStatesRequestContract();
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllClientStates(logger, 
                     new GetAllClientStatesRequest(bus)
                     ).Ask(request);
             
-            // Check response of get all client states request
             return result switch
             {
-                IGetAllClientStatesSuccessResultContract success => Ok(success.Data),
-                IGetAllClientStatesErrorResultContract error => BadRequest(error.Message),
+                IGetAllClientStatesSuccessResultContract success => Ok(success),
+                IGetAllClientStatesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -167,7 +161,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateClient(
             [FromBody]CreateClientHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateClientRequest>) _services.GetService(typeof(ILogger<LoggedCreateClientRequest>));
@@ -184,7 +177,6 @@ namespace Nano35.Instance.Api.Controllers
                 NewId = body.NewId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateClientRequest(logger,  
                     new ValidatedCreateClientRequest(
@@ -192,11 +184,10 @@ namespace Nano35.Instance.Api.Controllers
                         )
                     ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                ICreateClientSuccessResultContract => Ok(),
-                ICreateClientErrorResultContract error => BadRequest(error.Message),
+                ICreateClientSuccessResultContract success => Ok(success),
+                ICreateClientErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -206,7 +197,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsEmail(
             [FromBody] UpdateClientsEmailHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsEmailRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsEmailRequest>));
@@ -217,7 +207,6 @@ namespace Nano35.Instance.Api.Controllers
                 Email = body.Email
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsEmailRequest(logger,  
                     new ValidatedUpdateClientsEmailRequest(
@@ -225,11 +214,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsEmailSuccessResultContract => Ok(),
-                IUpdateClientsEmailErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsEmailSuccessResultContract success => Ok(success),
+                IUpdateClientsEmailErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -239,7 +227,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsName(
             [FromBody] UpdateClientsNameHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsNameRequest>));
@@ -250,7 +237,6 @@ namespace Nano35.Instance.Api.Controllers
                 Name = body.Name
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsNameRequest(logger,  
                     new ValidatedUpdateClientsNameRequest(
@@ -258,11 +244,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsNameSuccessResultContract => Ok(),
-                IUpdateClientsNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsNameSuccessResultContract success => Ok(success),
+                IUpdateClientsNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -271,7 +256,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsPhone(
             [FromBody] UpdateClientsPhoneHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsPhoneRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsPhoneRequest>));
@@ -282,7 +266,6 @@ namespace Nano35.Instance.Api.Controllers
                 Phone = body.Phone
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsPhoneRequest(logger,  
                     new ValidatedUpdateClientsPhoneRequest(
@@ -290,11 +273,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsPhoneSuccessResultContract => Ok(),
-                IUpdateClientsPhoneErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsPhoneSuccessResultContract success => Ok(success),
+                IUpdateClientsPhoneErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -304,7 +286,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsSelle(
             [FromBody] UpdateClientsSelleHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsSelleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsSelleRequest>));
@@ -315,7 +296,6 @@ namespace Nano35.Instance.Api.Controllers
                 Selle = body.Selle
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsSelleRequest(logger,  
                     new ValidatedUpdateClientsSelleRequest(
@@ -323,11 +303,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsSelleSuccessResultContract => Ok(),
-                IUpdateClientsSelleErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsSelleSuccessResultContract success => Ok(success),
+                IUpdateClientsSelleErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -337,7 +316,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsState(
             [FromBody] UpdateClientsStateHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsStateRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsStateRequest>));
@@ -348,7 +326,6 @@ namespace Nano35.Instance.Api.Controllers
                 StateId = body.StateId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsStateRequest(logger,  
                     new ValidatedUpdateClientsStateRequest(
@@ -356,11 +333,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsStateSuccessResultContract => Ok(),
-                IUpdateClientsStateErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsStateSuccessResultContract success => Ok(success),
+                IUpdateClientsStateErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -370,7 +346,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateClientsType(
             [FromBody] UpdateClientsTypeHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus) _services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsTypeRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsTypeRequest>));
@@ -381,7 +356,6 @@ namespace Nano35.Instance.Api.Controllers
                 TypeId = body.TypeId
             };
 
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateClientsTypeRequest(logger,  
                     new ValidatedUpdateClientsTypeRequest(
@@ -389,11 +363,10 @@ namespace Nano35.Instance.Api.Controllers
                     )
                 ).Ask(request);
 
-            // Check response of create client request
             return result switch
             {
-                IUpdateClientsTypeSuccessResultContract => Ok(),
-                IUpdateClientsTypeErrorResultContract error => BadRequest(error.Message),
+                IUpdateClientsTypeSuccessResultContract success => Ok(success),
+                IUpdateClientsTypeErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

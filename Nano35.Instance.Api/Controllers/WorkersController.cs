@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -22,31 +21,17 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public WorkersController(
             IServiceProvider services)
         {
             _services = services;
         }
         
-        /// <summary>
-        /// Controllers accept a HttpContext type
-        /// All controllers actions works by pipelines
-        /// Implementation works with 3 steps
-        /// 1. Setup DI services from IServiceProvider;
-        /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-        /// 3. Response pattern match of pipeline response;
-        /// </summary>
         [HttpGet]
         [Route("GetAllWorkers")]
         public async Task<IActionResult> GetAllWorkers(
             [FromQuery] GetAllWorkersHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkersRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
 
@@ -56,18 +41,16 @@ namespace Nano35.Instance.Api.Controllers
                 WorkersRoleId = query.WorkersRoleId
             };
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllWorkersRequest(logger,
                         new ValidatedGetAllWorkersRequest(
                             new GetAllWorkersRequest(bus)))
                     .Ask(request);
             
-            // Check response get all workers request
             return result switch
             {
-                IGetAllWorkersSuccessResultContract success => Ok(success.Data),
-                IGetAllWorkersErrorResultContract error => BadRequest(error.Message),
+                IGetAllWorkersSuccessResultContract success => Ok(success),
+                IGetAllWorkersErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -76,23 +59,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllWorkerRoles")]
         public async Task<IActionResult> GetAllWorkerRoles()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkerRolesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkerRolesRequest>));
 
             var request = new GetAllWorkerRolesRequestContract();
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllWorkerRolesRequest(logger,
                     new GetAllWorkerRolesRequest(bus))
                     .Ask(request);
 
-            // Check response of get all worker roles request
             return result switch
             {
-                IGetAllWorkerRolesSuccessResultContract success => Ok(success.Data),
-                IGetAllWorkerRolesErrorResultContract error => BadRequest(error.Message),
+                IGetAllWorkerRolesSuccessResultContract success => Ok(success),
+                IGetAllWorkerRolesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -102,7 +82,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateWorker(
             [FromBody] CreateWorkerHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateWorkerRequest>)_services.GetService(typeof(ILogger<LoggedCreateWorkerRequest>));
@@ -120,18 +99,16 @@ namespace Nano35.Instance.Api.Controllers
                 RoleId = body.RoleId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateWorkerRequest(logger, 
                     new ValidatedCreateWorkerRequest(
                         new CreateWorkerRequest(bus, auth)))
                     .Ask(request);
             
-            // Check response create worker request
             return result switch
             {
-                ICreateWorkerSuccessResultContract => Ok(),
-                ICreateWorkerErrorResultContract error => BadRequest(error.Message),
+                ICreateWorkerSuccessResultContract success => Ok(success),
+                ICreateWorkerErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -141,7 +118,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersRole(
             [FromBody] UpdateWorkersRoleHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersRoleRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersRoleRequest>));
@@ -152,18 +128,16 @@ namespace Nano35.Instance.Api.Controllers
                 RoleId = body.RoleId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersRoleRequest(logger, 
                         new ValidatedUpdateWorkersRoleRequest(
                             new UpdateWorkersRoleRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateWorkersRoleSuccessResultContract => Ok(),
-                IUpdateWorkersRoleErrorResultContract error => BadRequest(error.Message),
+                IUpdateWorkersRoleSuccessResultContract success => Ok(success),
+                IUpdateWorkersRoleErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -173,7 +147,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersName(
             [FromBody] UpdateWorkersNameHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersNameRequest>));
@@ -184,18 +157,16 @@ namespace Nano35.Instance.Api.Controllers
                 WorkersId = body.WorkersId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersNameRequest(logger, 
                         new ValidatedUpdateWorkersNameRequest(
                             new UpdateWorkersNameRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateWorkersNameSuccessResultContract => Ok(),
-                IUpdateWorkersNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateWorkersNameSuccessResultContract success => Ok(success),
+                IUpdateWorkersNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -205,7 +176,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersComment(
             [FromBody] UpdateWorkersCommentHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersCommentRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersCommentRequest>));
@@ -216,18 +186,16 @@ namespace Nano35.Instance.Api.Controllers
                 WorkersId = body.WorkersId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateWorkersCommentRequest(logger, 
                         new ValidatedUpdateWorkersCommentRequest(
                             new UpdateWorkersCommentRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateWorkersCommentSuccessResultContract => Ok(),
-                IUpdateWorkersCommentErrorResultContract error => BadRequest(error.Message),
+                IUpdateWorkersCommentSuccessResultContract success => Ok(success),
+                IUpdateWorkersCommentErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

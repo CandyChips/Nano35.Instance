@@ -30,31 +30,17 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public InstancesController(
             IServiceProvider services)
         {
             _services = services;
         }
     
-        /// <summary>
-        /// Controllers accept a HttpContext type
-        /// All controllers actions works by pipelines
-        /// Implementation works with 3 steps
-        /// 1. Setup DI services from IServiceProvider;
-        /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-        /// 3. Response pattern match of pipeline response;
-        /// </summary>
         [HttpGet]
         [Route("GetAllInstances")]
         public async Task<IActionResult> GetAllInstances(
             [FromQuery] GetAllInstancesHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstancesRequest>));
 
@@ -65,20 +51,16 @@ namespace Nano35.Instance.Api.Controllers
                 UserId = query.UserId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllInstancesRequest(logger,
                         new ValidatedGetAllInstancesRequest(
                             new GetAllInstancesRequest(bus)))
                     .Ask(request);
             
-            // Check response of get all instances request
             return result switch
             {
-                IGetAllInstancesSuccessResultContract success =>
-                    Ok(success.Data),
-                IGetAllInstancesErrorResultContract error => 
-                    BadRequest(error.Message),
+                IGetAllInstancesSuccessResultContract success => Ok(success),
+                IGetAllInstancesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -87,25 +69,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllCurrentInstances")]
         public async Task<IActionResult> GetAllCurrentInstances()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedGetAllCurrentInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCurrentInstancesRequest>));
 
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllCurrentInstancesRequest(logger,
                         new ValidatedGetAllCurrentInstancesRequest(
                             new GetAllCurrentInstancesRequest(bus, auth)))
                     .Ask(new GetAllInstancesRequestContract());
             
-            // Check response of get all instances request
             return result switch
             {
-                IGetAllInstancesSuccessResultContract success =>
-                    Ok(success.Data),
-                IGetAllInstancesErrorResultContract error => 
-                    BadRequest(error.Message),
+                IGetAllInstancesSuccessResultContract success => Ok(success),
+                IGetAllInstancesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -115,7 +92,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetInstanceById(
             [FromRoute] GetInstanceByIdHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetInstanceByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetInstanceByIdRequest>));
 
@@ -124,20 +100,15 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = query.InstanceId
             };
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetInstanceByIdRequest(logger,
                     new ValidatedGetInstanceByIdRequest(
                         new GetInstanceByIdRequest(bus)))
                     .Ask(request);
-
-            // Check response of get instance by id request
             return result switch
             {
-                IGetInstanceByIdSuccessResultContract success => 
-                    Ok(success.Data),
-                IGetInstanceByIdErrorResultContract error =>
-                    BadRequest(error.Message),
+                IGetInstanceByIdSuccessResultContract success => Ok(success),
+                IGetInstanceByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -146,25 +117,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllInstanceTypes")]
         public async Task<IActionResult> GetAllInstanceTypes()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllInstanceTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstanceTypesRequest>));
 
             var request = new GetAllInstanceTypesRequestContract();
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllInstanceTypesRequest(logger,
                     new GetAllInstanceTypesRequest(bus))
                     .Ask(request);
 
-            // Check response of get all instance types request
             return result switch
             {
-                IGetAllInstanceTypesSuccessResultContract success => 
-                    Ok(success.Data),
-                IGetAllInstanceTypesErrorResultContract error => 
-                    BadRequest(error.Message),
+                IGetAllInstanceTypesSuccessResultContract success => Ok(success),
+                IGetAllInstanceTypesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -173,23 +139,20 @@ namespace Nano35.Instance.Api.Controllers
         [Route("GetAllRegions")]
         public async Task<IActionResult> GetAllRegions()
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllRegionsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
 
             var request = new GetAllRegionsRequestContract();
             
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllRegionsRequest(logger,
                     new GetAllRegionsRequest(bus))
                     .Ask(request);
 
-            // Check response
             return result switch
             {
-                IGetAllRegionsSuccessResultContract success => Ok(success.Data),
-                IGetAllRegionsErrorResultContract error => BadRequest(error.Message),
+                IGetAllRegionsSuccessResultContract success => Ok(success),
+                IGetAllRegionsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -199,7 +162,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateInstance(
             [FromBody] CreateInstanceHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateInstanceRequest>)_services.GetService(typeof(ILogger<LoggedCreateInstanceRequest>));
@@ -217,18 +179,16 @@ namespace Nano35.Instance.Api.Controllers
                 UserId = body.UserId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateInstanceRequest(logger, 
                     new ValidatedCreateInstanceRequest(
                         new CreateInstanceRequest(bus, auth)))
                     .Ask(request);
             
-            // Check response
             return result switch
             {
-                ICreateInstanceSuccessResultContract => Ok(),
-                ICreateInstanceErrorResultContract error => BadRequest(error.Message),
+                ICreateInstanceSuccessResultContract success => Ok(success),
+                ICreateInstanceErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -238,7 +198,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateCashOutput(
             [FromBody] CreateCashOutputHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateCashOutputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashOutputRequest>));
@@ -253,17 +212,15 @@ namespace Nano35.Instance.Api.Controllers
                 WorkerId = body.UpdaterId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateCashOutputRequest(logger, 
                     new CreateCashOutputRequest(bus, auth))
                     .Ask(request);
             
-            // Check response
             return result switch
             {
-                ICreateCashOutputSuccessResultContract => Ok(),
-                ICreateCashOutputErrorResultContract error => BadRequest(error.Message),
+                ICreateCashOutputSuccessResultContract success => Ok(success),
+                ICreateCashOutputErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -273,7 +230,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateCashInput(
             [FromBody] CreateCashInputHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateCashInputRequest>)_services.GetService(typeof(ILogger<LoggedCreateCashInputRequest>));
@@ -288,17 +244,15 @@ namespace Nano35.Instance.Api.Controllers
                 WorkerId = body.UpdaterId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateCashInputRequest(logger, 
                     new CreateCashInputRequest(bus, auth))
                     .Ask(request);
             
-            // Check response
             return result switch
             {
-                ICreateCashInputSuccessResultContract => Ok(),
-                ICreateCashInputErrorResultContract error => BadRequest(error.Message),
+                ICreateCashInputSuccessResultContract success => Ok(success),
+                ICreateCashInputErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -308,7 +262,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceEmail(
             [FromBody] UpdateInstanceEmailHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceEmailRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceEmailRequest>));
 
@@ -318,18 +271,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceEmailRequest(logger, 
                         new ValidatedUpdateInstanceEmailRequest(
                             new UpdateInstanceEmailRequest(bus)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstanceEmailSuccessResultContract => Ok(),
-                IUpdateInstanceEmailErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstanceEmailSuccessResultContract success => Ok(success),
+                IUpdateInstanceEmailErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -339,7 +290,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceInfo(
             [FromBody] UpdateInstanceInfoHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceInfoRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceInfoRequest>));
 
@@ -349,18 +299,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceInfoRequest(logger, 
                         new ValidatedUpdateInstanceInfoRequest(
                             new UpdateInstanceInfoRequest(bus)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstanceInfoSuccessResultContract => Ok(),
-                IUpdateInstanceInfoErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstanceInfoSuccessResultContract success => Ok(success),
+                IUpdateInstanceInfoErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -370,7 +318,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceName(
             [FromBody] UpdateInstanceNameHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceNameRequest>));
 
@@ -380,18 +327,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceNameRequest(logger, 
                         new ValidatedUpdateInstanceNameRequest(
                             new UpdateInstanceNameRequest(bus)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstanceNameSuccessResultContract => Ok(),
-                IUpdateInstanceNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstanceNameSuccessResultContract success => Ok(success),
+                IUpdateInstanceNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -401,7 +346,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstancePhone(
             [FromBody] UpdateInstancePhoneHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstancePhoneRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstancePhoneRequest>));
 
@@ -411,18 +355,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstancePhoneRequest(logger, 
                         new ValidatedUpdateInstancePhoneRequest(
                             new UpdateInstancePhoneRequest(bus)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstancePhoneSuccessResultContract => Ok(),
-                IUpdateInstancePhoneErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstancePhoneSuccessResultContract success => Ok(success),
+                IUpdateInstancePhoneErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -432,7 +374,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceRealName(
             [FromBody] UpdateInstanceRealNameHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateInstanceRealNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRealNameRequest>));
 
@@ -442,18 +383,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceRealNameRequest(logger, 
                         new ValidatedUpdateInstanceRealNameRequest(
                             new UpdateInstanceRealNameRequest(bus)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstanceRealNameSuccessResultContract => Ok(),
-                IUpdateInstanceRealNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstanceRealNameSuccessResultContract success => Ok(success),
+                IUpdateInstanceRealNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -463,7 +402,6 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceRegion(
             [FromBody] UpdateInstanceRegionHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateInstanceRegionRequest>)_services.GetService(typeof(ILogger<LoggedUpdateInstanceRegionRequest>));
@@ -474,18 +412,16 @@ namespace Nano35.Instance.Api.Controllers
                 InstanceId = body.InstanceId
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedUpdateInstanceRegionRequest(logger, 
                         new ValidatedUpdateInstanceRegionRequest(
                             new UpdateInstanceRegionRequest(bus, auth)))
                     .Ask(request);
 
-            // Check response of create unit request
             return result switch
             {
-                IUpdateInstanceRegionSuccessResultContract => Ok(),
-                IUpdateInstanceRegionErrorResultContract error => BadRequest(error.Message),
+                IUpdateInstanceRegionSuccessResultContract success => Ok(success),
+                IUpdateInstanceRegionErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
