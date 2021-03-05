@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,7 @@ using Nano35.Instance.Api.Requests.UpdateClientsType;
 
 namespace Nano35.Instance.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ClientsController : ControllerBase
@@ -51,12 +53,14 @@ namespace Nano35.Instance.Api.Controllers
         ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
         /// 3. Response pattern match of pipeline response;
         /// </summary>
-        /// 
+        ///
+        [Authorize]
         [HttpGet]
         [Route("GetAllClients")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientsErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> GetAllClients(
             [FromQuery] GetAllClientsHttpQuery query)
         {
@@ -90,11 +94,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetClientById")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetClientByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetClientByIdErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> GetClientById(
             [FromQuery] GetClientByIdHttpQuery query)
         {
@@ -120,6 +126,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
     
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetAllClientTypes")]
         [Produces("application/json")]
@@ -145,6 +152,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
     
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetAllClientStates")]
         [Produces("application/json")]
@@ -170,11 +178,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost]
         [Route("CreateClient")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateClientSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateClientErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> CreateClient(
             [FromBody]CreateClientHttpBody body)
         {
@@ -209,11 +219,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsEmail")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsEmailSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsEmailErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> UpdateClientsEmail(
             [FromBody] UpdateClientsEmailHttpBody body)
         {
@@ -242,11 +254,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsName")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsNameErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> UpdateClientsName(
             [FromBody] UpdateClientsNameHttpBody body)
         {
@@ -274,11 +288,14 @@ namespace Nano35.Instance.Api.Controllers
                 _ => BadRequest()
             };
         }
+        
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsPhone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsPhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsPhoneErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> UpdateClientsPhone(
             [FromBody] UpdateClientsPhoneHttpBody body)
         {
@@ -307,11 +324,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsSelle")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsSelleSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsSelleErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsSelleErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]  
         public async Task<IActionResult> UpdateClientsSelle(
             [FromBody] UpdateClientsSelleHttpBody body)
         {
@@ -340,11 +359,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsState")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsStateSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsStateErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsStateErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]  
         public async Task<IActionResult> UpdateClientsState(
             [FromBody] UpdateClientsStateHttpBody body)
         {
@@ -373,11 +394,13 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
+        [Authorize]
         [HttpPut]
         [Route("UpdateClientsType")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsTypeSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateClientsTypeErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> UpdateClientsType(
             [FromBody] UpdateClientsTypeHttpBody body)
         {
