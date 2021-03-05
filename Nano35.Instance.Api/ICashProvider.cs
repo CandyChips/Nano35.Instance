@@ -10,16 +10,14 @@ using Newtonsoft.Json;
 
 namespace Nano35.Instance.Api
 {
-    public interface ICashedData<TData, TSaved>
+    public interface ICashedData
     {
-        Task<TSaved> TryGet();
-        Task Set(TData data);
+        Task<string> TryGet();
+        Task Set(string data);
     }
 
-    public class CashedData<TData, TSaved> :
-        ICashedData<TData, TSaved> 
-        where TData : class
-        where TSaved : class
+    public class CashedData :
+        ICashedData
     {
         private readonly IDistributedCache _distributedCache;
         private string _key;
@@ -30,13 +28,13 @@ namespace Nano35.Instance.Api
             _distributedCache = distributedCache;
         }
 
-        public async Task<TSaved> TryGet()
+        public async Task<string> TryGet()
         {
-            var result = await _distributedCache.GetStringAsync(_key);
-            return string.IsNullOrEmpty(result) ? null : JsonConvert.DeserializeObject<TSaved>(result);
+            return await _distributedCache.GetStringAsync(_key);
+            //return string.IsNullOrEmpty(result) ? null : JsonConvert.DeserializeObject<TSaved>(result);
         }
 
-        public async Task Set(TData data)
+        public async Task Set(string data)
         {
             var cacheEntryOptions = new DistributedCacheEntryOptions()
             {
@@ -44,9 +42,9 @@ namespace Nano35.Instance.Api
                 SlidingExpiration = TimeSpan.FromSeconds(30)
             };
 
-            var result =  JsonConvert.SerializeObject(data);
+            //var result =  JsonConvert.SerializeObject(data);
 
-            await _distributedCache.SetStringAsync(_key, result, cacheEntryOptions);
+            await _distributedCache.SetStringAsync(_key, data, cacheEntryOptions);
         }
     }
 }

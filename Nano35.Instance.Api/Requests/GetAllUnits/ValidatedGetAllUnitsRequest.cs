@@ -3,18 +3,25 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllUnits
 {
-    public class GetAllUnitsValidatorErrorResult : IGetAllUnitsErrorResultContract
+    public class GetAllUnitsValidatorErrorResult :
+        IGetAllUnitsErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedGetAllUnitsRequest:
-        IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
+        IPipelineNode<
+            IGetAllUnitsRequestContract, 
+            IGetAllUnitsResultContract>
     {
-        private readonly IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllUnitsRequestContract, 
+            IGetAllUnitsResultContract> _nextNode;
 
         public ValidatedGetAllUnitsRequest(
-            IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> nextNode)
+            IPipelineNode<
+                IGetAllUnitsRequestContract, 
+                IGetAllUnitsResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

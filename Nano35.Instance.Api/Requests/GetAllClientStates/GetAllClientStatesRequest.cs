@@ -7,7 +7,9 @@ using Nano35.Instance.Api.Helpers;
 namespace Nano35.Instance.Api.Requests.GetAllClientStates
 {
     public class GetAllClientStatesRequest :
-        IPipelineNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>
+        IPipelineNode<
+            IGetAllClientStatesRequestContract, 
+            IGetAllClientStatesResultContract>
     {
         private readonly IBus _bus;
 
@@ -27,14 +29,17 @@ namespace Nano35.Instance.Api.Requests.GetAllClientStates
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IGetAllClientStatesResultContract> Ask(IGetAllClientStatesRequestContract input)
+        public async Task<IGetAllClientStatesResultContract> Ask(
+            IGetAllClientStatesRequestContract input)
         {
             // Configure request client of input type
             var client = _bus.CreateRequestClient<IGetAllClientStatesRequestContract>(TimeSpan.FromSeconds(10));
             
             // Receive response of processor magic
             var response = await client
-                .GetResponse<IGetAllClientStatesSuccessResultContract, IGetAllClientStatesErrorResultContract>(input);
+                .GetResponse<
+                    IGetAllClientStatesSuccessResultContract,
+                    IGetAllClientStatesErrorResultContract>(input);
             
             // Checking response status
             if (response.Is(out Response<IGetAllClientStatesSuccessResultContract> successResponse))

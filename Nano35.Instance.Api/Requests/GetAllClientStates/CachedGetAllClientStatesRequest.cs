@@ -1,80 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MassTransit.Initializers;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.HttpContext.instance;
 using Newtonsoft.Json;
 
-namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
+namespace Nano35.Instance.Api.Requests.GetAllClientStates
 {
-    public class CachedGetAllInstanceTypesRequest :
+    public class CachedGetAllClientStatesRequest :
         IPipelineNode<
-            IGetAllInstanceTypesRequestContract, 
-            IGetAllInstanceTypesResultContract>
+            IGetAllClientStatesRequestContract, 
+            IGetAllClientStatesResultContract>
     {
         private readonly IDistributedCache _distributedCache;
         
         private readonly IPipelineNode<
-            IGetAllInstanceTypesRequestContract,
-            IGetAllInstanceTypesResultContract> _nextNode;
+            IGetAllClientStatesRequestContract,
+            IGetAllClientStatesResultContract> _nextNode;
 
-        public CachedGetAllInstanceTypesRequest(
+        public CachedGetAllClientStatesRequest(
             IDistributedCache distributedCache,
             IPipelineNode<
-                IGetAllInstanceTypesRequestContract, 
-                IGetAllInstanceTypesResultContract> nextNode)
+                IGetAllClientStatesRequestContract, 
+                IGetAllClientStatesResultContract> nextNode)
         {
             _distributedCache = distributedCache;
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllInstanceTypesResultContract> Ask(
-            IGetAllInstanceTypesRequestContract input)
+        public async Task<IGetAllClientStatesResultContract> Ask(
+            IGetAllClientStatesRequestContract input)
         {
             try
             {
-                IEnumerable<IInstanceTypeViewModel> result = null;
+                IEnumerable<IClientStateViewModel> result = null;
                 string serializedResult;
                 
-                var encodedResult = await _distributedCache.GetAsync("InstanceTypes");
+                var encodedResult = await _distributedCache.GetAsync("ClientStates");
                 
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<InstanceTypeViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<ClientStateViewModel>>(serializedResult);
                 }
                 else
                 {
                     switch (await _nextNode.Ask(input))
                     {
-                        case IGetAllInstanceTypesSuccessResultContract success:
+                        case IGetAllClientStatesSuccessResultContract success:
                             result = success.Data;
                             var cacheEntryOptions = new DistributedCacheEntryOptions()
                             {
                                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
                                 SlidingExpiration = TimeSpan.FromSeconds(30)
                             };
-                            await _distributedCache.SetAsync("InstanceTypes", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
+                            await _distributedCache.SetAsync("ClientStates", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
                             break;
-                        case IGetAllInstanceTypesErrorResultContract error:
+                        case IGetAllClientStatesErrorResultContract error:
                             return error;
                     }
                 }
 
-                return new GetAllInstanceTypesSuccessResultContract()
+                return new GetAllClientStatesSuccessResultContract()
                 {
                     Data = result
                 };
             }
             catch
             {
-                return new GetAllInstanceTypesErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
+                return new GetAllClientStatesErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
             }
         }
     }

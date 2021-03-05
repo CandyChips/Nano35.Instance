@@ -40,7 +40,7 @@ namespace Nano35.Instance.Api.Controllers
             _services = services;
         }
     
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetAllInstances")]
         [Produces("application/json")]
@@ -63,9 +63,8 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetAllInstancesRequest(logger,
-                    new CachedGetAllInstancesRequest(distributedCache,
                         new ValidatedGetAllInstancesRequest(
-                            new GetAllInstancesRequest(bus))))
+                            new GetAllInstancesRequest(bus)))
                     .Ask(request);
             
             return result switch
@@ -76,7 +75,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
         
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetAllCurrentInstances")]
         [Produces("application/json")]
@@ -103,7 +102,7 @@ namespace Nano35.Instance.Api.Controllers
             };
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetInstanceById/Id={InstanceId}")]
         [Produces("application/json")]

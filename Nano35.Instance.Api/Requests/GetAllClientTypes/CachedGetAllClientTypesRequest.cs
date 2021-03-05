@@ -1,80 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MassTransit.Initializers;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.HttpContext.instance;
 using Newtonsoft.Json;
 
-namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
+namespace Nano35.Instance.Api.Requests.GetAllClientTypes
 {
-    public class CachedGetAllInstanceTypesRequest :
+    public class CachedGetAllClientTypesRequest :
         IPipelineNode<
-            IGetAllInstanceTypesRequestContract, 
-            IGetAllInstanceTypesResultContract>
+            IGetAllClientTypesRequestContract, 
+            IGetAllClientTypesResultContract>
     {
         private readonly IDistributedCache _distributedCache;
         
         private readonly IPipelineNode<
-            IGetAllInstanceTypesRequestContract,
-            IGetAllInstanceTypesResultContract> _nextNode;
+            IGetAllClientTypesRequestContract,
+            IGetAllClientTypesResultContract> _nextNode;
 
-        public CachedGetAllInstanceTypesRequest(
+        public CachedGetAllClientTypesRequest(
             IDistributedCache distributedCache,
             IPipelineNode<
-                IGetAllInstanceTypesRequestContract, 
-                IGetAllInstanceTypesResultContract> nextNode)
+                IGetAllClientTypesRequestContract, 
+                IGetAllClientTypesResultContract> nextNode)
         {
             _distributedCache = distributedCache;
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllInstanceTypesResultContract> Ask(
-            IGetAllInstanceTypesRequestContract input)
+        public async Task<IGetAllClientTypesResultContract> Ask(
+            IGetAllClientTypesRequestContract input)
         {
             try
             {
-                IEnumerable<IInstanceTypeViewModel> result = null;
+                IEnumerable<IClientTypeViewModel> result = null;
                 string serializedResult;
                 
-                var encodedResult = await _distributedCache.GetAsync("InstanceTypes");
+                var encodedResult = await _distributedCache.GetAsync("ClientTypes");
                 
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<InstanceTypeViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<ClientTypeViewModel>>(serializedResult);
                 }
                 else
                 {
                     switch (await _nextNode.Ask(input))
                     {
-                        case IGetAllInstanceTypesSuccessResultContract success:
+                        case IGetAllClientTypesSuccessResultContract success:
                             result = success.Data;
                             var cacheEntryOptions = new DistributedCacheEntryOptions()
                             {
                                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
                                 SlidingExpiration = TimeSpan.FromSeconds(30)
                             };
-                            await _distributedCache.SetAsync("InstanceTypes", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
+                            await _distributedCache.SetAsync("ClientTypes", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
                             break;
-                        case IGetAllInstanceTypesErrorResultContract error:
+                        case IGetAllClientTypesErrorResultContract error:
                             return error;
                     }
                 }
 
-                return new GetAllInstanceTypesSuccessResultContract()
+                return new GetAllClientTypesSuccessResultContract()
                 {
                     Data = result
                 };
             }
             catch
             {
-                return new GetAllInstanceTypesErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
+                return new GetAllClientTypesErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
             }
         }
     }

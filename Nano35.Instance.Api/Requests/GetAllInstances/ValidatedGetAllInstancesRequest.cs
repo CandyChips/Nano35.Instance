@@ -3,18 +3,25 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllInstances
 {
-    public class GetAllInstancesValidatorErrorResult : IGetAllInstancesErrorResultContract
+    public class GetAllInstancesValidatorErrorResult :
+        IGetAllInstancesErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedGetAllInstancesRequest:
-        IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>
+        IPipelineNode<
+            IGetAllInstancesRequestContract,
+            IGetAllInstancesResultContract>
     {
-        private readonly IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllInstancesRequestContract, 
+            IGetAllInstancesResultContract> _nextNode;
 
         public ValidatedGetAllInstancesRequest(
-            IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllInstancesRequestContract, 
+                IGetAllInstancesResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

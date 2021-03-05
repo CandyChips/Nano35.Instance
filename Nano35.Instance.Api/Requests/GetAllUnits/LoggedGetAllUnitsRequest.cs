@@ -6,14 +6,21 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllUnits
 {
     public class LoggedGetAllUnitsRequest :
-        IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
+        IPipelineNode<
+            IGetAllUnitsRequestContract, 
+            IGetAllUnitsResultContract>
     {
         private readonly ILogger<LoggedGetAllUnitsRequest> _logger;
-        private readonly IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IGetAllUnitsRequestContract,
+            IGetAllUnitsResultContract> _nextNode;
 
         public LoggedGetAllUnitsRequest(
             ILogger<LoggedGetAllUnitsRequest> logger,
-            IPipelineNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> nextNode)
+            IPipelineNode<
+                IGetAllUnitsRequestContract, 
+                IGetAllUnitsResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
@@ -35,6 +42,7 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
                     _logger.LogError($"with error {error.Message}");
                     break;
             }
+
             return result;
         }
     }

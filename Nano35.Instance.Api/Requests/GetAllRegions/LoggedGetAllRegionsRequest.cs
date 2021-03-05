@@ -6,14 +6,21 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllRegions
 {
     public class LoggedGetAllRegionsRequest :
-        IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>
+        IPipelineNode<
+            IGetAllRegionsRequestContract, 
+            IGetAllRegionsResultContract>
     {
         private readonly ILogger<LoggedGetAllRegionsRequest> _logger;
-        private readonly IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract> _nextNode;
+        
+        private readonly IPipelineNode<
+            IGetAllRegionsRequestContract, 
+            IGetAllRegionsResultContract> _nextNode;
 
         public LoggedGetAllRegionsRequest(
             ILogger<LoggedGetAllRegionsRequest> logger,
-            IPipelineNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract> nextNode)
+            IPipelineNode<
+                IGetAllRegionsRequestContract, 
+                IGetAllRegionsResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;

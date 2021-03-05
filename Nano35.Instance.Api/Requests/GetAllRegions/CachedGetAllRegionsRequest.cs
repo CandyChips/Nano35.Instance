@@ -1,80 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MassTransit.Initializers;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.HttpContext.instance;
 using Newtonsoft.Json;
 
-namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
+namespace Nano35.Instance.Api.Requests.GetAllRegions
 {
-    public class CachedGetAllInstanceTypesRequest :
+    public class CachedGetAllRegionsRequest :
         IPipelineNode<
-            IGetAllInstanceTypesRequestContract, 
-            IGetAllInstanceTypesResultContract>
+            IGetAllRegionsRequestContract, 
+            IGetAllRegionsResultContract>
     {
         private readonly IDistributedCache _distributedCache;
         
         private readonly IPipelineNode<
-            IGetAllInstanceTypesRequestContract,
-            IGetAllInstanceTypesResultContract> _nextNode;
+            IGetAllRegionsRequestContract,
+            IGetAllRegionsResultContract> _nextNode;
 
-        public CachedGetAllInstanceTypesRequest(
+        public CachedGetAllRegionsRequest(
             IDistributedCache distributedCache,
             IPipelineNode<
-                IGetAllInstanceTypesRequestContract, 
-                IGetAllInstanceTypesResultContract> nextNode)
+                IGetAllRegionsRequestContract, 
+                IGetAllRegionsResultContract> nextNode)
         {
             _distributedCache = distributedCache;
             _nextNode = nextNode;
         }
 
-        public async Task<IGetAllInstanceTypesResultContract> Ask(
-            IGetAllInstanceTypesRequestContract input)
+        public async Task<IGetAllRegionsResultContract> Ask(
+            IGetAllRegionsRequestContract input)
         {
             try
             {
-                IEnumerable<IInstanceTypeViewModel> result = null;
+                IEnumerable<IRegionViewModel> result = null;
                 string serializedResult;
                 
-                var encodedResult = await _distributedCache.GetAsync("InstanceTypes");
+                var encodedResult = await _distributedCache.GetAsync("Regions");
                 
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<InstanceTypeViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<RegionViewModel>>(serializedResult);
                 }
                 else
                 {
                     switch (await _nextNode.Ask(input))
                     {
-                        case IGetAllInstanceTypesSuccessResultContract success:
+                        case IGetAllRegionsSuccessResultContract success:
                             result = success.Data;
                             var cacheEntryOptions = new DistributedCacheEntryOptions()
                             {
                                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
                                 SlidingExpiration = TimeSpan.FromSeconds(30)
                             };
-                            await _distributedCache.SetAsync("InstanceTypes", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
+                            await _distributedCache.SetAsync("Regions", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(success.Data)), cacheEntryOptions);
                             break;
-                        case IGetAllInstanceTypesErrorResultContract error:
+                        case IGetAllRegionsErrorResultContract error:
                             return error;
                     }
                 }
 
-                return new GetAllInstanceTypesSuccessResultContract()
+                return new GetAllRegionsSuccessResultContract()
                 {
                     Data = result
                 };
             }
             catch
             {
-                return new GetAllInstanceTypesErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
+                return new GetAllRegionsErrorResultContract() {Message = "Сервер не отвечает повторите попытку позже"};
             }
         }
     }
