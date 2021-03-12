@@ -18,8 +18,12 @@ using Nano35.Instance.Processor.UseCases.GetAllUnitTypes;
 using Nano35.Instance.Processor.UseCases.GetAllWorkerRoles;
 using Nano35.Instance.Processor.UseCases.GetAllWorkers;
 using Nano35.Instance.Processor.UseCases.GetClientById;
+using Nano35.Instance.Processor.UseCases.GetClientStringById;
 using Nano35.Instance.Processor.UseCases.GetInstanceById;
+using Nano35.Instance.Processor.UseCases.GetInstanceStringById;
 using Nano35.Instance.Processor.UseCases.GetUnitById;
+using Nano35.Instance.Processor.UseCases.GetUnitStringById;
+using Nano35.Instance.Processor.UseCases.GetWorkerStringById;
 
 namespace Nano35.Instance.Processor.Configurations
 {
@@ -119,7 +123,28 @@ namespace Nano35.Instance.Processor.Configurations
                     {
                         e.Consumer<GetUnitByIdConsumer>(provider);
                     });
+                    ///
+                    cfg.ReceiveEndpoint("IGetWorkerStringByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetWorkerStringByIdConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetClientStringByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetClientStringByIdConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetUnitStringByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetUnitStringByIdConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetInstanceStringByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetInstanceStringByIdConsumer>(provider);
+                    });
                 }));
+                x.AddConsumer<GetWorkerStringByIdConsumer>();
+                x.AddConsumer<GetClientStringByIdConsumer>();
+                x.AddConsumer<GetUnitStringByIdConsumer>();
+                x.AddConsumer<GetInstanceStringByIdConsumer>();
                 x.AddConsumer<CreateUnitConsumer>();
                 x.AddConsumer<CreateClientConsumer>();
                 x.AddConsumer<GetAllInstancesConsumer>();

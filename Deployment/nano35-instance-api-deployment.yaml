@@ -7,7 +7,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      type: nano35-api
       app: nano35-instance-api
   template:
     metadata:
@@ -15,8 +14,8 @@ spec:
         app: nano35-instance-api
     spec:
       containers:
-      - image: bushemi2021/nano35.instance.api:latest
-        name: nano35-instance-api
-        ports:
-        - containerPort: 80
+        - image: bushemi2021/nano35.instance.api:latest
+          name: nano35-instance-api
+          ports:
+            - containerPort: 80
       restartPolicy: Always
