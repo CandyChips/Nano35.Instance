@@ -11,6 +11,7 @@ using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests.CreateWorker;
 using Nano35.Instance.Api.Requests.GetAllWorkerRoles;
 using Nano35.Instance.Api.Requests.GetAllWorkers;
+using Nano35.Instance.Api.Requests.GetWorkerStringById;
 using Nano35.Instance.Api.Requests.UpdateWorkersComment;
 using Nano35.Instance.Api.Requests.UpdateWorkersName;
 using Nano35.Instance.Api.Requests.UpdateWorkersRole;
@@ -126,6 +127,34 @@ namespace Nano35.Instance.Api.Controllers
             {
                 ICreateWorkerSuccessResultContract success => Ok(success),
                 ICreateWorkerErrorResultContract error => BadRequest(error),
+                _ => BadRequest()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetWorkerStringById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
+        public async Task<IActionResult> GetWorkerStringById(
+            [FromQuery] Guid workerId)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetWorkerStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetWorkerStringByIdRequest>));
+
+            var request = new GetWorkerStringByIdRequestContract()
+            {
+                WorkerId = workerId
+            };
+            
+            var result = 
+                await new LoggedGetWorkerStringByIdRequest(logger, 
+                    new GetWorkerStringByIdRequest(bus)).Ask(request);
+
+            return result switch
+            {
+                IGetWorkerStringByIdSuccessResultContract success => Ok(success),
+                IGetWorkerStringByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

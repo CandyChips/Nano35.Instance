@@ -6,33 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllClients
 {
     public class LoggedGetAllClientsRequest :
-        IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>
+        PipeNodeBase<IGetAllClientsRequestContract, IGetAllClientsResultContract>
     {
         private readonly ILogger<LoggedGetAllClientsRequest> _logger;
-        private readonly IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> _nextNode;
-
+        
         public LoggedGetAllClientsRequest(
             ILogger<LoggedGetAllClientsRequest> logger,
-            IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> nextNode)
+            IPipeNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllClientsResultContract> Ask(
+        public override async Task<IGetAllClientsResultContract> Ask(
             IGetAllClientsRequestContract input)
         {
             _logger.LogInformation($"Get all clients logger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            // Check response of get all client types request
-            _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with responce {result}");
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case IGetAllClientsSuccessResultContract:
+                    _logger.LogInformation($"Get all clients logger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case IGetAllClientsErrorResultContract error:
+                    _logger.LogError($"Get all clients logger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

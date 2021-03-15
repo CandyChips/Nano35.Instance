@@ -6,39 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreateInstance
 {
     public class LoggedCreateInstanceRequest :
-        IPipelineNode<
-            ICreateInstanceRequestContract, 
-            ICreateInstanceResultContract>
+        PipeNodeBase<ICreateInstanceRequestContract, ICreateInstanceResultContract>
     {
         private readonly ILogger<LoggedCreateInstanceRequest> _logger;
-        private readonly IPipelineNode<
-            ICreateInstanceRequestContract,
-            ICreateInstanceResultContract> _nextNode;
 
         public LoggedCreateInstanceRequest(
             ILogger<LoggedCreateInstanceRequest> logger,
-            IPipelineNode<
-                ICreateInstanceRequestContract,
-                ICreateInstanceResultContract> nextNode)
+            IPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateInstanceResultContract> Ask(
+        public override async Task<ICreateInstanceResultContract> Ask(
             ICreateInstanceRequestContract input)
         {
             _logger.LogInformation($"CreateClientLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreateInstanceSuccessResultContract:
+                    _logger.LogInformation($"CreateInstanceLogger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreateInstanceErrorResultContract error:
+                    _logger.LogError($"CreateInstanceLogger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

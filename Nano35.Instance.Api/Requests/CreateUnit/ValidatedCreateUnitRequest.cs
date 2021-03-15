@@ -3,30 +3,17 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.CreateUnit
 {
-    public class CreateUnitValidatorErrorResult : ICreateUnitErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateUnitRequest:
-        IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract>
+        PipeNodeBase<ICreateUnitRequestContract, ICreateUnitResultContract>
     {
-        private readonly IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> _nextNode;
-
         public ValidatedCreateUnitRequest(
-            IPipelineNode<ICreateUnitRequestContract, ICreateUnitResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract> next) :
+            base(next) {}
 
-        public async Task<ICreateUnitResultContract> Ask(
+        public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input)
         {
-            if (false)
-            {
-                return new CreateUnitValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

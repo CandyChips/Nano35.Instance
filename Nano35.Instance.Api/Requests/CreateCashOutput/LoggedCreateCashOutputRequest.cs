@@ -7,39 +7,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreateCashOutput
 {
     public class LoggedCreateCashOutputRequest :
-        IPipelineNode<
-            ICreateCashOutputRequestContract,
-            ICreateCashOutputResultContract>
+        PipeNodeBase<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>
     {
         private readonly ILogger<LoggedCreateCashOutputRequest> _logger;
-        private readonly IPipelineNode<
-            ICreateCashOutputRequestContract,
-            ICreateCashOutputResultContract> _nextNode;
 
         public LoggedCreateCashOutputRequest(
             ILogger<LoggedCreateCashOutputRequest> logger,
-            IPipelineNode<
-                ICreateCashOutputRequestContract,
-                ICreateCashOutputResultContract> nextNode)
+            IPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateCashOutputResultContract> Ask(
+        public override async Task<ICreateCashOutputResultContract> Ask(
             ICreateCashOutputRequestContract input)
         {
-            _logger.LogInformation($"Create cash output logger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"Create cash output logger ends on: {DateTime.Now}");
-            
+            _logger.LogInformation($"Create cash output logger starts on: {DateTime.Now.ToString("dd.MM.yyyy")}");
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreateCashOutputSuccessResultContract success:
+                    _logger.LogInformation($"Create cash output logger ends on: {DateTime.Now.ToString("dd.MM.yyyy")} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreateCashOutputErrorResultContract error:
+                    _logger.LogError($"Create cash output logger ends on: {DateTime.Now.ToString("dd.MM.yyyy")} with error {error.Message}");
                     break;
             }
             return result;

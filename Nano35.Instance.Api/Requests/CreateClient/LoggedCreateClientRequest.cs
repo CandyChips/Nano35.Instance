@@ -6,40 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreateClient
 {
     public class LoggedCreateClientRequest :
-        IPipelineNode<
-            ICreateClientRequestContract, 
-            ICreateClientResultContract>
+        PipeNodeBase<ICreateClientRequestContract, ICreateClientResultContract>
     {
         private readonly ILogger<LoggedCreateClientRequest> _logger;
-        
-        private readonly IPipelineNode<
-            ICreateClientRequestContract, 
-            ICreateClientResultContract> _nextNode;
 
         public LoggedCreateClientRequest(
             ILogger<LoggedCreateClientRequest> logger,
-            IPipelineNode<
-                ICreateClientRequestContract, 
-                ICreateClientResultContract> nextNode)
+            IPipeNode<ICreateClientRequestContract, ICreateClientResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateClientResultContract> Ask(
+        public override async Task<ICreateClientResultContract> Ask(
             ICreateClientRequestContract input)
         {
             _logger.LogInformation($"Create client logger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"Create client logger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreateClientSuccessResultContract:
+                    _logger.LogInformation($"Create client logger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreateClientErrorResultContract error:
+                    _logger.LogError($"Create client logger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

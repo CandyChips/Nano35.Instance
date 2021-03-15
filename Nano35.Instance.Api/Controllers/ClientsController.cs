@@ -15,6 +15,7 @@ using Nano35.Instance.Api.Requests.GetAllClients;
 using Nano35.Instance.Api.Requests.GetAllClientStates;
 using Nano35.Instance.Api.Requests.GetAllClientTypes;
 using Nano35.Instance.Api.Requests.GetClientById;
+using Nano35.Instance.Api.Requests.GetClientStringById;
 using Nano35.Instance.Api.Requests.UpdateClientsEmail;
 using Nano35.Instance.Api.Requests.UpdateClientsName;
 using Nano35.Instance.Api.Requests.UpdateClientsPhone;
@@ -81,7 +82,7 @@ namespace Nano35.Instance.Api.Controllers
             var result = 
                 await new ValidatedGetAllClientsRequest(
                     new LoggedGetAllClientsRequest(logger, 
-                        new GetAllClientsRequest(bus))
+                        new GetAllClientsUseCase(bus))
                 ).Ask(request);
 
             // ToDo Hey Maslyonok
@@ -122,6 +123,34 @@ namespace Nano35.Instance.Api.Controllers
             {
                 IGetClientByIdSuccessResultContract success => Ok(success),
                 IGetClientByIdErrorResultContract error => BadRequest(error),
+                _ => BadRequest()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetClientStringById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
+        public async Task<IActionResult> GetClientStringById(
+            [FromQuery] Guid clientId)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetClientStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientStringByIdRequest>));
+
+            var request = new GetClientStringByIdRequestContract()
+            {
+                ClientId = clientId
+            };
+            
+            var result = 
+                await new LoggedGetClientStringByIdRequest(logger, 
+                    new GetClientStringByIdRequest(bus)).Ask(request);
+
+            return result switch
+            {
+                IGetClientStringByIdSuccessResultContract success => Ok(success),
+                IGetClientStringByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

@@ -6,39 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreateUnit
 {
     public class LoggedCreateUnitRequest :
-        IPipelineNode<
-            ICreateUnitRequestContract, 
-            ICreateUnitResultContract>
+        PipeNodeBase<ICreateUnitRequestContract, ICreateUnitResultContract>
     {
         private readonly ILogger<LoggedCreateUnitRequest> _logger;
-        private readonly IPipelineNode<
-            ICreateUnitRequestContract, 
-            ICreateUnitResultContract> _nextNode;
 
         public LoggedCreateUnitRequest(
             ILogger<LoggedCreateUnitRequest> logger,
-            IPipelineNode<
-                ICreateUnitRequestContract, 
-                ICreateUnitResultContract> nextNode)
+            IPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(
+        public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input)
         {
             _logger.LogInformation($"Create unit logger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"Create unit logger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreateUnitSuccessResultContract:
+                    _logger.LogInformation($"Create unit logger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreateUnitErrorResultContract error:
+                    _logger.LogError($"Create unit logger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

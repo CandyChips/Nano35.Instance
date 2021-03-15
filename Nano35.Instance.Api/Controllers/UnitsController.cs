@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Requests.GetUnitById;
+using Nano35.Instance.Api.Requests.GetUnitStringById;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -121,6 +122,34 @@ namespace Nano35.Instance.Api.Controllers
             {
                 IGetAllUnitTypesSuccessResultContract success => Ok(success),
                 IGetAllUnitTypesErrorResultContract error => BadRequest(error),
+                _ => BadRequest()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetUnitStringById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
+        public async Task<IActionResult> GetUnitStringById(
+            [FromQuery] Guid unitId)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetUnitStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetUnitStringByIdRequest>));
+
+            var request = new GetUnitStringByIdRequestContract()
+            {
+                UnitId = unitId
+            };
+            
+            var result = 
+                await new LoggedGetUnitStringByIdRequest(logger, 
+                    new GetUnitStringByIdRequest(bus)).Ask(request);
+
+            return result switch
+            {
+                IGetUnitStringByIdSuccessResultContract success => Ok(success),
+                IGetUnitStringByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

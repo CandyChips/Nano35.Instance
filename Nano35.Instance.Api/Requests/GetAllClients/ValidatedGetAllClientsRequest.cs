@@ -9,24 +9,16 @@ namespace Nano35.Instance.Api.Requests.GetAllClients
     }
     
     public class ValidatedGetAllClientsRequest:
-        IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>
+        PipeNodeBase<IGetAllClientsRequestContract, IGetAllClientsResultContract>
     {
-        private readonly IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> _nextNode;
-
         public ValidatedGetAllClientsRequest(
-            IPipelineNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllClientsRequestContract, IGetAllClientsResultContract> next) : 
+            base(next) {}
 
-        public async Task<IGetAllClientsResultContract> Ask(
+        public override async Task<IGetAllClientsResultContract> Ask(
             IGetAllClientsRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllClientsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

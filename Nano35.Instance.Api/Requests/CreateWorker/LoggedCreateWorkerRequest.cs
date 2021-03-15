@@ -6,33 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreateWorker
 {
     public class LoggedCreateWorkerRequest :
-        IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>
+        PipeNodeBase<ICreateWorkerRequestContract, ICreateWorkerResultContract>
     {
         private readonly ILogger<LoggedCreateWorkerRequest> _logger;
-        private readonly IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract> _nextNode;
 
         public LoggedCreateWorkerRequest(
             ILogger<LoggedCreateWorkerRequest> logger,
-            IPipelineNode<ICreateWorkerRequestContract, ICreateWorkerResultContract> nextNode)
+            IPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateWorkerResultContract> Ask(
+        public override async Task<ICreateWorkerResultContract> Ask(
             ICreateWorkerRequestContract input)
         {
             _logger.LogInformation($"CreateWorkerLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"CreateWorkerLogger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreateWorkerSuccessResultContract:
+                    _logger.LogInformation($"CreateWorkerLogger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreateWorkerErrorResultContract error:
+                    _logger.LogError($"CreateWorkerLogger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

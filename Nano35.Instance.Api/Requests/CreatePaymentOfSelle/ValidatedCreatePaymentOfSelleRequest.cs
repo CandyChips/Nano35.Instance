@@ -3,30 +3,17 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.CreatePaymentOfSelle
 {
-    public class CreatePaymentOfSelleValidatorErrorResult : ICreatePaymentOfSelleErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreatePaymentOfSelleRequest:
-        IPipelineNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract>
+        PipeNodeBase<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract>
     {
-        private readonly IPipelineNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract> _nextNode;
-
         public ValidatedCreatePaymentOfSelleRequest(
-            IPipelineNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract> next) :
+            base(next) {}
 
-        public async Task<ICreatePaymentOfSelleResultContract> Ask(
+        public override async Task<ICreatePaymentOfSelleResultContract> Ask(
             ICreatePaymentOfSelleRequestContract input)
         {
-            if (false)
-            {
-                return new CreatePaymentOfSelleValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

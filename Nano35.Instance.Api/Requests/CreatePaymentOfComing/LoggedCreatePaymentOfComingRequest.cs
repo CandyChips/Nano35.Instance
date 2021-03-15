@@ -6,39 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.CreatePaymentOfComing
 {
     public class LoggedCreatePaymentOfComingRequest :
-        IPipelineNode<
-            ICreatePaymentOfComingRequestContract, 
-            ICreatePaymentOfComingResultContract>
+        PipeNodeBase<ICreatePaymentOfComingRequestContract, ICreatePaymentOfComingResultContract>
     {
         private readonly ILogger<LoggedCreatePaymentOfComingRequest> _logger;
-        private readonly IPipelineNode<
-            ICreatePaymentOfComingRequestContract,
-            ICreatePaymentOfComingResultContract> _nextNode;
 
         public LoggedCreatePaymentOfComingRequest(
             ILogger<LoggedCreatePaymentOfComingRequest> logger,
-            IPipelineNode<
-                ICreatePaymentOfComingRequestContract,
-                ICreatePaymentOfComingResultContract> nextNode)
+            IPipeNode<ICreatePaymentOfComingRequestContract, ICreatePaymentOfComingResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreatePaymentOfComingResultContract> Ask(
+        public override async Task<ICreatePaymentOfComingResultContract> Ask(
             ICreatePaymentOfComingRequestContract input)
         {
             _logger.LogInformation($"CreateClientLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case ICreatePaymentOfComingSuccessResultContract success:
+                    _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case ICreatePaymentOfComingErrorResultContract error:
+                    _logger.LogError($"CreateClientLogger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;

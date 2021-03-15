@@ -18,6 +18,7 @@ using Nano35.Instance.Api.Requests.GetAllInstances;
 using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
 using Nano35.Instance.Api.Requests.GetAllRegions;
 using Nano35.Instance.Api.Requests.GetInstanceById;
+using Nano35.Instance.Api.Requests.GetInstanceStringById;
 using Nano35.Instance.Api.Requests.UpdateInstanceEmail;
 using Nano35.Instance.Api.Requests.UpdateInstanceInfo;
 using Nano35.Instance.Api.Requests.UpdateInstanceName;
@@ -129,6 +130,34 @@ namespace Nano35.Instance.Api.Controllers
             {
                 IGetInstanceByIdSuccessResultContract success => Ok(success),
                 IGetInstanceByIdErrorResultContract error => BadRequest(error),
+                _ => BadRequest()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetInstanceStringById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
+        public async Task<IActionResult> GetInstanceStringById(
+            [FromQuery] Guid instanceId)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetInstanceStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetInstanceStringByIdRequest>));
+
+            var request = new GetInstanceStringByIdRequestContract()
+            {
+                InstanceId = instanceId
+            };
+            
+            var result = 
+                await new LoggedGetInstanceStringByIdRequest(logger, 
+                    new GetInstanceStringByIdRequest(bus)).Ask(request);
+
+            return result switch
+            {
+                IGetInstanceStringByIdSuccessResultContract success => Ok(success),
+                IGetInstanceStringByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -254,7 +283,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedCreateCashOutputRequest(logger, 
-                    new CreateCashOutputRequest(bus, auth))
+                    new CreateCashOutputUseCase(bus, auth))
                     .Ask(request);
             
             return result switch
@@ -291,7 +320,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedCreateCashInputRequest(logger, 
-                    new CreateCashInputRequest(bus, auth))
+                    new CreateCashInputUseCase(bus, auth))
                     .Ask(request);
             
             return result switch

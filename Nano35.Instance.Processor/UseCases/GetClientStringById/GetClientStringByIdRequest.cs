@@ -14,23 +14,14 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
     {
         private readonly ApplicationContext _context;
 
-        public GetClientStringByIdRequest(ApplicationContext context)
-        {
-            _context = context;
-        }
+        public GetClientStringByIdRequest(ApplicationContext context) { _context = context; }
         
-        private class GetClientStringByIdSuccessResultContract : 
-            IGetClientStringByIdSuccessResultContract
-        {
-            public string Data { get; set; }
-        }
-
         public async Task<IGetClientStringByIdResultContract> Ask(
             IGetClientStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Clients.FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken)).ToString();
-            return new GetClientStringByIdSuccessResultContract() {Data = result};
+            var result = (await _context.Clients.FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken));
+            return new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.Phone}"};
         }
     }
 }

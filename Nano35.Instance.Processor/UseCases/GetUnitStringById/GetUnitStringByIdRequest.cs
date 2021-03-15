@@ -19,18 +19,12 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
             _context = context;
         }
         
-        private class GetUnitStringByIdSuccessResultContract : 
-            IGetUnitStringByIdSuccessResultContract
-        {
-            public string Data { get; set; }
-        }
-
         public async Task<IGetUnitStringByIdResultContract> Ask(
             IGetUnitStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Units.FirstOrDefaultAsync(e => e.Id == input.UnitId, cancellationToken: cancellationToken)).ToString();
-            return new GetUnitStringByIdSuccessResultContract() {Data = result};
+            var result = (await _context.Units.FirstOrDefaultAsync(e => e.Id == input.UnitId, cancellationToken: cancellationToken));
+            return new GetUnitStringByIdSuccessResultContract() {Data = $"{result.Name} - {result.Adress}"};
         }
     }
 }

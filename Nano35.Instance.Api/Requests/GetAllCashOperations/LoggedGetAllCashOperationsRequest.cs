@@ -6,39 +6,30 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllCashOperations
 {
     public class LoggedGetAllCashOperationsRequest :
-        IPipelineNode<
-            IGetAllCashOperationsRequestContract, 
-            IGetAllCashOperationsResultContract>
+        PipeNodeBase<IGetAllCashOperationsRequestContract, IGetAllCashOperationsResultContract>
     {
         private readonly ILogger<LoggedGetAllCashOperationsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllCashOperationsRequestContract,
-            IGetAllCashOperationsResultContract> _nextNode;
 
         public LoggedGetAllCashOperationsRequest(
             ILogger<LoggedGetAllCashOperationsRequest> logger,
-            IPipelineNode<
-                IGetAllCashOperationsRequestContract,
-                IGetAllCashOperationsResultContract> nextNode)
+            IPipeNode<IGetAllCashOperationsRequestContract, IGetAllCashOperationsResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllCashOperationsResultContract> Ask(
+        public override async Task<IGetAllCashOperationsResultContract> Ask(
             IGetAllCashOperationsRequestContract input)
         {
             _logger.LogInformation($"CreateClientLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now}");
-            
+            var result = await DoNext(input);
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
-                    _logger.LogInformation("with success");
+                case IGetAllCashOperationsSuccessResultContract:
+                    _logger.LogInformation($"CreateClientLogger ends on: {DateTime.Now} with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
-                    _logger.LogError($"with error {error.Message}");
+                case IGetAllCashOperationsErrorResultContract error:
+                    _logger.LogError($"CreateClientLogger ends on: {DateTime.Now} with error {error.Message}");
                     break;
             }
             return result;
