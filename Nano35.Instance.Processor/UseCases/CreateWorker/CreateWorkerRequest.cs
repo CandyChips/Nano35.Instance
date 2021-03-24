@@ -10,7 +10,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateWorker
 {
     public class CreateWorkerRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreateWorkerRequestContract,
             ICreateWorkerResultContract>
     {
@@ -37,7 +37,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             public string Message { get; set; }
         }
         
-        public async Task<ICreateWorkerResultContract> Ask(
+        public override async Task<ICreateWorkerResultContract> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {

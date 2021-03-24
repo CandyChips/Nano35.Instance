@@ -30,8 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
                 await new LoggedCreateInstanceRequest(logger,  
                     new ValidatedCreateInstanceRequest(
                         new TransactedCreateInstanceRequest(dbContext,
-                            new CreateInstanceRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateInstanceRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create instance request
             switch (result)

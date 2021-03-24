@@ -35,8 +35,7 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfComing
                 await new LoggedCreatePaymentOfComingRequest(logger,
                     new ValidatedCreatePaymentOfComingRequest(
                         new TransactedCreatePaymentOfComingRequest(dbContext,
-                            new CreatePaymentOfComingRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreatePaymentOfComingRequest(dbContext)))).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

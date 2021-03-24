@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
     }
     
     public class ValidatedCreatePaymentOfSelleRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreatePaymentOfSelleRequestContract,
             ICreatePaymentOfSelleResultContract>
     {
-        private readonly IPipelineNode<
-            ICreatePaymentOfSelleRequestContract,
-            ICreatePaymentOfSelleResultContract> _nextNode;
 
         public ValidatedCreatePaymentOfSelleRequest(
-            IPipelineNode<
-                ICreatePaymentOfSelleRequestContract, 
-                ICreatePaymentOfSelleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreatePaymentOfSelleRequestContract,
+                ICreatePaymentOfSelleResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreatePaymentOfSelleResultContract> Ask(
+        public override async Task<ICreatePaymentOfSelleResultContract> Ask(
             ICreatePaymentOfSelleRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
             {
                 return new CreatePaymentOfSelleValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

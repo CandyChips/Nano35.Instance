@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
     }
     
     public class ValidatedGetAllWorkersRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllWorkersRequestContract, 
             IGetAllWorkersResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllWorkersRequestContract, 
-            IGetAllWorkersResultContract> _nextNode;
-
         public ValidatedGetAllWorkersRequest(
-            IPipelineNode<
-                IGetAllWorkersRequestContract,
-                IGetAllWorkersResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllWorkersRequestContract,
+                IGetAllWorkersResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetAllWorkersResultContract> Ask(
+        public override async Task<IGetAllWorkersResultContract> Ask(
             IGetAllWorkersRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             {
                 return new GetAllWorkersValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

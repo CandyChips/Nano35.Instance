@@ -11,23 +11,19 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
     }
     
     public class ValidatedGetAllClientStatesRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllClientStatesRequestContract,
             IGetAllClientStatesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllClientStatesRequestContract,
-            IGetAllClientStatesResultContract> _nextNode;
+        
 
         public ValidatedGetAllClientStatesRequest(
-            IPipelineNode<
-                IGetAllClientStatesRequestContract, 
-                IGetAllClientStatesResultContract> nextNode)
+            IPipeNode<IGetAllClientStatesRequestContract,
+                IGetAllClientStatesResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IGetAllClientStatesResultContract> Ask(
+        public override async Task<IGetAllClientStatesResultContract> Ask(
             IGetAllClientStatesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
             {
                 return new GetAllClientStatesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

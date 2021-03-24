@@ -29,8 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
             var result =
                 await new LoggedGetAllWorkerRolesRequest(logger,
                     new ValidatedGetAllWorkerRolesRequest(
-                        new GetAllWorkerRolesRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllWorkerRolesRequest(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

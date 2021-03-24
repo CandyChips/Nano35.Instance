@@ -30,8 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
             var result =
                 await new LoggedGetUnitByIdRequest(logger,
                     new ValidatedGetUnitByIdRequest(
-                        new GetUnitByIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetUnitByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

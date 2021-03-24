@@ -6,31 +6,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllInstances
 {
     public class LoggedGetAllInstancesRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllInstancesRequestContract, 
             IGetAllInstancesResultContract>
     {
         private readonly ILogger<LoggedGetAllInstancesRequest> _logger;
-        
-        private readonly IPipelineNode<
-            IGetAllInstancesRequestContract,
-            IGetAllInstancesResultContract> _nextNode;
 
         public LoggedGetAllInstancesRequest(
             ILogger<LoggedGetAllInstancesRequest> logger,
-            IPipelineNode<
-                IGetAllInstancesRequestContract,
-                IGetAllInstancesResultContract> nextNode)
+            IPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllInstancesResultContract> Ask(
+        public override async Task<IGetAllInstancesResultContract> Ask(
             IGetAllInstancesRequestContract input)
         {
             _logger.LogInformation($"GetAllInstancesLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllInstancesLogger ends on: {DateTime.Now}");
             
             switch (result)

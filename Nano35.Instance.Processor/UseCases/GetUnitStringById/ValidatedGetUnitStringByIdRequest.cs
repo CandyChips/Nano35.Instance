@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
     }
     
     public class ValidatedGetUnitStringByIdRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetUnitStringByIdRequestContract, 
             IGetUnitStringByIdResultContract>
     {
-        private readonly IPipelineNode<
-            IGetUnitStringByIdRequestContract, 
-            IGetUnitStringByIdResultContract> _nextNode;
-
         public ValidatedGetUnitStringByIdRequest(
-            IPipelineNode<
-                IGetUnitStringByIdRequestContract, 
-                IGetUnitStringByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetUnitStringByIdRequestContract,
+                IGetUnitStringByIdResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetUnitStringByIdResultContract> Ask(
+        public override async Task<IGetUnitStringByIdResultContract> Ask(
             IGetUnitStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
             {
                 return new GetUnitStringByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

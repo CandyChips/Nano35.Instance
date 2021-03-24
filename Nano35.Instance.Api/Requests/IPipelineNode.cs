@@ -10,6 +10,15 @@ namespace Nano35.Instance.Api.Requests
     {
         Task<TOut> Ask(TIn input);
     }
+    
+    public abstract class PipeInConvert <TFrom, TTo, In, TOut> : 
+        IPipeNode<TFrom, TTo>
+    {
+        private readonly IPipeNode<In, TOut> _next;
+        protected PipeInConvert(IPipeNode<In, TOut> next) { _next = next; }
+        protected Task<TOut> DoNext(In input) { return _next.Ask(input); }
+        public abstract Task<TTo> Ask(TFrom input);
+    }
 
     /// <summary>
     /// Contract request reduction

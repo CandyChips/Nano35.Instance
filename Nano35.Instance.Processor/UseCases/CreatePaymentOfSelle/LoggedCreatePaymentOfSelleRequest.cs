@@ -7,32 +7,27 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
 {
     public class LoggedCreatePaymentOfSelleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreatePaymentOfSelleRequestContract, 
             ICreatePaymentOfSelleResultContract>
     {
         private readonly ILogger<LoggedCreatePaymentOfSelleRequest> _logger;
         
-        private readonly IPipelineNode<
-            ICreatePaymentOfSelleRequestContract, 
-            ICreatePaymentOfSelleResultContract> _nextNode;
 
         public LoggedCreatePaymentOfSelleRequest(
             ILogger<LoggedCreatePaymentOfSelleRequest> logger,
-            IPipelineNode<
-                ICreatePaymentOfSelleRequestContract,
-                ICreatePaymentOfSelleResultContract> nextNode)
+            IPipeNode<ICreatePaymentOfSelleRequestContract,
+                ICreatePaymentOfSelleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreatePaymentOfSelleResultContract> Ask(
+        public override async Task<ICreatePaymentOfSelleResultContract> Ask(
             ICreatePaymentOfSelleRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreatePaymentOfSelleLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"CreatePaymentOfSelleLogger ends on: {DateTime.Now}");
             
             switch (result)

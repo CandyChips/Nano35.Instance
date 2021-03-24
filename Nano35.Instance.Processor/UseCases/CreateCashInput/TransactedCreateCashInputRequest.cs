@@ -7,33 +7,27 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateCashInput
 {
     public class TransactedCreateCashInputRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateCashInputRequestContract,
             ICreateCashInputResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateCashInputRequestContract,
-            ICreateCashInputResultContract> _nextNode;
+        
 
-        public TransactedCreateCashInputRequest(
-            ApplicationContext context,
-            IPipelineNode<
-                ICreateCashInputRequestContract,
-                ICreateCashInputResultContract> nextNode)
+        public TransactedCreateCashInputRequest(ApplicationContext context,
+            IPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateCashInputResultContract> Ask(
+        public override async Task<ICreateCashInputResultContract> Ask(
             ICreateCashInputRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

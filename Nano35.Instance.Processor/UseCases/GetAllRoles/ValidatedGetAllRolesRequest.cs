@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
     }
     
     public class ValidatedGetAllRolesRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllRolesRequestContract,
             IGetAllRolesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllRolesRequestContract,
-            IGetAllRolesResultContract> _nextNode;
-
         public ValidatedGetAllRolesRequest(
-            IPipelineNode<
-                IGetAllRolesRequestContract,
-                IGetAllRolesResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllRolesRequestContract,
+                IGetAllRolesResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetAllRolesResultContract> Ask(
+        public override async Task<IGetAllRolesResultContract> Ask(
             IGetAllRolesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
             {
                 return new GetAllRolesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

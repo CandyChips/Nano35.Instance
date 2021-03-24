@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
 {
     public class CreatePaymentOfSelleRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreatePaymentOfSelleRequestContract,
             ICreatePaymentOfSelleResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
             
         }
         
-        public async Task<ICreatePaymentOfSelleResultContract> Ask(
+        public override async Task<ICreatePaymentOfSelleResultContract> Ask(
             ICreatePaymentOfSelleRequestContract input,
             CancellationToken cancellationToken)
         {

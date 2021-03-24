@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
     }
     
     public class ValidatedCreateCashInputRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateCashInputRequestContract,
             ICreateCashInputResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateCashInputRequestContract, 
-            ICreateCashInputResultContract> _nextNode;
-
         public ValidatedCreateCashInputRequest(
-            IPipelineNode<
-                ICreateCashInputRequestContract,
-                ICreateCashInputResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            
+            IPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreateCashInputResultContract> Ask(
+        public override async Task<ICreateCashInputResultContract> Ask(
             ICreateCashInputRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
             {
                 return new CreateCashInputValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

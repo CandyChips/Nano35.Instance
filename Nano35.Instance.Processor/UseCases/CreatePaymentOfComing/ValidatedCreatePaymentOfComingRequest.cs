@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfComing
     }
     
     public class ValidatedCreatePaymentOfComingRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreatePaymentOfComingRequestContract,
             ICreatePaymentOfComingResultContract>
     {
-        private readonly IPipelineNode<
-            ICreatePaymentOfComingRequestContract,
-            ICreatePaymentOfComingResultContract> _nextNode;
 
         public ValidatedCreatePaymentOfComingRequest(
-            IPipelineNode<
-                ICreatePaymentOfComingRequestContract, 
-                ICreatePaymentOfComingResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreatePaymentOfComingRequestContract, ICreatePaymentOfComingResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreatePaymentOfComingResultContract> Ask(
+        public override async Task<ICreatePaymentOfComingResultContract> Ask(
             ICreatePaymentOfComingRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfComing
             {
                 return new CreatePaymentOfComingValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

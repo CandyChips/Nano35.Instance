@@ -11,7 +11,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
     }
     
     public class ValidatedGetClientStringByIdRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetClientStringByIdRequestContract, 
             IGetClientStringByIdResultContract>
     {
@@ -20,14 +20,11 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
             IGetClientStringByIdResultContract> _nextNode;
 
         public ValidatedGetClientStringByIdRequest(
-            IPipelineNode<
-                IGetClientStringByIdRequestContract, 
-                IGetClientStringByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetClientStringByIdRequestContract,
+                IGetClientStringByIdResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetClientStringByIdResultContract> Ask(
+        public override async Task<IGetClientStringByIdResultContract> Ask(
             IGetClientStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +32,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
             {
                 return new GetClientStringByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

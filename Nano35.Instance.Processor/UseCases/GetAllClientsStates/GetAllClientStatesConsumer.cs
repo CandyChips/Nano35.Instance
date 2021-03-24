@@ -29,8 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
             var result =
                 await new LoggedGetAllClientStatesRequest(logger,
                     new ValidatedGetAllClientStatesRequest(
-                        new GetAllClientStatesRequest(dbcontect))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllClientStatesRequest(dbcontect))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
     }
     
     public class ValidatedGetAllRegionsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllRegionsRequestContract, 
             IGetAllRegionsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllRegionsRequestContract, 
-            IGetAllRegionsResultContract> _nextNode;
 
         public ValidatedGetAllRegionsRequest(
-            IPipelineNode<
-                IGetAllRegionsRequestContract, 
-                IGetAllRegionsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllRegionsRequestContract,
+                IGetAllRegionsResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetAllRegionsResultContract> Ask(
+        public override async Task<IGetAllRegionsResultContract> Ask(
             IGetAllRegionsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             {
                 return new GetAllRegionsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

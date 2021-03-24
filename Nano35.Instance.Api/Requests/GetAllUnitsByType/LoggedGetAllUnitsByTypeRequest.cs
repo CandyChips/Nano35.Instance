@@ -6,24 +6,24 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllUnitsByType
 {
     public class LoggedGetAllUnitsByTypeRequest :
-        IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract>
+        PipeNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract>
     {
         private readonly ILogger<LoggedGetAllUnitsByTypeRequest> _logger;
-        private readonly IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> _nextNode;
 
         public LoggedGetAllUnitsByTypeRequest(
             ILogger<LoggedGetAllUnitsByTypeRequest> logger,
-            IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> nextNode)
+            IPipeNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllUnitsByTypeResultContract> Ask(
+
+        public override async Task<IGetAllUnitsByTypeResultContract> Ask(
             IGetAllUnitsByTypeRequestContract input)
         {
             _logger.LogInformation($"GetAllUnitsByTypeLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllUnitsByTypeLogger ends on: {DateTime.Now}");
             
             switch (result)

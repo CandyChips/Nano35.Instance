@@ -7,14 +7,14 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateCashOutput
 {
-    public class CreateCashOutputRequest :
-        IPipelineNode<
+    public class CreateCashOutputUseCase :
+        EndPointNodeBase<
             ICreateCashOutputRequestContract,
             ICreateCashOutputResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public CreateCashOutputRequest(
+        public CreateCashOutputUseCase(
             ApplicationContext context)
         {
             _context = context;
@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashOutput
             
         }
         
-        public async Task<ICreateCashOutputResultContract> Ask(
+        public override async Task<ICreateCashOutputResultContract> Ask(
             ICreateCashOutputRequestContract input,
             CancellationToken cancellationToken)
         {

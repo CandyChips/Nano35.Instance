@@ -29,8 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
             var result =
                 await new LoggedGetAllUnitTypesRequest(logger,
                     new ValidateGetAllUnitTypesRequest(
-                        new GetAllUnitTypesRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllUnitTypesRequest(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

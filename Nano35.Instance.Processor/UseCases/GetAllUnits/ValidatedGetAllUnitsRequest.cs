@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
     }
     
     public class ValidatedGetAllUnitsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllUnitsRequestContract,
             IGetAllUnitsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllUnitsRequestContract,
-            IGetAllUnitsResultContract> _nextNode;
 
         public ValidatedGetAllUnitsRequest(
-            IPipelineNode<
-                IGetAllUnitsRequestContract,
-                IGetAllUnitsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllUnitsRequestContract,
+                IGetAllUnitsResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetAllUnitsResultContract> Ask(
+        public override async Task<IGetAllUnitsResultContract> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             {
                 return new GetAllUnitsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
     }
     
     public class ValidatedCreateWorkerRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateWorkerRequestContract,
             ICreateWorkerResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateWorkerRequestContract,
-            ICreateWorkerResultContract> _nextNode;
 
         public ValidatedCreateWorkerRequest(
-            IPipelineNode<
-                ICreateWorkerRequestContract, 
-                ICreateWorkerResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateWorkerRequestContract,
+                ICreateWorkerResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreateWorkerResultContract> Ask(
+        public override async Task<ICreateWorkerResultContract> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             {
                 return new CreateWorkerValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

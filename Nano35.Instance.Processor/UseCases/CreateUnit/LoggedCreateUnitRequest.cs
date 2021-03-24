@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
     public class LoggedCreateUnitRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateUnitRequestContract,
             ICreateUnitResultContract>
     {
         private readonly ILogger<LoggedCreateUnitRequest> _logger;
         
-        private readonly IPipelineNode<
-            ICreateUnitRequestContract, 
-            ICreateUnitResultContract> _nextNode;
 
         public LoggedCreateUnitRequest(
             ILogger<LoggedCreateUnitRequest> logger,
-            IPipelineNode<
-                ICreateUnitRequestContract, 
-                ICreateUnitResultContract> nextNode)
+            IPipeNode<ICreateUnitRequestContract,
+                ICreateUnitResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
+        public override async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreateUnitLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"CreateUnitLogger ends on: {DateTime.Now}");
             
             switch (result)

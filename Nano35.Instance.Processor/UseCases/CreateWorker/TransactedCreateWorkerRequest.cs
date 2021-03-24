@@ -7,33 +7,28 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateWorker
 {
     public class TransactedCreateWorkerRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateWorkerRequestContract, 
             ICreateWorkerResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateWorkerRequestContract,
-            ICreateWorkerResultContract> _nextNode;
-
+        
         public TransactedCreateWorkerRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateWorkerRequestContract, 
-                ICreateWorkerResultContract> nextNode)
+            IPipeNode<ICreateWorkerRequestContract, 
+                ICreateWorkerResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateWorkerResultContract> Ask(
+        public override async Task<ICreateWorkerResultContract> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

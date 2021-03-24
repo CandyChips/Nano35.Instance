@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
                 await new LoggedCreateCashInputRequest(logger,
                         new ValidatedCreateCashInputRequest(
                             new TransactedCreateCashInputRequest(dbContext,
-                                new CreateCashInputRequest(dbContext))))
+                                new CreateCashInputUseCase(dbContext))))
                     .Ask(message, context.CancellationToken);
             switch (result)
             {

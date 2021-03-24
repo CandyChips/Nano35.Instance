@@ -6,38 +6,34 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllClientStates
 {
     public class LoggedGetAllClientStates :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllClientStatesRequestContract,
             IGetAllClientStatesResultContract>
     {
         private readonly ILogger<LoggedGetAllClientStates> _logger;
-        private readonly IPipelineNode<
-            IGetAllClientStatesRequestContract,
-            IGetAllClientStatesResultContract> _nextNode;
+        
 
         public LoggedGetAllClientStates(
             ILogger<LoggedGetAllClientStates> logger,
-            IPipelineNode<
-                IGetAllClientStatesRequestContract,
-                IGetAllClientStatesResultContract> nextNode)
+            IPipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllClientStatesResultContract> Ask(
+        public override async Task<IGetAllClientStatesResultContract> Ask(
             IGetAllClientStatesRequestContract input)
         {
             _logger.LogInformation($"GetAllClientStatesLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllClientStatesLogger ends on: {DateTime.Now}");
             
             switch (result)
             {
-                case IGetAllRegionsSuccessResultContract success:
+                case IGetAllClientStatesSuccessResultContract success:
                     _logger.LogInformation("with success");
                     break;
-                case IGetAllRegionsErrorResultContract error:
+                case IGetAllClientStatesErrorResultContract error:
                     _logger.LogError($"with error {error.Message}");
                     break;
             }

@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
 {
     public class LoggedGetAllCashOperationsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllCashOperationsRequestContract, 
             IGetAllCashOperationsResultContract>
     {
         private readonly ILogger<LoggedGetAllCashOperationsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllCashOperationsRequestContract, 
-            IGetAllCashOperationsResultContract> _nextNode;
 
         public LoggedGetAllCashOperationsRequest(
             ILogger<LoggedGetAllCashOperationsRequest> logger,
-            IPipelineNode<
-                IGetAllCashOperationsRequestContract,
-                IGetAllCashOperationsResultContract> nextNode)
+            IPipeNode<IGetAllCashOperationsRequestContract,
+                IGetAllCashOperationsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllCashOperationsResultContract> Ask(
+        public override async Task<IGetAllCashOperationsResultContract> Ask(
             IGetAllCashOperationsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllCashOperationsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllCashOperationsLogger ends on: {DateTime.Now}");
             
             switch (result)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +55,7 @@ namespace Nano35.Instance.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllInstancesRequest>));
             var distributedCache = (IDistributedCache) _services.GetService(typeof(IDistributedCache)); // ToDo ???
+            var validator = (IValidator<IGetAllInstancesRequestContract>) _services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>));
 
             var request = new GetAllInstancesRequestContract()
             {
@@ -62,18 +64,10 @@ namespace Nano35.Instance.Api.Controllers
                 UserId = query.UserId
             };
             
-            var result = 
-                await new LoggedGetAllInstancesRequest(logger,
-                        new ValidatedGetAllInstancesRequest(
-                            new GetAllInstancesRequest(bus)))
-                    .Ask(request);
+            return await new LoggedGetAllInstancesRequest(logger,
+                        new ValidatedGetAllInstancesRequest(validator,
+                            new GetAllInstancesUseCase(bus))).Ask(request);
             
-            return result switch
-            {
-                IGetAllInstancesSuccessResultContract success => Ok(success),
-                IGetAllInstancesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
         
         [AllowAnonymous]
@@ -88,11 +82,12 @@ namespace Nano35.Instance.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedGetAllCurrentInstancesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCurrentInstancesRequest>));
+            //var validator = (IValidator<igetallcurrentinstances>) _services.GetService(typeof(IValidator<IGenerateTokenRequestContract>));
 
             var result = 
                 await new LoggedGetAllCurrentInstancesRequest(logger,
                         new ValidatedGetAllCurrentInstancesRequest(
-                            new GetAllCurrentInstancesRequest(bus, auth)))
+                            new GetAllCurrentInstancesUseCase(bus, auth)))
                     .Ask(new GetAllInstancesRequestContract());
             
             return result switch
@@ -118,13 +113,13 @@ namespace Nano35.Instance.Api.Controllers
 
             var request = new GetInstanceByIdRequestContract()
             {
-                InstanceId = query.InstanceId
+                InstanceId = query.Id
             };
             
             var result =
                 await new LoggedGetInstanceByIdRequest(logger,
                     new ValidatedGetInstanceByIdRequest(
-                        new GetInstanceByIdRequest(bus)))
+                        new GetInstanceByIdUseCase(bus)))
                     .Ask(request);
             return result switch
             {
@@ -152,7 +147,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetInstanceStringByIdRequest(logger, 
-                    new GetInstanceStringByIdRequest(bus)).Ask(request);
+                    new GetInstanceStringByIdUseCase(bus)).Ask(request);
 
             return result switch
             {
@@ -179,7 +174,7 @@ namespace Nano35.Instance.Api.Controllers
             var result =
                 await new LoggedGetAllInstanceTypesRequest(logger,
                         new CachedGetAllInstanceTypesRequest(distributedCache,
-                            new GetAllInstanceTypesRequest(bus)))
+                            new GetAllInstanceTypesUseCase(bus)))
                     .Ask(request);
 
             return result switch
@@ -205,7 +200,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result =
                 await new LoggedGetAllRegionsRequest(logger,
-                    new GetAllRegionsRequest(bus))
+                    new GetAllRegionsUseCase(bus))
                     .Ask(request);
 
             return result switch
@@ -246,7 +241,7 @@ namespace Nano35.Instance.Api.Controllers
             var result = 
                 await new LoggedCreateInstanceRequest(logger, 
                     new ValidatedCreateInstanceRequest(
-                        new CreateInstanceRequest(bus, auth)))
+                        new CreateInstanceUseCase(bus, auth)))
                     .Ask(request);
             
             return result switch

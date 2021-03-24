@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit.Transactions;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
+using Nano35.Instance.Processor.UseCases.CreateCashOutput;
 
 namespace Nano35.Instance.Processor.UseCases.CreateCashInput
 {
-    public class CreateCashInputRequest :
-        IPipelineNode<
+    public class CreateCashInputUseCase :
+        EndPointNodeBase<
             ICreateCashInputRequestContract,
             ICreateCashInputResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public CreateCashInputRequest(
+        public CreateCashInputUseCase(
             ApplicationContext context)
         {
             _context = context;
@@ -26,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
             
         }
         
-        public async Task<ICreateCashInputResultContract> Ask(
+        public override async Task<ICreateCashInputResultContract> Ask(
             ICreateCashInputRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -41,8 +43,9 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
                 Date = DateTime.Now,
                 WorkerId = input.WorkerId
             };
+            
             await _context.CashOperations.AddAsync(operation, cancellationToken);
-            return new CreateCashInputSuccessResultContract();
+            return new CreateCashInputSuccessResultContract() {};
         }
     }
 }

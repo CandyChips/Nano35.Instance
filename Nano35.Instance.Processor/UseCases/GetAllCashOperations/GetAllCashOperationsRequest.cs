@@ -10,7 +10,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
 {
     public class GetAllCashOperationsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllCashOperationsRequestContract,
             IGetAllCashOperationsResultContract>
     {
@@ -28,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
             public IEnumerable<ICashOperationViewModel> Data { get; set; }
         }
         
-        public async Task<IGetAllCashOperationsResultContract> Ask(
+        public override async Task<IGetAllCashOperationsResultContract> Ask(
             IGetAllCashOperationsRequestContract input,
             CancellationToken cancellationToken)
         {

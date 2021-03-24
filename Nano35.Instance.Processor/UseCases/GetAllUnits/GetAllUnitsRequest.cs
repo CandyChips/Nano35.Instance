@@ -10,7 +10,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllUnits
 {
     public class GetAllUnitsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllUnitsRequestContract, 
             IGetAllUnitsResultContract>
     {
@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             public string Message { get; set; }
         }
 
-        public async Task<IGetAllUnitsResultContract> Ask(
+        public override async Task<IGetAllUnitsResultContract> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {

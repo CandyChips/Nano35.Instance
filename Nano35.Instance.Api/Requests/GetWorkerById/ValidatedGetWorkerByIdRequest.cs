@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetWorkerById
@@ -9,24 +10,26 @@ namespace Nano35.Instance.Api.Requests.GetWorkerById
     }
     
     public class ValidatedGetWorkerByIdRequest:
-        IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>
+        PipeNodeBase<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>
     {
-        private readonly IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract> _nextNode;
+        private readonly IValidator<IGetWorkerByIdRequestContract> _validator;
 
         public ValidatedGetWorkerByIdRequest(
-            IPipelineNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract> nextNode)
+            IValidator<IGetWorkerByIdRequestContract> validator,
+            IPipeNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetWorkerByIdResultContract> Ask(
+        public override async Task<IGetWorkerByIdResultContract> Ask(
             IGetWorkerByIdRequestContract input)
         {
             if (false)
             {
                 return new GetWorkerByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

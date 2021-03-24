@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Requests.GetAllInstances;
 
@@ -10,24 +11,26 @@ namespace Nano35.Instance.Api.Requests.GetAllCurrentInstances
     }
     
     public class ValidatedGetAllCurrentInstancesRequest:
-        IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>
+        PipeNodeBase<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>
     {
-        private readonly IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> _nextNode;
+        private readonly IValidator<IGetAllInstancesRequestContract> _validator;
 
         public ValidatedGetAllCurrentInstancesRequest(
-            IPipelineNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> nextNode)
+            IValidator<IGetAllInstancesRequestContract> validator,
+            IPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAllInstancesResultContract> Ask(
+        public override async Task<IGetAllInstancesResultContract> Ask(
             IGetAllInstancesRequestContract input)
         {
             if (false)
             {
                 return new GetAllInstancesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

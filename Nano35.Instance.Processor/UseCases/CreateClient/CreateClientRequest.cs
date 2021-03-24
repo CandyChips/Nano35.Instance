@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateClient
 {
     public class CreateClientRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreateClientRequestContract, 
             ICreateClientResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             
         }
         
-        public async Task<ICreateClientResultContract> Ask(
+        public override async Task<ICreateClientResultContract> Ask(
             ICreateClientRequestContract input,
             CancellationToken cancellationToken)
         {

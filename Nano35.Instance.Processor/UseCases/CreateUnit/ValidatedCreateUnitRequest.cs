@@ -11,23 +11,18 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
     }
     
     public class ValidatedCreateUnitRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateUnitRequestContract, 
             ICreateUnitResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateUnitRequestContract,
-            ICreateUnitResultContract> _nextNode;
+        
 
         public ValidatedCreateUnitRequest(
-            IPipelineNode<
-                ICreateUnitRequestContract, 
-                ICreateUnitResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateUnitRequestContract,
+                ICreateUnitResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreateUnitResultContract> Ask(
+        public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             {
                 return new CreateUnitValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

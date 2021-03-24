@@ -9,7 +9,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetWorkerById
 {
     public class GetWorkerByIdRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetWorkerByIdRequestContract, 
             IGetWorkerByIdResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
             public IWorkerViewModel Data { get; set; }
         }
 
-        public async Task<IGetWorkerByIdResultContract> Ask(
+        public override async Task<IGetWorkerByIdResultContract> Ask(
             IGetWorkerByIdRequestContract input,
             CancellationToken cancellationToken)
         {

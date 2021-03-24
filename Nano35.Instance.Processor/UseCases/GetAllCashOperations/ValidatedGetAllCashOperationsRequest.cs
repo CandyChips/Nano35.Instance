@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
     }
     
     public class ValidatedGetAllCashOperationsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllCashOperationsRequestContract,
             IGetAllCashOperationsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllCashOperationsRequestContract,
-            IGetAllCashOperationsResultContract> _nextNode;
-
+        
         public ValidatedGetAllCashOperationsRequest(
-            IPipelineNode<
-                IGetAllCashOperationsRequestContract, 
-                IGetAllCashOperationsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllCashOperationsRequestContract,
+                IGetAllCashOperationsResultContract> next) : base(next)
+        {}
 
-        public async Task<IGetAllCashOperationsResultContract> Ask(
+        public override async Task<IGetAllCashOperationsResultContract> Ask(
             IGetAllCashOperationsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
             {
                 return new GetAllCashOperationsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

@@ -8,7 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
     public class CreateUnitRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreateUnitRequestContract,
             ICreateUnitResultContract>
     {
@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             
         }
         
-        public async Task<ICreateUnitResultContract> Ask(
+        public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {

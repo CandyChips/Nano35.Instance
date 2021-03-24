@@ -9,7 +9,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
 {
     public class GetAllClientTypesRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllClientTypesRequestContract,
             IGetAllClientTypesResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
             public IEnumerable<IClientTypeViewModel> Data { get; set; }
         }
         
-        public async Task<IGetAllClientTypesResultContract> Ask(
+        public override async Task<IGetAllClientTypesResultContract> Ask(
             IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {

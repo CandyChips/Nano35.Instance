@@ -29,8 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
             var result =
                 await new LoggedGetUnitStringByIdRequest(logger,
                     new ValidatedGetUnitStringByIdRequest(
-                        new GetUnitStringByIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetUnitStringByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

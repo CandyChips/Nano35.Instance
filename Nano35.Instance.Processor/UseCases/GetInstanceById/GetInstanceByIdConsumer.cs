@@ -30,8 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
             var result =
                 await new LoggedGetInstanceByIdRequest(logger,
                     new ValidatedGetInstanceByIdRequest(
-                        new GetInstanceByIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetInstanceByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

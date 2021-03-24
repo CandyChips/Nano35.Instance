@@ -32,8 +32,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                 await new LoggedCreateClientRequest(logger,  
                     new ValidatedCreateClientRequest(
                         new TransactedCreateClientRequest(dbContext,
-                            new CreateClientRequest(dbContext)))
-                    ).Ask(message, context.CancellationToken);
+                            new CreateClientRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

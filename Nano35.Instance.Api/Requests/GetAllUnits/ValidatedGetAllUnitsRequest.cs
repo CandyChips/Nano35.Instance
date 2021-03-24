@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllUnits
@@ -10,30 +11,29 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
     }
     
     public class ValidatedGetAllUnitsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllUnitsRequestContract, 
             IGetAllUnitsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllUnitsRequestContract, 
-            IGetAllUnitsResultContract> _nextNode;
+        private readonly IValidator<IGetAllUnitsRequestContract> _validator;
+
 
         public ValidatedGetAllUnitsRequest(
-            IPipelineNode<
-                IGetAllUnitsRequestContract, 
-                IGetAllUnitsResultContract> nextNode)
+            IValidator<IGetAllUnitsRequestContract> validator,
+            IPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAllUnitsResultContract> Ask(
+        public override async Task<IGetAllUnitsResultContract> Ask(
             IGetAllUnitsRequestContract input)
         {
             if (false)
             {
                 return new GetAllUnitsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

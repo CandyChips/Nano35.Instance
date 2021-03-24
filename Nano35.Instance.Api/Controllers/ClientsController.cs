@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -107,24 +108,17 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetClientByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
+            var validator = (IValidator<IGetClientByIdRequestContract>) _services.GetService(typeof(IValidator<IGetClientByIdRequestContract>));
 
             var request = new GetClientByIdRequestContract()
             {
-                UnitId = query.UnitId
+                UnitId = query.Id
             };
             
-            var result = 
-                await new ValidatedGetClientByIdRequest(
+            return await 
+                new ValidatedGetClientByIdRequest(validator,
                     new LoggedGetClientByIdRequest(logger, 
-                        new GetClientByIdRequest(bus))
-                ).Ask(request);
-
-            return result switch
-            {
-                IGetClientByIdSuccessResultContract success => Ok(success),
-                IGetClientByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new GetClientByIdUseCase(bus))).Ask(request);
         }
 
         [AllowAnonymous]
@@ -145,7 +139,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetClientStringByIdRequest(logger, 
-                    new GetClientStringByIdRequest(bus)).Ask(request);
+                    new GetClientStringByIdUseCase(bus)).Ask(request);
 
             return result switch
             {
@@ -170,7 +164,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetAllClientTypesRequest(logger, 
-                    new GetAllClientTypesRequest(bus)
+                    new GetAllClientTypesUseCase(bus)
                     ).Ask(request);
 
             return result switch
@@ -196,7 +190,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetAllClientStates(logger, 
-                    new GetAllClientStatesRequest(bus)
+                    new GetAllClientStatesUseCase(bus)
                     ).Ask(request);
             
             return result switch
@@ -236,7 +230,7 @@ namespace Nano35.Instance.Api.Controllers
             var result = 
                 await new LoggedCreateClientRequest(logger,  
                     new ValidatedCreateClientRequest(
-                        new CreateClientRequest(bus, auth)
+                        new CreateClientUseCase(bus, auth)
                         )
                     ).Ask(request);
 

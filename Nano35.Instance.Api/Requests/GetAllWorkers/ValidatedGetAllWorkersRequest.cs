@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllWorkers
@@ -9,24 +10,26 @@ namespace Nano35.Instance.Api.Requests.GetAllWorkers
     }
     
     public class ValidatedGetAllWorkersRequest:
-        IPipelineNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>
+        PipeNodeBase<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>
     {
-        private readonly IPipelineNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract> _nextNode;
+        private readonly IValidator<IGetAllWorkersRequestContract> _validator;
 
         public ValidatedGetAllWorkersRequest(
-            IPipelineNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract> nextNode)
+            IValidator<IGetAllWorkersRequestContract> validator,
+            IPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAllWorkersResultContract> Ask(
+        public override async Task<IGetAllWorkersResultContract> Ask(
             IGetAllWorkersRequestContract input)
         {
             if (false)
             {
                 return new GetAllWorkersValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

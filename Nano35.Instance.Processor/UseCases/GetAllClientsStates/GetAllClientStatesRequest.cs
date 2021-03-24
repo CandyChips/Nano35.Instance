@@ -9,7 +9,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
 {
     public class GetAllClientStatesRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllClientStatesRequestContract,
             IGetAllClientStatesResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
             public IEnumerable<IClientStateViewModel> Data { get; set; }
         }
         
-        public async Task<IGetAllClientStatesResultContract> Ask(
+        public override async Task<IGetAllClientStatesResultContract> Ask(
             IGetAllClientStatesRequestContract input,
             CancellationToken cancellationToken)
         {

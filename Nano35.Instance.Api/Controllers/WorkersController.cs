@@ -53,7 +53,7 @@ namespace Nano35.Instance.Api.Controllers
             var result =
                 await new LoggedGetAllWorkersRequest(logger,
                         new ValidatedGetAllWorkersRequest(
-                            new GetAllWorkersRequest(bus)))
+                            new GetAllWorkersUseCase(bus)))
                     .Ask(request);
             
             return result switch
@@ -79,7 +79,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result =
                 await new LoggedGetAllWorkerRolesRequest(logger,
-                    new GetAllWorkerRolesRequest(bus))
+                    new GetAllWorkerRolesUseCase(bus))
                     .Ask(request);
 
             return result switch
@@ -120,7 +120,7 @@ namespace Nano35.Instance.Api.Controllers
             var result = 
                 await new LoggedCreateWorkerRequest(logger, 
                     new ValidatedCreateWorkerRequest(
-                        new CreateWorkerRequest(bus, auth)))
+                        new CreateWorkerUseCase(bus, auth)))
                     .Ask(request);
             
             return result switch
@@ -149,7 +149,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetWorkerStringByIdRequest(logger, 
-                    new GetWorkerStringByIdRequest(bus)).Ask(request);
+                    new GetWorkerStringByIdUseCase(bus)).Ask(request);
 
             return result switch
             {

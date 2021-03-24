@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
     }
     
     public class ValidatedGetInstanceByIdRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetInstanceByIdRequestContract, 
             IGetInstanceByIdResultContract>
     {
-        private readonly IPipelineNode<
-            IGetInstanceByIdRequestContract, 
-            IGetInstanceByIdResultContract> _nextNode;
-
         public ValidatedGetInstanceByIdRequest(
-            IPipelineNode<
-                IGetInstanceByIdRequestContract,
-                IGetInstanceByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetInstanceByIdRequestContract,
+                IGetInstanceByIdResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetInstanceByIdResultContract> Ask(
+        public override async Task<IGetInstanceByIdResultContract> Ask(
             IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
             {
                 return new GetInstanceByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

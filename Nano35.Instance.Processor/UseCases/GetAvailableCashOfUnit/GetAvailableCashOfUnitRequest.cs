@@ -8,7 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
 {
     public class GetAvailableCashOfUnitRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAvailableCashOfUnitRequestContract,
             IGetAvailableCashOfUnitResultContract>
     {
@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
             public double Cash { get; set; }
         }
         
-        public async Task<IGetAvailableCashOfUnitResultContract> Ask(
+        public override async Task<IGetAvailableCashOfUnitResultContract> Ask(
             IGetAvailableCashOfUnitRequestContract input,
             CancellationToken cancellationToken)
         {

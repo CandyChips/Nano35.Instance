@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllRoles
@@ -10,30 +11,29 @@ namespace Nano35.Instance.Api.Requests.GetAllRoles
     }
     
     public class ValidatedGetAllRolesRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllRolesRequestContract, 
             IGetAllRolesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllRolesRequestContract,
-            IGetAllRolesResultContract> _nextNode;
+        private readonly IValidator<IGetAllRolesRequestContract> _validator;
+
 
         public ValidatedGetAllRolesRequest(
-            IPipelineNode<
-                IGetAllRolesRequestContract,
-                IGetAllRolesResultContract> nextNode)
+            IValidator<IGetAllRolesRequestContract> validator,
+            IPipeNode<IGetAllRolesRequestContract, IGetAllRolesResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAllRolesResultContract> Ask(
+        public override async Task<IGetAllRolesResultContract> Ask(
             IGetAllRolesRequestContract input)
         {
             if (false)
             {
                 return new GetAllRolesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

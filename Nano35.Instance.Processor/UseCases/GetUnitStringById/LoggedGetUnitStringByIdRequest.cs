@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
 {
     public class LoggedGetUnitStringByIdRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetUnitStringByIdRequestContract,
             IGetUnitStringByIdResultContract>
     {
         private readonly ILogger<LoggedGetUnitStringByIdRequest> _logger;
-        private readonly IPipelineNode<
-            IGetUnitStringByIdRequestContract, 
-            IGetUnitStringByIdResultContract> _nextNode;
 
         public LoggedGetUnitStringByIdRequest(
             ILogger<LoggedGetUnitStringByIdRequest> logger,
-            IPipelineNode<
-                IGetUnitStringByIdRequestContract, 
-                IGetUnitStringByIdResultContract> nextNode)
+            IPipeNode<IGetUnitStringByIdRequestContract,
+                IGetUnitStringByIdResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetUnitStringByIdResultContract> Ask(
+        public override async Task<IGetUnitStringByIdResultContract> Ask(
             IGetUnitStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetUnitStringByIdLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetUnitStringByIdLogger ends on: {DateTime.Now}");
 
             switch (result)

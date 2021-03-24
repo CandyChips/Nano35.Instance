@@ -6,24 +6,24 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.GetAllWorkerRoles
 {
     public class LoggedGetAllWorkerRolesRequest :
-        IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
+        PipeNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
     {
         private readonly ILogger<LoggedGetAllWorkerRolesRequest> _logger;
-        private readonly IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract> _nextNode;
 
         public LoggedGetAllWorkerRolesRequest(
             ILogger<LoggedGetAllWorkerRolesRequest> logger,
-            IPipelineNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract> nextNode)
+            IPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllWorkerRolesResultContract> Ask(
+
+        public override async Task<IGetAllWorkerRolesResultContract> Ask(
             IGetAllWorkerRolesRequestContract input)
         {
             _logger.LogInformation($"GetAllWorkerRolesLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllWorkerRoles  Logger ends on: {DateTime.Now}");
             
             switch (result)

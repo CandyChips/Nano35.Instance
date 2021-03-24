@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
     }
     
     public class ValidatedGetWorkerStringByIdRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetWorkerStringByIdRequestContract, 
             IGetWorkerStringByIdResultContract>
     {
-        private readonly IPipelineNode<
-            IGetWorkerStringByIdRequestContract, 
-            IGetWorkerStringByIdResultContract> _nextNode;
 
         public ValidatedGetWorkerStringByIdRequest(
-            IPipelineNode<
-                IGetWorkerStringByIdRequestContract, 
-                IGetWorkerStringByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
-
-        public async Task<IGetWorkerStringByIdResultContract> Ask(
+            IPipeNode<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract> next) : base(next)
+        { }
+        
+        public override async Task<IGetWorkerStringByIdResultContract> Ask(
             IGetWorkerStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
             {
                 return new GetWorkerStringByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

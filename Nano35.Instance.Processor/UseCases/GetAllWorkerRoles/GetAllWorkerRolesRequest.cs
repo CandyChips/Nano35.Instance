@@ -9,7 +9,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
 {
     public class GetAllWorkerRolesRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllWorkerRolesRequestContract, 
             IGetAllWorkerRolesResultContract>
     {
@@ -33,7 +33,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
             public string Message { get; set; }
         }
 
-        public async Task<IGetAllWorkerRolesResultContract> Ask(
+        public override async Task<IGetAllWorkerRolesResultContract> Ask(
             IGetAllWorkerRolesRequestContract input,
             CancellationToken cancellationToken)
         {

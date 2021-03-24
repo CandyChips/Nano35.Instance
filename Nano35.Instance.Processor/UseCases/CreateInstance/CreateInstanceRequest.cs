@@ -8,7 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateInstance
 {
     public class CreateInstanceRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreateInstanceRequestContract, 
             ICreateInstanceResultContract>
     {
@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             
         }
         
-        public async Task<ICreateInstanceResultContract> Ask(
+        public override async Task<ICreateInstanceResultContract> Ask(
             ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)
         {

@@ -57,7 +57,7 @@ namespace Nano35.Instance.Api.Controllers
             var result =
                 await new LoggedGetAllUnitsRequest(logger,
                         new ValidatedGetAllUnitsRequest(
-                            new GetAllUnitsRequest(bus)))
+                            new GetAllUnitsUseCase(bus)))
                     .Ask(request);
             
             return result switch
@@ -83,13 +83,13 @@ namespace Nano35.Instance.Api.Controllers
 
             var request = new GetUnitByIdRequestContract()
             {
-                UnitId = query.UnitId
+                UnitId = query.Id
             };
             
             var result =
                 await new LoggedGetUnitByIdRequest(logger,
                         new ValidatedGetUnitByIdRequest(
-                            new GetUnitByIdRequest(bus)))
+                            new GetUnitByIdUseCase(bus)))
                     .Ask(request);
             
             return result switch
@@ -115,7 +115,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result =
                 await new LoggedGetAllUnitTypesRequest(logger,
-                    new GetAllUnitTypesRequest(bus))
+                    new GetAllUnitTypesUseCase(bus))
                     .Ask(request);
             
             return result switch
@@ -144,7 +144,7 @@ namespace Nano35.Instance.Api.Controllers
             
             var result = 
                 await new LoggedGetUnitStringByIdRequest(logger, 
-                    new GetUnitStringByIdRequest(bus)).Ask(request);
+                    new GetUnitStringByIdUseCase(bus)).Ask(request);
 
             return result switch
             {
@@ -183,7 +183,7 @@ namespace Nano35.Instance.Api.Controllers
             var result = 
                 await new LoggedCreateUnitRequest(logger, 
                     new ValidatedCreateUnitRequest(
-                        new CreateUnitRequest(bus, auth)))
+                        new CreateUnitUseCase(bus, auth)))
                     .Ask(request);
 
             return result switch

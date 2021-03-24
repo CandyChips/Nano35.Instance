@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllUnitsByType
@@ -9,24 +10,26 @@ namespace Nano35.Instance.Api.Requests.GetAllUnitsByType
     }
     
     public class ValidatedGetAllUnitsByTypeRequest:
-        IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract>
+        PipeNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract>
     {
-        private readonly IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> _nextNode;
+        private readonly IValidator<IGetAllUnitsByTypeRequestContract> _validator;
 
         public ValidatedGetAllUnitsByTypeRequest(
-            IPipelineNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> nextNode)
+            IValidator<IGetAllUnitsByTypeRequestContract> validator,
+            IPipeNode<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAllUnitsByTypeResultContract> Ask(
+        public override async Task<IGetAllUnitsByTypeResultContract> Ask(
             IGetAllUnitsByTypeRequestContract input)
         {
             if (false)
             {
                 return new GetAllUnitsByTypeValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

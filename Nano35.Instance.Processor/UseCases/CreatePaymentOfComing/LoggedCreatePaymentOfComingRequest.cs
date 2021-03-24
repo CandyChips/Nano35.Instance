@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfComing
 {
     public class LoggedCreatePaymentOfComingRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreatePaymentOfComingRequestContract, 
             ICreatePaymentOfComingResultContract>
     {
         private readonly ILogger<LoggedCreatePaymentOfComingRequest> _logger;
-        private readonly IPipelineNode<
-            ICreatePaymentOfComingRequestContract, 
-            ICreatePaymentOfComingResultContract> _nextNode;
 
         public LoggedCreatePaymentOfComingRequest(
             ILogger<LoggedCreatePaymentOfComingRequest> logger,
-            IPipelineNode<
-                ICreatePaymentOfComingRequestContract,
-                ICreatePaymentOfComingResultContract> nextNode)
+            IPipeNode<ICreatePaymentOfComingRequestContract,
+                ICreatePaymentOfComingResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreatePaymentOfComingResultContract> Ask(
+        public override async Task<ICreatePaymentOfComingResultContract> Ask(
             ICreatePaymentOfComingRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"CreatePaymentOfComingLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"CreatePaymentOfComingLogger ends on: {DateTime.Now}");
             
             switch (result)

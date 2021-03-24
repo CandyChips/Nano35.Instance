@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
     }
     
     public class ValidatedGetAvailableCashOfUnitRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAvailableCashOfUnitRequestContract, 
             IGetAvailableCashOfUnitResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAvailableCashOfUnitRequestContract,
-            IGetAvailableCashOfUnitResultContract> _nextNode;
 
         public ValidatedGetAvailableCashOfUnitRequest(
-            IPipelineNode<
-                IGetAvailableCashOfUnitRequestContract,
-                IGetAvailableCashOfUnitResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
-
-        public async Task<IGetAvailableCashOfUnitResultContract> Ask(
+            IPipeNode<IGetAvailableCashOfUnitRequestContract,
+                IGetAvailableCashOfUnitResultContract> next) : base(next)
+        {}
+        
+        public override async Task<IGetAvailableCashOfUnitResultContract> Ask(
             IGetAvailableCashOfUnitRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
             {
                 return new GetAvailableCashOfUnitValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

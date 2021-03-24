@@ -9,7 +9,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllRegions
 {
     public class GetAllRegionsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllRegionsRequestContract,
             IGetAllRegionsResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             public IEnumerable<IRegionViewModel> Data { get; set; }
         }
 
-        public async Task<IGetAllRegionsResultContract> Ask(
+        public override async Task<IGetAllRegionsResultContract> Ask(
             IGetAllRegionsRequestContract input,
             CancellationToken cancellationToken)
         {

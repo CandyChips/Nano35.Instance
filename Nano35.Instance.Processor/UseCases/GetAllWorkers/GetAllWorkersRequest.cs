@@ -13,7 +13,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
     public class GetAllWorkersRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllWorkersRequestContract, 
             IGetAllWorkersResultContract>
     {
@@ -45,7 +45,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             public Guid UserId { get; set; }
         }
 
-        public async Task<IGetAllWorkersResultContract> Ask(
+        public override async Task<IGetAllWorkersResultContract> Ask(
             IGetAllWorkersRequestContract input,
             CancellationToken cancellationToken)
         {

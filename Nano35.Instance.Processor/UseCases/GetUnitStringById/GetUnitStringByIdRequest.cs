@@ -10,7 +10,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
 {
     public class GetUnitStringByIdRequest :
-        IPipelineNode<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>
+        EndPointNodeBase<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,7 +19,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
             _context = context;
         }
         
-        public async Task<IGetUnitStringByIdResultContract> Ask(
+        public override async Task<IGetUnitStringByIdResultContract> Ask(
             IGetUnitStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {

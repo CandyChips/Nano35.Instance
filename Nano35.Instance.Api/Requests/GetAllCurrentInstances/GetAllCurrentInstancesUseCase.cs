@@ -6,8 +6,8 @@ using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.GetAllCurrentInstances
 {
-    public class GetAllCurrentInstancesRequest :
-        IPipelineNode<
+    public class GetAllCurrentInstancesUseCase :
+        EndPointNodeBase<
             IGetAllInstancesRequestContract,
             IGetAllInstancesResultContract>
     {
@@ -17,7 +17,7 @@ namespace Nano35.Instance.Api.Requests.GetAllCurrentInstances
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
-        public GetAllCurrentInstancesRequest(
+        public GetAllCurrentInstancesUseCase(
             IBus bus,
             ICustomAuthStateProvider auth)
         {
@@ -32,25 +32,11 @@ namespace Nano35.Instance.Api.Requests.GetAllCurrentInstances
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IGetAllInstancesResultContract> Ask(
+        public override async Task<IGetAllInstancesResultContract> Ask(
             IGetAllInstancesRequestContract input)
         {
             input.UserId = _auth.CurrentUserId;
-            // Configure request client of input type
-            var client = _bus.CreateRequestClient<IGetAllInstancesRequestContract>(TimeSpan.FromSeconds(10));
-            
-            // Receive response of processor magic
-            var response = await client
-                .GetResponse<IGetAllInstancesSuccessResultContract, IGetAllInstancesErrorResultContract>(input);
-            
-            // Checking response status
-            if (response.Is(out Response<IGetAllInstancesSuccessResultContract> successResponse))
-                return successResponse.Message;
-            
-            if (response.Is(out Response<IGetAllInstancesErrorResultContract> errorResponse))
-                return errorResponse.Message;
-            
-            throw new InvalidOperationException();
+            return (await (new GetAllCurrentInstancesRequet(_bus, input)).GetResponse());
         }
     }
 }

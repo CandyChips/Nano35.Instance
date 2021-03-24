@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
 {
     public class LoggedGetAvailableCashOfUnitRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAvailableCashOfUnitRequestContract, 
             IGetAvailableCashOfUnitResultContract>
     {
         private readonly ILogger<LoggedGetAvailableCashOfUnitRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAvailableCashOfUnitRequestContract, 
-            IGetAvailableCashOfUnitResultContract> _nextNode;
 
         public LoggedGetAvailableCashOfUnitRequest(
             ILogger<LoggedGetAvailableCashOfUnitRequest> logger,
-            IPipelineNode<
-                IGetAvailableCashOfUnitRequestContract,
-                IGetAvailableCashOfUnitResultContract> nextNode)
+            IPipeNode<IGetAvailableCashOfUnitRequestContract,
+                IGetAvailableCashOfUnitResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAvailableCashOfUnitResultContract> Ask(
+        public override async Task<IGetAvailableCashOfUnitResultContract> Ask(
             IGetAvailableCashOfUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAvailableCashOfUnitLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAvailableCashOfUnitLogger ends on: {DateTime.Now}");
             
             switch (result)

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAvailableCashOfUnit
@@ -9,24 +10,26 @@ namespace Nano35.Instance.Api.Requests.GetAvailableCashOfUnit
     }
     
     public class ValidatedGetAvailableCashOfUnitRequest:
-        IPipelineNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract>
+        PipeNodeBase<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract>
     {
-        private readonly IPipelineNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract> _nextNode;
+        private readonly IValidator<IGetAvailableCashOfUnitRequestContract> _validator;
 
         public ValidatedGetAvailableCashOfUnitRequest(
-            IPipelineNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract> nextNode)
+            IValidator<IGetAvailableCashOfUnitRequestContract> validator,
+            IPipeNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
+            _validator = validator;
         }
 
-        public async Task<IGetAvailableCashOfUnitResultContract> Ask(
+        public override async Task<IGetAvailableCashOfUnitResultContract> Ask(
             IGetAvailableCashOfUnitRequestContract input)
         {
             if (false)
             {
                 return new GetAvailableCashOfUnitValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

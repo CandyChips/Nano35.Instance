@@ -7,33 +7,27 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
     public class TransactedCreateUnitRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateUnitRequestContract,
             ICreateUnitResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateUnitRequestContract, 
-            ICreateUnitResultContract> _nextNode;
+        
 
-        public TransactedCreateUnitRequest(
-            ApplicationContext context,
-            IPipelineNode<
-                ICreateUnitRequestContract,
-                ICreateUnitResultContract> nextNode)
+        public TransactedCreateUnitRequest(ApplicationContext context,
+            IPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateUnitResultContract> Ask(
+        public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
 {
     public class GetWorkerStringByIdRequest :
-        IPipelineNode<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract>
+        EndPointNodeBase<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,7 +22,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
             public string Data { get; set; }
         }
 
-        public async Task<IGetWorkerStringByIdResultContract> Ask(
+        public override async Task<IGetWorkerStringByIdResultContract> Ask(
             IGetWorkerStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {

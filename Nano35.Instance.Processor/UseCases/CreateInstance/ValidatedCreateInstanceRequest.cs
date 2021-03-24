@@ -11,23 +11,18 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
     }
     
     public class ValidatedCreateInstanceRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateInstanceRequestContract,
             ICreateInstanceResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateInstanceRequestContract,
-            ICreateInstanceResultContract> _nextNode;
+       
 
         public ValidatedCreateInstanceRequest(
-            IPipelineNode<
-                ICreateInstanceRequestContract,
-                ICreateInstanceResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateInstanceRequestContract,
+                ICreateInstanceResultContract> next) : base(next)
+        {}
 
-        public async Task<ICreateInstanceResultContract> Ask(
+        public override async Task<ICreateInstanceResultContract> Ask(
             ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             {
                 return new CreateInstanceValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

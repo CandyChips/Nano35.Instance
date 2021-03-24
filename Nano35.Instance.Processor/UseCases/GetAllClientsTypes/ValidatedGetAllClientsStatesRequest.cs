@@ -11,23 +11,18 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
     }
     
     public class ValidatedGetAllClientTypesRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllClientTypesRequestContract, 
             IGetAllClientTypesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllClientTypesRequestContract,
-            IGetAllClientTypesResultContract> _nextNode;
 
         public ValidatedGetAllClientTypesRequest(
-            IPipelineNode<
-                IGetAllClientTypesRequestContract,
-                IGetAllClientTypesResultContract> nextNode)
+            IPipeNode<IGetAllClientTypesRequestContract,
+                IGetAllClientTypesResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IGetAllClientTypesResultContract> Ask(
+        public override async Task<IGetAllClientTypesResultContract> Ask(
             IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
             {
                 return new GetAllClientTypesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

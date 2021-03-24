@@ -7,31 +7,24 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.GetAllRegions
 {
     public class LoggedGetAllRegionsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllRegionsRequestContract,
             IGetAllRegionsResultContract>
     {
         private readonly ILogger<LoggedGetAllRegionsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllRegionsRequestContract, 
-            IGetAllRegionsResultContract> _nextNode;
 
-        public LoggedGetAllRegionsRequest(
-            ILogger<LoggedGetAllRegionsRequest> logger,
-            IPipelineNode<
-                IGetAllRegionsRequestContract, 
-                IGetAllRegionsResultContract> nextNode)
+        public LoggedGetAllRegionsRequest(ILogger<LoggedGetAllRegionsRequest> logger,
+            IPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllRegionsResultContract> Ask(
+        public override async Task<IGetAllRegionsResultContract> Ask(
             IGetAllRegionsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllRegionsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllRegionsLogger ends on: {DateTime.Now}");
 
             switch (result)
