@@ -7,32 +7,27 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
 {
     public class LoggedUpdateClientsEmailRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateClientsEmailRequestContract,
             IUpdateClientsEmailResultContract>
     {
         private readonly ILogger<LoggedUpdateClientsEmailRequest> _logger;
         
-        private readonly IPipelineNode<
-            IUpdateClientsEmailRequestContract, 
-            IUpdateClientsEmailResultContract> _nextNode;
 
         public LoggedUpdateClientsEmailRequest(
             ILogger<LoggedUpdateClientsEmailRequest> logger,
-            IPipelineNode<
-                IUpdateClientsEmailRequestContract,
-                IUpdateClientsEmailResultContract> nextNode)
+            IPipeNode<IUpdateClientsEmailRequestContract,
+                IUpdateClientsEmailResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateClientsEmailResultContract> Ask(
+        public override async Task<IUpdateClientsEmailResultContract> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateClientsEmail starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"LoggedUpdateClientsEmail ends on: {DateTime.Now}");
             
             switch (result)

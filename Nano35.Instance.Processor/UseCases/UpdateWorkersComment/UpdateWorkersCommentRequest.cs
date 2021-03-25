@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
 {
     public class UpdateWorkersCommentRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateWorkersCommentRequestContract,
             IUpdateWorkersCommentResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
             
         }
 
-        public async Task<IUpdateWorkersCommentResultContract> Ask(
+        public override async Task<IUpdateWorkersCommentResultContract> Ask(
             IUpdateWorkersCommentRequestContract input,
             CancellationToken cancellationToken)
         {

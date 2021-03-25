@@ -6,8 +6,8 @@ using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateClientsSelle
 {
-    public class UpdateClientsSelleRequest :
-        IPipelineNode<
+    public class UpdateClientsSelleUseCase :
+        EndPointNodeBase<
             IUpdateClientsSelleRequestContract,
             IUpdateClientsSelleResultContract>
     {
@@ -18,7 +18,7 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsSelle
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
-        public UpdateClientsSelleRequest(
+        public UpdateClientsSelleUseCase(
             IBus bus, 
             ICustomAuthStateProvider auth)
         {
@@ -33,26 +33,12 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsSelle
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateClientsSelleResultContract> Ask(
+        public override async Task<IUpdateClientsSelleResultContract> Ask(
             IUpdateClientsSelleRequestContract input)
         {
             input.UpdaterId = _auth.CurrentUserId;
 
-            // Configure request client of input type
-            var client = _bus.CreateRequestClient<IUpdateClientsSelleRequestContract>(TimeSpan.FromSeconds(10));
-            
-            // Receive response of processor magic
-            var response = await client
-                .GetResponse<IUpdateClientsSelleSuccessResultContract, IUpdateClientsSelleErrorResultContract>(input);
-            
-            // Checking response status
-            if (response.Is(out Response<IUpdateClientsSelleSuccessResultContract> successResponse))
-                return successResponse.Message;
-            
-            if (response.Is(out Response<IUpdateClientsSelleErrorResultContract> errorResponse))
-                return errorResponse.Message;
-            
-            throw new InvalidOperationException();
+            return (await (new UpdateClientsSelleRequest(_bus, input)).GetResponse());
         }
     }
 }

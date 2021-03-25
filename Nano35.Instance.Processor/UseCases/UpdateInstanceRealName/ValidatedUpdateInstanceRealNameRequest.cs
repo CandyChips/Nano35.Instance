@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
     }
     
     public class ValidatedUpdateInstanceRealNameRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateInstanceRealNameRequestContract,
             IUpdateInstanceRealNameResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateInstanceRealNameRequestContract,
-            IUpdateInstanceRealNameResultContract> _nextNode;
-
         public ValidatedUpdateInstanceRealNameRequest(
-            IPipelineNode<
-                IUpdateInstanceRealNameRequestContract,
-                IUpdateInstanceRealNameResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateInstanceRealNameRequestContract,
+                IUpdateInstanceRealNameResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateInstanceRealNameResultContract> Ask(
+        public override async Task<IUpdateInstanceRealNameResultContract> Ask(
             IUpdateInstanceRealNameRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
             {
                 return new UpdateInstanceRealNameValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

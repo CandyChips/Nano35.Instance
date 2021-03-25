@@ -9,24 +9,24 @@ namespace Nano35.Instance.Api.Requests.UpdateInstanceEmail
     }
     
     public class ValidatedUpdateInstanceEmailRequest:
-        IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>
+        PipeNodeBase
+        <IUpdateInstanceEmailRequestContract,
+            IUpdateInstanceEmailResultContract>
     {
-        private readonly IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract> _nextNode;
 
         public ValidatedUpdateInstanceEmailRequest(
-            IPipelineNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateInstanceEmailRequestContract,
+                IUpdateInstanceEmailResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateInstanceEmailResultContract> Ask(
+        public override async Task<IUpdateInstanceEmailResultContract> Ask(
             IUpdateInstanceEmailRequestContract input)
         {
             if (false)
             {
                 return new UpdateInstanceEmailValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

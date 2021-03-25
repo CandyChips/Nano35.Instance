@@ -44,7 +44,7 @@ namespace Nano35.Instance.Api.Requests.GetAllRegions
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<RegionViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<IRegionViewModel>>(serializedResult);
                 }
                 else
                 {

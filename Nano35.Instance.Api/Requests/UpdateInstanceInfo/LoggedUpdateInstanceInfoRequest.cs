@@ -6,24 +6,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.UpdateInstanceInfo
 {
     public class LoggedUpdateInstanceInfoRequest :
-        IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>
+        PipeNodeBase
+        <IUpdateInstanceInfoRequestContract,
+            IUpdateInstanceInfoResultContract>
     {
         private readonly ILogger<LoggedUpdateInstanceInfoRequest> _logger;
-        private readonly IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> _nextNode;
 
         public LoggedUpdateInstanceInfoRequest(
             ILogger<LoggedUpdateInstanceInfoRequest> logger,
-            IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> nextNode)
+            IPipeNode<IUpdateInstanceInfoRequestContract,
+                IUpdateInstanceInfoResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateInstanceInfoResultContract> Ask(
+        public override async Task<IUpdateInstanceInfoResultContract> Ask(
             IUpdateInstanceInfoRequestContract input)
         {
             _logger.LogInformation($"UpdateInstanceInfoLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateInstanceInfoLogger ends on: {DateTime.Now}");
             
             switch (result)

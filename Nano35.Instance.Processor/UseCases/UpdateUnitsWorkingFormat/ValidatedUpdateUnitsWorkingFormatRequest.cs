@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
     }
     
     public class ValidatedUpdateUnitsWorkingFormatRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateUnitsWorkingFormatRequestContract,
             IUpdateUnitsWorkingFormatResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateUnitsWorkingFormatRequestContract, 
-            IUpdateUnitsWorkingFormatResultContract> _nextNode;
-
         public ValidatedUpdateUnitsWorkingFormatRequest(
-            IPipelineNode<
-                IUpdateUnitsWorkingFormatRequestContract,
-                IUpdateUnitsWorkingFormatResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateUnitsWorkingFormatRequestContract,
+                IUpdateUnitsWorkingFormatResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateUnitsWorkingFormatResultContract> Ask(
+        public override async Task<IUpdateUnitsWorkingFormatResultContract> Ask(
             IUpdateUnitsWorkingFormatRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
             {
                 return new UpdateUnitsWorkingFormatValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

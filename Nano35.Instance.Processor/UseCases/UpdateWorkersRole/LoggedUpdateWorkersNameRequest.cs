@@ -7,31 +7,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
 {
     public class LoggedUpdateWorkersRoleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersRoleRequestContract,
             IUpdateWorkersRoleResultContract>
     {
         private readonly ILogger<LoggedUpdateWorkersRoleRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateWorkersRoleRequestContract,
-            IUpdateWorkersRoleResultContract> _nextNode;
-
         public LoggedUpdateWorkersRoleRequest(
             ILogger<LoggedUpdateWorkersRoleRequest> logger,
-            IPipelineNode<
-                IUpdateWorkersRoleRequestContract,
-                IUpdateWorkersRoleResultContract> nextNode)
+            IPipeNode<IUpdateWorkersRoleRequestContract,
+                IUpdateWorkersRoleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateWorkersRoleResultContract> Ask(
+        public override async Task<IUpdateWorkersRoleResultContract> Ask(
             IUpdateWorkersRoleRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateWorkersRole starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"LoggedUpdateWorkersRole ends on: {DateTime.Now}");
             
             switch (result)

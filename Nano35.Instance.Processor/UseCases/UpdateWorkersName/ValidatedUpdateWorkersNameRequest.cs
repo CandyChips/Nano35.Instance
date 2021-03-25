@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersName
     }
     
     public class ValidatedUpdateWorkersNameRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersNameRequestContract,
             IUpdateWorkersNameResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateWorkersNameRequestContract,
-            IUpdateWorkersNameResultContract> _nextNode;
-
         public ValidatedUpdateWorkersNameRequest(
-            IPipelineNode<
-                IUpdateWorkersNameRequestContract,
-                IUpdateWorkersNameResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateWorkersNameRequestContract,
+                IUpdateWorkersNameResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateWorkersNameResultContract> Ask(
+        public override async Task<IUpdateWorkersNameResultContract> Ask(
             IUpdateWorkersNameRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersName
             {
                 return new UpdateWorkersNameValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

@@ -7,31 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsType
 {
     public class LoggedUpdateUnitsTypeRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateUnitsTypeRequestContract,
             IUpdateUnitsTypeResultContract>
     {
         private readonly ILogger<LoggedUpdateUnitsTypeRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateUnitsTypeRequestContract,
-            IUpdateUnitsTypeResultContract> _nextNode;
 
         public LoggedUpdateUnitsTypeRequest(
             ILogger<LoggedUpdateUnitsTypeRequest> logger,
-            IPipelineNode<
-                IUpdateUnitsTypeRequestContract,
-                IUpdateUnitsTypeResultContract> nextNode)
+            IPipeNode<IUpdateUnitsTypeRequestContract,
+                IUpdateUnitsTypeResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateUnitsTypeResultContract> Ask(
+        public override async Task<IUpdateUnitsTypeResultContract> Ask(
             IUpdateUnitsTypeRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateUnitsType starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"LoggedUpdateUnitsType ends on: {DateTime.Now}");
             
             switch (result)

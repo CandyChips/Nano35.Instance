@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsState
     }
     
     public class ValidatedUpdateClientsStateRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateClientsStateRequestContract,
             IUpdateClientsStateResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateClientsStateRequestContract, 
-            IUpdateClientsStateResultContract> _nextNode;
 
         public ValidatedUpdateClientsStateRequest(
-            IPipelineNode<
-                IUpdateClientsStateRequestContract, 
-                IUpdateClientsStateResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateClientsStateRequestContract,
+                IUpdateClientsStateResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateClientsStateResultContract> Ask(
+        public override async Task<IUpdateClientsStateResultContract> Ask(
             IUpdateClientsStateRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsState
             {
                 return new UpdateClientsStateValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

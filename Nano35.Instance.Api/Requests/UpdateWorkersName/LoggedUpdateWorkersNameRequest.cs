@@ -6,31 +6,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.UpdateWorkersName
 {
     public class LoggedUpdateWorkersNameRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersNameRequestContract,
             IUpdateWorkersNameResultContract>
     {
         private readonly ILogger<LoggedUpdateWorkersNameRequest> _logger;
-        
-        private readonly IPipelineNode<
-            IUpdateWorkersNameRequestContract, 
-            IUpdateWorkersNameResultContract> _nextNode;
 
         public LoggedUpdateWorkersNameRequest(
             ILogger<LoggedUpdateWorkersNameRequest> logger,
-            IPipelineNode<
-                IUpdateWorkersNameRequestContract,
-                IUpdateWorkersNameResultContract> nextNode)
+            IPipeNode<IUpdateWorkersNameRequestContract,
+                IUpdateWorkersNameResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateWorkersNameResultContract> Ask(
+        public override async Task<IUpdateWorkersNameResultContract> Ask(
             IUpdateWorkersNameRequestContract input)
         {
             _logger.LogInformation($"UpdateWorkersNameLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateWorkersNameLogger ends on: {DateTime.Now}");
             
             switch (result)

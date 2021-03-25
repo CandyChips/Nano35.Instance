@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
 {
     public class UpdateInstanceRealNameRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateInstanceRealNameRequestContract,
             IUpdateInstanceRealNameResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
             
         }
 
-        public async Task<IUpdateInstanceRealNameResultContract> Ask(
+        public override async Task<IUpdateInstanceRealNameResultContract> Ask(
             IUpdateInstanceRealNameRequestContract input,
             CancellationToken cancellationToken)
         {

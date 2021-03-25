@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
 {
     public class UpdateUnitsNameRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateUnitsNameRequestContract,
             IUpdateUnitsNameResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
             
         }
 
-        public async Task<IUpdateUnitsNameResultContract> Ask(
+        public override async Task<IUpdateUnitsNameResultContract> Ask(
             IUpdateUnitsNameRequestContract input,
             CancellationToken cancellationToken)
         {

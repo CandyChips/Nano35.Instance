@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,12 +14,10 @@ using Nano35.Instance.Api.Requests.UpdateUnitsName;
 using Nano35.Instance.Api.Requests.UpdateUnitsPhone;
 using Nano35.Instance.Api.Requests.UpdateUnitsType;
 using Nano35.Instance.Api.Requests.UpdateUnitsWorkingFormat;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Requests.GetUnitById;
-using Nano35.Instance.Api.Requests.GetUnitStringById;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -47,25 +46,13 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllUnitsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitsRequest>));
+            var validator = (IValidator<IGetAllUnitsRequestContract>) _services.GetService(typeof(IValidator<IGetAllUnitsRequestContract>));
 
-            var request = new GetAllUnitsRequestContract()
-            {
-                InstanceId = query.InstanceId,
-                UnitTypeId = query.UnitTypeId
-            };
-            
-            var result =
-                await new LoggedGetAllUnitsRequest(logger,
-                        new ValidatedGetAllUnitsRequest(
-                            new GetAllUnitsUseCase(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllUnitsSuccessResultContract success => Ok(success),
-                IGetAllUnitsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedGetAllUnitsOnHttpContext(
+                    new LoggedGetAllUnitsRequest(logger,
+                        new ValidatedGetAllUnitsRequest(validator,
+                            new GetAllUnitsUseCase(bus)))).Ask(query);
         }
         
         [Authorize]
@@ -80,24 +67,14 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetUnitByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetUnitByIdRequest>));
+            var validator = (IValidator<IGetUnitByIdRequestContract>) _services.GetService(typeof(IValidator<IGetUnitByIdRequestContract>));
 
-            var request = new GetUnitByIdRequestContract()
-            {
-                UnitId = query.Id
-            };
-            
-            var result =
-                await new LoggedGetUnitByIdRequest(logger,
-                        new ValidatedGetUnitByIdRequest(
-                            new GetUnitByIdUseCase(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetUnitByIdSuccessResultContract success => Ok(success),
-                IGetUnitByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+           
+            return await 
+                new ConvertedGetUnitByIdOnHttpContext(
+                    new LoggedGetUnitByIdRequest(logger,
+                        new ValidatedGetUnitByIdRequest(validator,
+                            new GetUnitByIdUseCase(bus)))).Ask(query);
         }
     
         [AllowAnonymous]
@@ -110,48 +87,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllUnitTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllUnitTypesRequest>));
-
-            var request = new GetAllUnitTypesRequestContract();
             
-            var result =
-                await new LoggedGetAllUnitTypesRequest(logger,
-                    new GetAllUnitTypesUseCase(bus))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllUnitTypesSuccessResultContract success => Ok(success),
-                IGetAllUnitTypesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetUnitStringById")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetUnitStringById(
-            [FromQuery] Guid unitId)
-        {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetUnitStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetUnitStringByIdRequest>));
-
-            var request = new GetUnitStringByIdRequestContract()
-            {
-                UnitId = unitId
-            };
-            
-            var result = 
-                await new LoggedGetUnitStringByIdRequest(logger, 
-                    new GetUnitStringByIdUseCase(bus)).Ask(request);
-
-            return result switch
-            {
-                IGetUnitStringByIdSuccessResultContract success => Ok(success),
-                IGetUnitStringByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedGetAllUnitTypesOnHttpContext(
+                    new LoggedGetAllUnitTypesRequest(logger,
+                        new GetAllUnitTypesUseCase(bus)))
+                    .Ask(new GetAllUnitTypesHttpQuery());
         }
 
         [Authorize]
@@ -168,30 +109,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateUnitRequest>)_services.GetService(typeof(ILogger<LoggedCreateUnitRequest>));
 
-            var request = new CreateUnitRequestContract()
-            {
-                Address = body.Address,
-                CreatorId = body.CreatorId,
-                Id = body.Id,
-                InstanceId = body.InstanceId,
-                Name = body.Name,
-                Phone = body.Phone,
-                UnitTypeId = body.UnitTypeId,
-                WorkingFormat = body.WorkingFormat
-            };
-            
-            var result = 
-                await new LoggedCreateUnitRequest(logger, 
-                    new ValidatedCreateUnitRequest(
-                        new CreateUnitUseCase(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                ICreateUnitSuccessResultContract success => Ok(success),
-                ICreateUnitErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedCreateUnitOnHttpContext(
+                    new LoggedCreateUnitRequest(logger,
+                        new ValidatedCreateUnitRequest(
+                            new CreateUnitUseCase(bus,auth)))).Ask(body);
         }
 
         [Authorize]
@@ -208,24 +130,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsNameRequest>));
 
-            var request = new UpdateUnitsNameRequestContract()
-            {
-                Name = body.Name,
-                UnitId = body.UnitId
-            };
-            
-            var result = 
-                await new LoggedUpdateUnitsNameRequest(logger, 
-                    new ValidatedUpdateUnitsNameRequest(
-                        new UpdateUnitsNameRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateUnitsNameSuccessResultContract success => Ok(success),
-                IUpdateUnitsNameErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedUpdateUnitsNameOnHttpContext(
+                    new LoggedUpdateUnitsNameRequest(logger,
+                        new ValidatedUpdateUnitsNameRequest(
+                            new UpdateUnitsNameUseCase(bus,auth)))).Ask(body);
         }
 
         [Authorize]
@@ -242,24 +151,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsPhoneRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsPhoneRequest>));
 
-            var request = new UpdateUnitsPhoneRequestContract()
-            {
-                Phone = body.Phone,
-                UnitId = body.UnitId
-            };
-            
-            var result = 
-                await new LoggedUpdateUnitsPhoneRequest(logger, 
-                    new ValidatedUpdateUnitsPhoneRequest(
-                        new UpdateUnitsPhoneRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateUnitsPhoneSuccessResultContract success => Ok(success),
-                IUpdateUnitsPhoneErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedUpdateUnitsPhoneOnHttpContext(
+                    new LoggedUpdateUnitsPhoneRequest(logger,
+                        new ValidatedUpdateUnitsPhoneRequest(
+                            new UpdateUnitsPhoneUseCase(bus,auth)))).Ask(body);
         }
 
         [Authorize]
@@ -276,24 +172,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsAddressRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsAddressRequest>));
 
-            var request = new UpdateUnitsAddressRequestContract()
-            {
-                Address = body.Address,
-                UnitId = body.UnitId
-            };
-            
-            var result = 
-                await new LoggedUpdateUnitsAddressRequest(logger, 
-                    new ValidatedUpdateUnitsAddressRequest(
-                        new UpdateUnitsAddressRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateUnitsAddressSuccessResultContract success => Ok(success),
-                IUpdateUnitsAddressErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedUpdateUnitsAddressOnHttpContext(
+                    new LoggedUpdateUnitsAddressRequest(logger,
+                        new ValidatedUpdateUnitsAddressRequest(
+                            new UpdateUnitsAddressUseCase(bus,auth)))).Ask(body);
         }
 
         [Authorize]
@@ -310,24 +193,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsTypeRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsTypeRequest>));
 
-            var request = new UpdateUnitsTypeRequestContract()
-            {
-                TypeId = body.TypeId,
-                UnitId = body.UnitId
-            };
-            
-            var result = 
-                await new LoggedUpdateUnitsTypeRequest(logger, 
-                    new ValidatedUpdateUnitsTypeRequest(
-                        new UpdateUnitsTypeRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateUnitsTypeSuccessResultContract success => Ok(success),
-                IUpdateUnitsTypeErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedUpdateUnitsTypeOnHttpContext(
+                    new LoggedUpdateUnitsTypeRequest(logger,
+                        new ValidatedUpdateUnitsTypeRequest(
+                            new UpdateUnitsTypeUseCase(bus,auth)))).Ask(body);
         }
 
         [Authorize]
@@ -344,24 +214,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateUnitsWorkingFormatRequest>)_services.GetService(typeof(ILogger<LoggedUpdateUnitsWorkingFormatRequest>));
 
-            var request = new UpdateUnitsWorkingFormatRequestContract()
-            {
-                WorkingFormat = body.WorkingFormat,
-                UnitId = body.UnitId
-            };
-            
-            var result = 
-                await new LoggedUpdateUnitsWorkingFormatRequest(logger, 
-                    new ValidatedUpdateUnitsWorkingFormatRequest(
-                        new UpdateUnitsWorkingFormatRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateUnitsWorkingFormatSuccessResultContract success => Ok(success),
-                IUpdateUnitsWorkingFormatErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedUpdateUnitsWorkingFormatOnHttpContext(
+                    new LoggedUpdateUnitsWorkingFormatRequest(logger,
+                        new ValidatedUpdateUnitsWorkingFormatRequest(
+                            new UpdateUnitsWorkingFormatUseCase(bus,auth)))).Ask(body);
         }
     }
 }

@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
     }
     
     public class ValidatedUpdateInstanceRegionRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateInstanceRegionRequestContract,
             IUpdateInstanceRegionResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateInstanceRegionRequestContract, 
-            IUpdateInstanceRegionResultContract> _nextNode;
-
         public ValidatedUpdateInstanceRegionRequest(
-            IPipelineNode<
-                IUpdateInstanceRegionRequestContract,
-                IUpdateInstanceRegionResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateInstanceRegionRequestContract,
+                IUpdateInstanceRegionResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateInstanceRegionResultContract> Ask(
+        public override async Task<IUpdateInstanceRegionResultContract> Ask(
             IUpdateInstanceRegionRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
             {
                 return new UpdateInstanceRegionValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

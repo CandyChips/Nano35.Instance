@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceEmail
 {
     public class UpdateInstanceEmailRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateInstanceEmailRequestContract, 
             IUpdateInstanceEmailResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceEmail
             
         }
 
-        public async Task<IUpdateInstanceEmailResultContract> Ask(
+        public override async Task<IUpdateInstanceEmailResultContract> Ask(
             IUpdateInstanceEmailRequestContract input,
             CancellationToken cancellationToken)
         {

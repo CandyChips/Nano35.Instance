@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
 {
     public class UpdateWorkersRoleRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateWorkersRoleRequestContract,
             IUpdateWorkersRoleResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
             
         }
 
-        public async Task<IUpdateWorkersRoleResultContract> Ask(
+        public override async Task<IUpdateWorkersRoleResultContract> Ask(
             IUpdateWorkersRoleRequestContract input,
             CancellationToken cancellationToken)
         {

@@ -7,32 +7,26 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAdress
 {
     public class LoggedUpdateUnitsAddressRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateUnitsAddressRequestContract, 
             IUpdateUnitsAddressResultContract>
     {
         private readonly ILogger<LoggedUpdateUnitsAddressRequest> _logger;
-        
-        private readonly IPipelineNode<
-            IUpdateUnitsAddressRequestContract,
-            IUpdateUnitsAddressResultContract> _nextNode;
 
         public LoggedUpdateUnitsAddressRequest(
             ILogger<LoggedUpdateUnitsAddressRequest> logger,
-            IPipelineNode<
-                IUpdateUnitsAddressRequestContract, 
-                IUpdateUnitsAddressResultContract> nextNode)
+            IPipeNode<IUpdateUnitsAddressRequestContract,
+                IUpdateUnitsAddressResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateUnitsAddressResultContract> Ask(
+        public override async Task<IUpdateUnitsAddressResultContract> Ask(
             IUpdateUnitsAddressRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateUnitsAddress starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"LoggedUpdateUnitsAddress ends on: {DateTime.Now}");
             
             switch (result)

@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
     }
     
     public class ValidatedUpdateClientsEmailRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateClientsEmailRequestContract, 
             IUpdateClientsEmailResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateClientsEmailRequestContract, 
-            IUpdateClientsEmailResultContract> _nextNode;
-
         public ValidatedUpdateClientsEmailRequest(
-            IPipelineNode<
-                IUpdateClientsEmailRequestContract, 
-                IUpdateClientsEmailResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateClientsEmailRequestContract,
+                IUpdateClientsEmailResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateClientsEmailResultContract> Ask(
+        public override async Task<IUpdateClientsEmailResultContract> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
             {
                 return new UpdateClientsEmailValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

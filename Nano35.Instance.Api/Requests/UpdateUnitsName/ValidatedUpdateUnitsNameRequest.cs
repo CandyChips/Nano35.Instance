@@ -9,24 +9,24 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsName
     }
     
     public class ValidatedUpdateUnitsNameRequest:
-        IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>
+        PipeNodeBase
+        <IUpdateUnitsNameRequestContract,
+            IUpdateUnitsNameResultContract>
     {
-        private readonly IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> _nextNode;
-
         public ValidatedUpdateUnitsNameRequest(
-            IPipelineNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract> nextNode)
+            IPipeNode<IUpdateUnitsNameRequestContract,
+                IUpdateUnitsNameResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IUpdateUnitsNameResultContract> Ask(
+        public override async Task<IUpdateUnitsNameResultContract> Ask(
             IUpdateUnitsNameRequestContract input)
         {
             if (false)
             {
                 return new UpdateUnitsNameValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

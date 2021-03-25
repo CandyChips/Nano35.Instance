@@ -44,7 +44,7 @@ namespace Nano35.Instance.Api.Requests.GetAllClientTypes
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<ClientTypeViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<IClientTypeViewModel>>(serializedResult);
                 }
                 else
                 {

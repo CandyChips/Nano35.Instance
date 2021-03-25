@@ -44,7 +44,7 @@ namespace Nano35.Instance.Api.Requests.GetAllClientStates
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<ClientStateViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<IClientStateViewModel>>(serializedResult);
                 }
                 else
                 {

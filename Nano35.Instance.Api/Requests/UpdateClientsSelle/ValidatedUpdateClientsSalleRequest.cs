@@ -9,24 +9,24 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsSelle
     }
     
     public class ValidatedUpdateClientsSelleRequest:
-        IPipelineNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract>
+        PipeNodeBase
+        <IUpdateClientsSelleRequestContract,
+            IUpdateClientsSelleResultContract>
     {
-        private readonly IPipelineNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract> _nextNode;
 
         public ValidatedUpdateClientsSelleRequest(
-            IPipelineNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateClientsSelleRequestContract,
+                IUpdateClientsSelleResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateClientsSelleResultContract> Ask(
+        public override async Task<IUpdateClientsSelleResultContract> Ask(
             IUpdateClientsSelleRequestContract input)
         {
             if (false)
             {
                 return new UpdateClientsSelleValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

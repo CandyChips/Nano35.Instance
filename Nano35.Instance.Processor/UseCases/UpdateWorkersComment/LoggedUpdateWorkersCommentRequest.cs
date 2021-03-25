@@ -7,31 +7,24 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
 {
     public class LoggedUpdateWorkersCommentRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersCommentRequestContract,
             IUpdateWorkersCommentResultContract>
     {
         private readonly ILogger<LoggedUpdateWorkersCommentRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateWorkersCommentRequestContract,
-            IUpdateWorkersCommentResultContract> _nextNode;
 
-        public LoggedUpdateWorkersCommentRequest(
-            ILogger<LoggedUpdateWorkersCommentRequest> logger,
-            IPipelineNode<
-                IUpdateWorkersCommentRequestContract,
-                IUpdateWorkersCommentResultContract> nextNode)
+        public LoggedUpdateWorkersCommentRequest(ILogger<LoggedUpdateWorkersCommentRequest> logger,
+            IPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateWorkersCommentResultContract> Ask(
+        public override async Task<IUpdateWorkersCommentResultContract> Ask(
             IUpdateWorkersCommentRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"LoggedUpdateWorkersComment starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"LoggedUpdateWorkersComment ends on: {DateTime.Now}");
             
             switch (result)

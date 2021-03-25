@@ -9,24 +9,24 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsPhone
     }
     
     public class ValidatedUpdateClientsPhoneRequest:
-        IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract>
+        PipeNodeBase
+        <IUpdateClientsPhoneRequestContract,
+            IUpdateClientsPhoneResultContract>
     {
-        private readonly IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract> _nextNode;
 
         public ValidatedUpdateClientsPhoneRequest(
-            IPipelineNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateClientsPhoneRequestContract, 
+                IUpdateClientsPhoneResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateClientsPhoneResultContract> Ask(
+        public override async Task<IUpdateClientsPhoneResultContract> Ask(
             IUpdateClientsPhoneRequestContract input)
         {
             if (false)
             {
                 return new UpdateClientsPhoneValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

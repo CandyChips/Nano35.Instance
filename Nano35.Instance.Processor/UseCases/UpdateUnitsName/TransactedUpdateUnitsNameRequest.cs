@@ -7,33 +7,28 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
 {
     public class TransactedUpdateUnitsNameRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateUnitsNameRequestContract,
             IUpdateUnitsNameResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateUnitsNameRequestContract,
-            IUpdateUnitsNameResultContract> _nextNode;
 
         public TransactedUpdateUnitsNameRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateUnitsNameRequestContract,
-                IUpdateUnitsNameResultContract> nextNode)
+            IPipeNode<IUpdateUnitsNameRequestContract,
+                IUpdateUnitsNameResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateUnitsNameResultContract> Ask(
+        public override async Task<IUpdateUnitsNameResultContract> Ask(
             IUpdateUnitsNameRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

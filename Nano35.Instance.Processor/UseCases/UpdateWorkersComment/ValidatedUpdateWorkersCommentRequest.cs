@@ -11,23 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
     }
     
     public class ValidatedUpdateWorkersCommentRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersCommentRequestContract,
             IUpdateWorkersCommentResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateWorkersCommentRequestContract,
-            IUpdateWorkersCommentResultContract> _nextNode;
-
         public ValidatedUpdateWorkersCommentRequest(
-            IPipelineNode<
-                IUpdateWorkersCommentRequestContract,
-                IUpdateWorkersCommentResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateWorkersCommentRequestContract,
+                IUpdateWorkersCommentResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateWorkersCommentResultContract> Ask(
+        public override async Task<IUpdateWorkersCommentResultContract> Ask(
             IUpdateWorkersCommentRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
             {
                 return new UpdateWorkersCommentValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

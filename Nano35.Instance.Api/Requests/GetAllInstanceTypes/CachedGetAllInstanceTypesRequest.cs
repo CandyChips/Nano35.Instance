@@ -14,27 +14,21 @@ using Newtonsoft.Json;
 namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
 {
     public class CachedGetAllInstanceTypesRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllInstanceTypesRequestContract, 
             IGetAllInstanceTypesResultContract>
     {
         private readonly IDistributedCache _distributedCache;
         
-        private readonly IPipelineNode<
-            IGetAllInstanceTypesRequestContract,
-            IGetAllInstanceTypesResultContract> _nextNode;
-
         public CachedGetAllInstanceTypesRequest(
             IDistributedCache distributedCache,
-            IPipelineNode<
-                IGetAllInstanceTypesRequestContract, 
-                IGetAllInstanceTypesResultContract> nextNode)
+            IPipeNode<IGetAllInstanceTypesRequestContract,
+                IGetAllInstanceTypesResultContract> next) : base(next)
         {
             _distributedCache = distributedCache;
-            _nextNode = nextNode;
         }
 
-        public async Task<IGetAllInstanceTypesResultContract> Ask(
+        public override async Task<IGetAllInstanceTypesResultContract> Ask(
             IGetAllInstanceTypesRequestContract input)
         {
             try
@@ -47,11 +41,11 @@ namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
                 if (encodedResult != null)
                 {
                     serializedResult = Encoding.UTF8.GetString(encodedResult);
-                    result = JsonConvert.DeserializeObject<List<InstanceTypeViewModel>>(serializedResult);
+                    result = JsonConvert.DeserializeObject<List<IInstanceTypeViewModel>>(serializedResult);
                 }
                 else
                 {
-                    switch (await _nextNode.Ask(input))
+                    switch (await DoNext(input))
                     {
                         case IGetAllInstanceTypesSuccessResultContract success:
                             result = success.Data;

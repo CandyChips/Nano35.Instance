@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
+using MassTransit.Testing.Indicators;
 using Nano35.Contracts;
 
 namespace Nano35.Instance.Api.Requests

@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
 {
     public class UpdateInstanceRegionRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateInstanceRegionRequestContract,
             IUpdateInstanceRegionResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
             
         }
 
-        public async Task<IUpdateInstanceRegionResultContract> Ask(
+        public override async Task<IUpdateInstanceRegionResultContract> Ask(
             IUpdateInstanceRegionRequestContract input,
             CancellationToken cancellationToken)
         {

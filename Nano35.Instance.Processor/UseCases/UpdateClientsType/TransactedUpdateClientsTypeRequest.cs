@@ -7,33 +7,28 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsType
 {
     public class TransactedUpdateClientsTypeRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateClientsTypeRequestContract,
             IUpdateClientsTypeResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateClientsTypeRequestContract,
-            IUpdateClientsTypeResultContract> _nextNode;
 
         public TransactedUpdateClientsTypeRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateClientsTypeRequestContract,
-                IUpdateClientsTypeResultContract> nextNode)
+            IPipeNode<IUpdateClientsTypeRequestContract,
+                IUpdateClientsTypeResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateClientsTypeResultContract> Ask(
+        public override async Task<IUpdateClientsTypeResultContract> Ask(
             IUpdateClientsTypeRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

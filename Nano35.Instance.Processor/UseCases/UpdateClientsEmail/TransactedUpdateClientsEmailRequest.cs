@@ -7,33 +7,28 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
 {
     public class TransactedUpdateClientsEmailRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateClientsEmailRequestContract,
             IUpdateClientsEmailResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateClientsEmailRequestContract,
-            IUpdateClientsEmailResultContract> _nextNode;
 
         public TransactedUpdateClientsEmailRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateClientsEmailRequestContract,
-                IUpdateClientsEmailResultContract> nextNode)
+            IPipeNode<IUpdateClientsEmailRequestContract,
+                IUpdateClientsEmailResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateClientsEmailResultContract> Ask(
+        public override async Task<IUpdateClientsEmailResultContract> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

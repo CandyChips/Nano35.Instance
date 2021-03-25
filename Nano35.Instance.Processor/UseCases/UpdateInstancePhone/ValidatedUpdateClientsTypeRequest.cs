@@ -11,23 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
     }
     
     public class ValidatedUpdateInstancePhoneRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateInstancePhoneRequestContract,
             IUpdateInstancePhoneResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateInstancePhoneRequestContract,
-            IUpdateInstancePhoneResultContract> _nextNode;
-
         public ValidatedUpdateInstancePhoneRequest(
-            IPipelineNode<
-                IUpdateInstancePhoneRequestContract, 
-                IUpdateInstancePhoneResultContract> nextNode)
+            IPipeNode<IUpdateInstancePhoneRequestContract,
+                IUpdateInstancePhoneResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IUpdateInstancePhoneResultContract> Ask(
+        public override async Task<IUpdateInstancePhoneResultContract> Ask(
             IUpdateInstancePhoneRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
             {
                 return new UpdateInstancePhoneValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

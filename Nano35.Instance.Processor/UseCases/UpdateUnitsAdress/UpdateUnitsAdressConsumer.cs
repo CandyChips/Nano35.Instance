@@ -31,8 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAdress
                 await new LoggedUpdateUnitsAddressRequest(logger,
                     new ValidatedUpdateUnitsAddressRequest(
                         new TransactedUpdateUnitsAddressRequest(dbContext,
-                            new UpdateUnitsAddressRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new UpdateUnitsAddressRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

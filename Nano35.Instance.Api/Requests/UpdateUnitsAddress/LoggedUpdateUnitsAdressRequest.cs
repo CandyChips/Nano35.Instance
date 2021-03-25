@@ -6,24 +6,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.UpdateUnitsAddress
 {
     public class LoggedUpdateUnitsAddressRequest :
-        IPipelineNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>
+        PipeNodeBase
+        <IUpdateUnitsAddressRequestContract,
+            IUpdateUnitsAddressResultContract>
     {
         private readonly ILogger<LoggedUpdateUnitsAddressRequest> _logger;
-        private readonly IPipelineNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract> _nextNode;
 
         public LoggedUpdateUnitsAddressRequest(
             ILogger<LoggedUpdateUnitsAddressRequest> logger,
-            IPipelineNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract> nextNode)
+            IPipeNode<IUpdateUnitsAddressRequestContract,
+                IUpdateUnitsAddressResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateUnitsAddressResultContract> Ask(
+        public override async Task<IUpdateUnitsAddressResultContract> Ask(
             IUpdateUnitsAddressRequestContract input)
         {
             _logger.LogInformation($"UpdateUnitsAddressLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateUnitsAddressLogger ends on: {DateTime.Now}");
             
             switch (result)

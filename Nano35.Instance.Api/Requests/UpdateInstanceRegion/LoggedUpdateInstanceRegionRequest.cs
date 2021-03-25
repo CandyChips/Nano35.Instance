@@ -6,24 +6,25 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests.UpdateInstanceRegion
 {
     public class LoggedUpdateInstanceRegionRequest :
-        IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>
+        PipeNodeBase
+        <IUpdateInstanceRegionRequestContract,
+            IUpdateInstanceRegionResultContract>
     {
         private readonly ILogger<LoggedUpdateInstanceRegionRequest> _logger;
-        private readonly IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract> _nextNode;
 
         public LoggedUpdateInstanceRegionRequest(
             ILogger<LoggedUpdateInstanceRegionRequest> logger,
-            IPipelineNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract> nextNode)
+            IPipeNode<IUpdateInstanceRegionRequestContract,
+                IUpdateInstanceRegionResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateInstanceRegionResultContract> Ask(
+        public override async Task<IUpdateInstanceRegionResultContract> Ask(
             IUpdateInstanceRegionRequestContract input)
         {
             _logger.LogInformation($"UpdateInstanceRegionLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateInstanceRegionLogger ends on: {DateTime.Now}");
             
             switch (result)

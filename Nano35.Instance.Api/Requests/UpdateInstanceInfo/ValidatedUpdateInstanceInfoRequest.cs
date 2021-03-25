@@ -9,24 +9,24 @@ namespace Nano35.Instance.Api.Requests.UpdateInstanceInfo
     }
     
     public class ValidatedUpdateInstanceInfoRequest:
-        IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>
+        PipeNodeBase
+        <IUpdateInstanceInfoRequestContract,
+            IUpdateInstanceInfoResultContract>
     {
-        private readonly IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> _nextNode;
 
         public ValidatedUpdateInstanceInfoRequest(
-            IPipelineNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateInstanceInfoRequestContract,
+                IUpdateInstanceInfoResultContract> next) : base(next)
+        {}
 
-        public async Task<IUpdateInstanceInfoResultContract> Ask(
+        public override async Task<IUpdateInstanceInfoResultContract> Ask(
             IUpdateInstanceInfoRequestContract input)
         {
             if (false)
             {
                 return new UpdateInstanceInfoValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

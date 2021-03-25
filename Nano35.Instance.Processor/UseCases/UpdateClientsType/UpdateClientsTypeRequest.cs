@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsType
 {
     public class UpdateClientsTypeRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateClientsTypeRequestContract,
             IUpdateClientsTypeResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsType
             
         }
 
-        public async Task<IUpdateClientsTypeResultContract> Ask(
+        public override async Task<IUpdateClientsTypeResultContract> Ask(
             IUpdateClientsTypeRequestContract input,
             CancellationToken cancellationToken)
         {

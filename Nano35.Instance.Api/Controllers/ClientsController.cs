@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentValidation;
 using MassTransit;
@@ -7,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Helpers;
@@ -16,7 +14,6 @@ using Nano35.Instance.Api.Requests.GetAllClients;
 using Nano35.Instance.Api.Requests.GetAllClientStates;
 using Nano35.Instance.Api.Requests.GetAllClientTypes;
 using Nano35.Instance.Api.Requests.GetClientById;
-using Nano35.Instance.Api.Requests.GetClientStringById;
 using Nano35.Instance.Api.Requests.UpdateClientsEmail;
 using Nano35.Instance.Api.Requests.UpdateClientsName;
 using Nano35.Instance.Api.Requests.UpdateClientsPhone;
@@ -66,34 +63,16 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllClients(
             [FromQuery] GetAllClientsHttpQuery query)
         {
-            // ToDo Hey Maslyonok
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientsRequest>));
-
-            var request = new GetAllClientsRequestContract()
-            {
-                InstanceId = query.InstanceId,
-                ClientStateId = query.ClientStateId,
-                ClientTypeId = query.ClientTypeId
-            };
             
-            // ToDo Hey Maslyonok
-            // Send request to pipeline
-            var result = 
-                await new ValidatedGetAllClientsRequest(
+            return await 
+                new ConvertedGetAllClientsOnHttpContext(
+                new ValidatedGetAllClientsRequest(
                     new LoggedGetAllClientsRequest(logger, 
-                        new GetAllClientsUseCase(bus))
-                ).Ask(request);
+                        new GetAllClientsUseCase(bus)))
+                ).Ask(query);
 
-            // ToDo Hey Maslyonok
-            // Check response of get all clients request
-            return result switch
-            {
-                IGetAllClientsSuccessResultContract success => Ok(success),
-                IGetAllClientsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
 
         [Authorize]
@@ -109,46 +88,13 @@ namespace Nano35.Instance.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetClientByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
             var validator = (IValidator<IGetClientByIdRequestContract>) _services.GetService(typeof(IValidator<IGetClientByIdRequestContract>));
-
-            var request = new GetClientByIdRequestContract()
-            {
-                UnitId = query.Id
-            };
-            
             return await 
+                new ConvertedGetClientByIdOnHttpContext(
                 new ValidatedGetClientByIdRequest(validator,
                     new LoggedGetClientByIdRequest(logger, 
-                        new GetClientByIdUseCase(bus))).Ask(request);
+                        new GetClientByIdUseCase(bus)))).Ask(query);
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetClientStringById")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetClientStringById(
-            [FromQuery] Guid clientId)
-        {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetClientStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetClientStringByIdRequest>));
-
-            var request = new GetClientStringByIdRequestContract()
-            {
-                ClientId = clientId
-            };
-            
-            var result = 
-                await new LoggedGetClientStringByIdRequest(logger, 
-                    new GetClientStringByIdUseCase(bus)).Ask(request);
-
-            return result switch
-            {
-                IGetClientStringByIdSuccessResultContract success => Ok(success),
-                IGetClientStringByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
-        }
-    
+        
         [AllowAnonymous]
         [HttpGet]
         [Route("GetAllClientTypes")]
@@ -159,20 +105,10 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientTypesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllClientTypesRequest>));
-
-            var request = new GetAllClientTypesRequestContract();
             
-            var result = 
-                await new LoggedGetAllClientTypesRequest(logger, 
-                    new GetAllClientTypesUseCase(bus)
-                    ).Ask(request);
-
-            return result switch
-            {
-                IGetAllClientTypesSuccessResultContract success => Ok(success),
-                IGetAllClientTypesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllClientTypesOnHttpContext(
+                new LoggedGetAllClientTypesRequest(logger,
+                    new GetAllClientTypesUseCase(bus))).Ask(new GetAllClientTypesHttpQuery());
         }
     
         [AllowAnonymous]
@@ -185,20 +121,10 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllClientStates>)_services.GetService(typeof(ILogger<LoggedGetAllClientStates>));
-
-            var request = new GetAllClientStatesRequestContract();
             
-            var result = 
-                await new LoggedGetAllClientStates(logger, 
-                    new GetAllClientStatesUseCase(bus)
-                    ).Ask(request);
-            
-            return result switch
-            {
-                IGetAllClientStatesSuccessResultContract success => Ok(success),
-                IGetAllClientStatesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllClientStatesOnHttpContext(
+                new LoggedGetAllClientStates(logger,
+                    new GetAllClientStatesUseCase(bus))).Ask(new GetAllClientStatesHttpQuery());
         }
 
         [Authorize]
@@ -215,31 +141,10 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateClientRequest>) _services.GetService(typeof(ILogger<LoggedCreateClientRequest>));
 
-            var request = new CreateClientRequestContract()
-            {
-                Name = body.Name,
-                Email = body.Email,
-                Phone = body.Phone,
-                Selle = body.Selle,
-                InstanceId = body.InstanceId,
-                ClientStateId = body.ClientStateId,
-                ClientTypeId = body.ClientTypeId,
-                NewId = body.NewId
-            };
-            
-            var result = 
-                await new LoggedCreateClientRequest(logger,  
+            return await new ConvertedCreateClientOnHttpContext(
+                new LoggedCreateClientRequest(logger,
                     new ValidatedCreateClientRequest(
-                        new CreateClientUseCase(bus, auth)
-                        )
-                    ).Ask(request);
-
-            return result switch
-            {
-                ICreateClientSuccessResultContract success => Ok(success),
-                ICreateClientErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new CreateClientUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -256,25 +161,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsEmailRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsEmailRequest>));
 
-            var request = new UpdateClientsEmailRequestContract()
-            {
-                ClientId = body.ClientId,
-                Email = body.Email
-            };
             
-            var result = 
-                await new LoggedUpdateClientsEmailRequest(logger,  
+            return await new ConvertedUpdateClientsEmailOnHttpContext(
+                new LoggedUpdateClientsEmailRequest(logger,  
                     new ValidatedUpdateClientsEmailRequest(
-                        new UpdateClientsEmailRequest(bus, auth)
-                    )
-                ).Ask(request);
+                        new UpdateClientsEmailUseCase(bus, auth)))).Ask(body);
 
-            return result switch
-            {
-                IUpdateClientsEmailSuccessResultContract success => Ok(success),
-                IUpdateClientsEmailErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
 
         [Authorize]
@@ -291,25 +183,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsNameRequest>));
             
-            var request = new UpdateClientsNameRequestContract()
-            {
-                ClientId = body.ClientId,
-                Name = body.Name
-            };
-            
-            var result = 
-                await new LoggedUpdateClientsNameRequest(logger,  
+           return await 
+               new ConvertedUpdateClientsNameOnHttpContext( 
+               new LoggedUpdateClientsNameRequest(logger,  
                     new ValidatedUpdateClientsNameRequest(
-                        new UpdateClientsNameRequest(bus, auth)
-                    )
-                ).Ask(request);
+                        new UpdateClientsNameUseCase(bus, auth)))).Ask(body);
 
-            return result switch
-            {
-                IUpdateClientsNameSuccessResultContract success => Ok(success),
-                IUpdateClientsNameErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
         
         [Authorize]
@@ -326,25 +205,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsPhoneRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsPhoneRequest>));
             
-            var request = new UpdateClientsPhoneRequestContract()
-            {
-                ClientId = body.ClientId,
-                Phone = body.Phone
-            };
-            
-            var result = 
-                await new LoggedUpdateClientsPhoneRequest(logger,  
+            return await 
+                new ConvertedUpdateClientsPhoneOnHttpContext(
+                new LoggedUpdateClientsPhoneRequest(logger,  
                     new ValidatedUpdateClientsPhoneRequest(
-                        new UpdateClientsPhoneRequest(bus, auth)
-                    )
-                ).Ask(request);
-
-            return result switch
-            {
-                IUpdateClientsPhoneSuccessResultContract success => Ok(success),
-                IUpdateClientsPhoneErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new UpdateClientsPhoneUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -361,25 +226,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsSelleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsSelleRequest>));
             
-            var request = new UpdateClientsSelleRequestContract()
-            {
-                ClientId = body.ClientId,
-                Selle = body.Selle
-            };
             
-            var result = 
-                await new LoggedUpdateClientsSelleRequest(logger,  
+            return await 
+                new ConvertedUpdateClientsSelleOnHttpContext(
+                new LoggedUpdateClientsSelleRequest(logger,  
                     new ValidatedUpdateClientsSelleRequest(
-                        new UpdateClientsSelleRequest(bus, auth)
-                    )
-                ).Ask(request);
-
-            return result switch
-            {
-                IUpdateClientsSelleSuccessResultContract success => Ok(success),
-                IUpdateClientsSelleErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new UpdateClientsSelleUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -396,25 +248,13 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsStateRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsStateRequest>));
             
-            var request = new UpdateClientsStateRequestContract()
-            {
-                ClientId = body.ClientId,
-                StateId = body.StateId
-            };
             
-            var result = 
-                await new LoggedUpdateClientsStateRequest(logger,  
+            return await 
+                new ConvertedUpdateClientsStateOnHttpContext( 
+                new LoggedUpdateClientsStateRequest(logger,  
                     new ValidatedUpdateClientsStateRequest(
-                        new UpdateClientsStateRequest(bus, auth)
-                    )
-                ).Ask(request);
+                        new UpdateClientsStateUseCase(bus, auth)))).Ask(body);
 
-            return result switch
-            {
-                IUpdateClientsStateSuccessResultContract success => Ok(success),
-                IUpdateClientsStateErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
 
         [Authorize]
@@ -431,25 +271,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateClientsTypeRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsTypeRequest>));
             
-            var request = new UpdateClientsTypeRequestContract()
-            {
-                ClientId = body.ClientId,
-                TypeId = body.TypeId
-            };
-
-            var result = 
-                await new LoggedUpdateClientsTypeRequest(logger,  
-                    new ValidatedUpdateClientsTypeRequest(
-                        new UpdateClientsTypeRequest(bus, auth)
-                    )
-                ).Ask(request);
-
-            return result switch
-            {
-                IUpdateClientsTypeSuccessResultContract success => Ok(success),
-                IUpdateClientsTypeErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await
+                new ConvertedUpdateClientsTypeOnHttpContext(
+                    new LoggedUpdateClientsTypeRequest(logger, 
+                        new ValidatedUpdateClientsTypeRequest(
+                            new UpdateClientsTypeUseCase(bus, auth)))).Ask(body);
         }
     }
 }

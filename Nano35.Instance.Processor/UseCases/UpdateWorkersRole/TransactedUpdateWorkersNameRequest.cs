@@ -7,33 +7,27 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
 {
     public class TransactedUpdateWorkersRoleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateWorkersRoleRequestContract,
             IUpdateWorkersRoleResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateWorkersRoleRequestContract,
-            IUpdateWorkersRoleResultContract> _nextNode;
-
         public TransactedUpdateWorkersRoleRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateWorkersRoleRequestContract,
-                IUpdateWorkersRoleResultContract> nextNode)
+            IPipeNode<IUpdateWorkersRoleRequestContract,
+                IUpdateWorkersRoleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateWorkersRoleResultContract> Ask(
+        public override async Task<IUpdateWorkersRoleResultContract> Ask(
             IUpdateWorkersRoleRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

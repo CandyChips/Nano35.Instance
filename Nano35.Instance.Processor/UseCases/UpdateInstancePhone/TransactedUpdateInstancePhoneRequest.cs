@@ -7,33 +7,28 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
 {
     public class TransactedUpdateInstancePhoneRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateInstancePhoneRequestContract,
             IUpdateInstancePhoneResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateInstancePhoneRequestContract,
-            IUpdateInstancePhoneResultContract> _nextNode;
 
         public TransactedUpdateInstancePhoneRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateInstancePhoneRequestContract,
-                IUpdateInstancePhoneResultContract> nextNode)
+            IPipeNode<IUpdateInstancePhoneRequestContract,
+                IUpdateInstancePhoneResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateInstancePhoneResultContract> Ask(
+        public override async Task<IUpdateInstancePhoneResultContract> Ask(
             IUpdateInstancePhoneRequestContract input,
             CancellationToken cancellationToken)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

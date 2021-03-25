@@ -6,8 +6,8 @@ using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.UpdateUnitsAddress
 {
-    public class UpdateUnitsAddressRequest :
-        IPipelineNode<
+    public class UpdateUnitsAddressUseCase :
+        EndPointNodeBase<
             IUpdateUnitsAddressRequestContract, 
             IUpdateUnitsAddressResultContract>
     {
@@ -18,7 +18,7 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsAddress
         /// <summary>
         /// The request is accepted by the bus processing the request
         /// </summary>
-        public UpdateUnitsAddressRequest(
+        public UpdateUnitsAddressUseCase(
             IBus bus, ICustomAuthStateProvider auth)
         {
             _bus = bus;
@@ -32,26 +32,12 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsAddress
         /// 3. Check and returns response
         /// 4? Throw exception if overtime
         /// </summary>
-        public async Task<IUpdateUnitsAddressResultContract> Ask(
+        public override async Task<IUpdateUnitsAddressResultContract> Ask(
             IUpdateUnitsAddressRequestContract input)
         {
             input.UpdaterId = _auth.CurrentUserId;
-            
-            // Configure request client of input type
-            var client = _bus.CreateRequestClient<IUpdateUnitsAddressRequestContract>(TimeSpan.FromSeconds(10));
-            
-            // Receive response of processor magic
-            var response = await client
-                .GetResponse<IUpdateUnitsAddressSuccessResultContract, IUpdateUnitsAddressErrorResultContract>(input);
-            
-            // Checking response status
-            if (response.Is(out Response<IUpdateUnitsAddressSuccessResultContract> successResponse))
-                return successResponse.Message;
-            
-            if (response.Is(out Response<IUpdateUnitsAddressErrorResultContract> errorResponse))
-                return errorResponse.Message;
-            
-            throw new InvalidOperationException();
+            return (await (new UpdateUnitsAddressRequest(_bus, input)).GetResponse());
+
         }
     }
 }

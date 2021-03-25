@@ -7,7 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
 {
     public class UpdateUnitsWorkingFormatRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateUnitsWorkingFormatRequestContract,
             IUpdateUnitsWorkingFormatResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
             
         }
 
-        public async Task<IUpdateUnitsWorkingFormatResultContract> Ask(
+        public override async Task<IUpdateUnitsWorkingFormatResultContract> Ask(
             IUpdateUnitsWorkingFormatRequestContract input,
             CancellationToken cancellationToken)
         {

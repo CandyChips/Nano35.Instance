@@ -11,23 +11,18 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsType
     }
     
     public class ValidatedUpdateUnitsTypeRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateUnitsTypeRequestContract,
             IUpdateUnitsTypeResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateUnitsTypeRequestContract,
-            IUpdateUnitsTypeResultContract> _nextNode;
 
         public ValidatedUpdateUnitsTypeRequest(
-            IPipelineNode<
-                IUpdateUnitsTypeRequestContract,
-                IUpdateUnitsTypeResultContract> nextNode)
+            IPipeNode<IUpdateUnitsTypeRequestContract,
+                IUpdateUnitsTypeResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IUpdateUnitsTypeResultContract> Ask(
+        public override async Task<IUpdateUnitsTypeResultContract> Ask(
             IUpdateUnitsTypeRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsType
             {
                 return new UpdateUnitsTypeValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

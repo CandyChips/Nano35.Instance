@@ -31,8 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceInfo
                 await new LoggedUpdateInstanceInfoRequest(logger,
                     new ValidatedUpdateInstanceInfoRequest(
                         new TransactedUpdateInstanceInfoRequest(dbcontect,
-                            new UpdateInstanceInfoRequest(dbcontect)))
-                ).Ask(message, context.CancellationToken);
+                            new UpdateInstanceInfoRequest(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

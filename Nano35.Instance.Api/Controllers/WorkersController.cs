@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,6 @@ using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests.CreateWorker;
 using Nano35.Instance.Api.Requests.GetAllWorkerRoles;
 using Nano35.Instance.Api.Requests.GetAllWorkers;
-using Nano35.Instance.Api.Requests.GetWorkerStringById;
 using Nano35.Instance.Api.Requests.UpdateWorkersComment;
 using Nano35.Instance.Api.Requests.UpdateWorkersName;
 using Nano35.Instance.Api.Requests.UpdateWorkersRole;
@@ -43,25 +43,13 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkersRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
-
-            var request = new GetAllWorkersRequestContract()
-            {
-                InstanceId = query.InstanceId,
-                WorkersRoleId = query.WorkersRoleId
-            };
+            var validator = (IValidator<IGetAllWorkersRequestContract>) _services.GetService(typeof(IValidator<IGetAllWorkersRequestContract>));
             
-            var result =
-                await new LoggedGetAllWorkersRequest(logger,
-                        new ValidatedGetAllWorkersRequest(
-                            new GetAllWorkersUseCase(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllWorkersSuccessResultContract success => Ok(success),
-                IGetAllWorkersErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedGetAllWorkersOnHttpContext(
+                    new LoggedGetAllWorkersRequest(logger,
+                        new ValidatedGetAllWorkersRequest(validator,
+                            new GetAllWorkersUseCase(bus)))).Ask(query);
         }
     
         [AllowAnonymous]
@@ -74,20 +62,12 @@ namespace Nano35.Instance.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllWorkerRolesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllWorkerRolesRequest>));
-
-            var request = new GetAllWorkerRolesRequestContract();
             
-            var result =
-                await new LoggedGetAllWorkerRolesRequest(logger,
-                    new GetAllWorkerRolesUseCase(bus))
-                    .Ask(request);
-
-            return result switch
-            {
-                IGetAllWorkerRolesSuccessResultContract success => Ok(success),
-                IGetAllWorkerRolesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedGetAllWorkerRolesOnHttpContext(
+                    new LoggedGetAllWorkerRolesRequest(logger,
+                            new GetAllWorkerRolesUseCase(bus)))
+                    .Ask(new GetAllWorkerRolesHttpQuery());
         }
 
         [Authorize]
@@ -104,59 +84,11 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedCreateWorkerRequest>)_services.GetService(typeof(ILogger<LoggedCreateWorkerRequest>));
 
-            var request = new CreateWorkerRequestContract()
-            {
-                Comment = body.Comment,
-                Email = body.Email,
-                InstanceId = body.InstanceId,
-                Name = body.Name,
-                NewId = body.NewId,
-                Password = body.Password,
-                PasswordConfirm = body.PasswordConfirm,
-                Phone = body.Phone,
-                RoleId = body.RoleId
-            };
-            
-            var result = 
-                await new LoggedCreateWorkerRequest(logger, 
-                    new ValidatedCreateWorkerRequest(
-                        new CreateWorkerUseCase(bus, auth)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateWorkerSuccessResultContract success => Ok(success),
-                ICreateWorkerErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetWorkerStringById")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetWorkerStringById(
-            [FromQuery] Guid workerId)
-        {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetWorkerStringByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetWorkerStringByIdRequest>));
-
-            var request = new GetWorkerStringByIdRequestContract()
-            {
-                WorkerId = workerId
-            };
-            
-            var result = 
-                await new LoggedGetWorkerStringByIdRequest(logger, 
-                    new GetWorkerStringByIdUseCase(bus)).Ask(request);
-
-            return result switch
-            {
-                IGetWorkerStringByIdSuccessResultContract success => Ok(success),
-                IGetWorkerStringByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await 
+                new ConvertedCreateWorkerOnHttpContext(
+                    new LoggedCreateWorkerRequest(logger,
+                        new ValidatedCreateWorkerRequest(
+                            new CreateWorkerUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -173,24 +105,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersRoleRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersRoleRequest>));
 
-            var request = new UpdateWorkersRoleRequestContract()
-            {
-                WorkersId = body.WorkersId,
-                RoleId = body.RoleId
-            };
             
-            var result = 
-                await new LoggedUpdateWorkersRoleRequest(logger, 
+            return await 
+                new ConvertedUpdateWorkersRoleOnHttpContext(
+                    new LoggedUpdateWorkersRoleRequest(logger,
                         new ValidatedUpdateWorkersRoleRequest(
-                            new UpdateWorkersRoleRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateWorkersRoleSuccessResultContract success => Ok(success),
-                IUpdateWorkersRoleErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                            new UpdateWorkersRoleUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -207,24 +127,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersNameRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersNameRequest>));
 
-            var request = new UpdateWorkersNameRequestContract()
-            {
-                Name = body.Name,
-                WorkersId = body.WorkersId
-            };
             
-            var result = 
-                await new LoggedUpdateWorkersNameRequest(logger, 
+            return await 
+                new ConvertedUpdateWorkersNameOnHttpContext(
+                    new LoggedUpdateWorkersNameRequest(logger,
                         new ValidatedUpdateWorkersNameRequest(
-                            new UpdateWorkersNameRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateWorkersNameSuccessResultContract success => Ok(success),
-                IUpdateWorkersNameErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                            new UpdateWorkersNameUseCase(bus, auth)))).Ask(body);
         }
 
         [Authorize]
@@ -241,24 +149,12 @@ namespace Nano35.Instance.Api.Controllers
             var auth = (ICustomAuthStateProvider) _services.GetService(typeof(ICustomAuthStateProvider));
             var logger = (ILogger<LoggedUpdateWorkersCommentRequest>)_services.GetService(typeof(ILogger<LoggedUpdateWorkersCommentRequest>));
 
-            var request = new UpdateWorkersCommentRequestContract()
-            {
-                Comment = body.Comment,
-                WorkersId = body.WorkersId
-            };
             
-            var result = 
-                await new LoggedUpdateWorkersCommentRequest(logger, 
+            return await 
+                new ConvertedUpdateWorkersCommentOnHttpContext(
+                    new LoggedUpdateWorkersCommentRequest(logger,
                         new ValidatedUpdateWorkersCommentRequest(
-                            new UpdateWorkersCommentRequest(bus, auth)))
-                    .Ask(request);
-
-            return result switch
-            {
-                IUpdateWorkersCommentSuccessResultContract success => Ok(success),
-                IUpdateWorkersCommentErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                            new UpdateWorkersCommentUseCase(bus, auth)))).Ask(body);
         }
     }
 }
