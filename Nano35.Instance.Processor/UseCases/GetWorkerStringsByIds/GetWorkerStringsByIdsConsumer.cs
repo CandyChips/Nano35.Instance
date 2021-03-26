@@ -28,8 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds
             var result =
                 await new LoggedGetWorkerStringsByIdsRequest(logger,
                     new ValidatedGetWorkerStringsByIdsRequest(
-                        new GetWorkerStringsByIdsRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetWorkerStringsByIdsUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

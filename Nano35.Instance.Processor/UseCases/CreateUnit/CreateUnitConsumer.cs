@@ -33,7 +33,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
                 await new LoggedCreateUnitRequest(logger,  
                     new ValidatedCreateUnitRequest(
                         new TransactedCreateUnitRequest(dbContext,
-                            new CreateUnitRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateUnitUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

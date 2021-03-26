@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsType
                 await new LoggedUpdateUnitsTypeRequest(logger,
                     new ValidatedUpdateUnitsTypeRequest(
                         new TransactedUpdateUnitsTypeRequest(dbcontect,
-                            new UpdateUnitsTypeRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateUnitsTypeUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -6,14 +6,14 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsSelle
 {
-    public class UpdateClientsSelleRequest :
+    public class UpdateClientsSelleUseCase :
         EndPointNodeBase<
             IUpdateClientsSelleRequestContract,
             IUpdateClientsSelleResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public UpdateClientsSelleRequest(
+        public UpdateClientsSelleUseCase(
             ApplicationContext context)
         {
             _context = context;

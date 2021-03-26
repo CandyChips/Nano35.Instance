@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
                 await new LoggedUpdateInstanceRealNameRequest(logger,
                     new ValidatedUpdateInstanceRealNameRequest(
                         new TransactedUpdateInstanceRealNameRequest(dbcontect,
-                            new UpdateInstanceRealNameRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateInstanceRealNameUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {
