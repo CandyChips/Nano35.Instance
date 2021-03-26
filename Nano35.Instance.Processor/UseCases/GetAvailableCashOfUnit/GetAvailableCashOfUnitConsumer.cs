@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
             var result =
                 await new LoggedGetAvailableCashOfUnitRequest(logger,
                     new ValidatedGetAvailableCashOfUnitRequest(
-                        new GetAvailableCashOfUnitRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAvailableCashOfUnitUseCase(dbContext))).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

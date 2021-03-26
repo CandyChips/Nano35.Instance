@@ -7,14 +7,14 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
 {
-    public class GetAvailableCashOfUnitRequest :
+    public class GetAvailableCashOfUnitUseCase :
         EndPointNodeBase<
             IGetAvailableCashOfUnitRequestContract,
             IGetAvailableCashOfUnitResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetAvailableCashOfUnitRequest(
+        public GetAvailableCashOfUnitUseCase(
             ApplicationContext context)
         {
             _context = context;

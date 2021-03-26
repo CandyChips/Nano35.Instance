@@ -12,7 +12,7 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
-    public class GetAllWorkersRequest :
+    public class GetAllWorkersUseCase :
         EndPointNodeBase<
             IGetAllWorkersRequestContract, 
             IGetAllWorkersResultContract>
@@ -20,7 +20,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
 
-        public GetAllWorkersRequest(
+        public GetAllWorkersUseCase(
             ApplicationContext context, 
             IBus bus)
         {

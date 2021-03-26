@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
@@ -6,25 +7,25 @@ using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.Services.MappingProfiles;
 
-namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
+namespace Nano35.Instance.Processor.UseCases.GetAllUnits
 {
-    public class GetAllWorkerRolesRequest :
+    public class GetAllUnitsUseCase :
         EndPointNodeBase<
-            IGetAllWorkerRolesRequestContract, 
-            IGetAllWorkerRolesResultContract>
+            IGetAllUnitsRequestContract, 
+            IGetAllUnitsResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetAllWorkerRolesRequest(
+        public GetAllUnitsUseCase(
             ApplicationContext context)
         {
             _context = context;
         }
         
-        private class GetAllWorkerRolesSuccessResultContract : 
-            IGetAllWorkerRolesSuccessResultContract
+        private class GetAllUnitsSuccessResultContract : 
+            IGetAllUnitsSuccessResultContract
         {
-            public IEnumerable<IWorkersRoleViewModel> Data { get; set; }
+            public IEnumerable<IUnitViewModel> Data { get; set; }
         }
 
         private class GetAllClientStatesErrorResultContract : 
@@ -33,13 +34,14 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
             public string Message { get; set; }
         }
 
-        public override async Task<IGetAllWorkerRolesResultContract> Ask(
-            IGetAllWorkerRolesRequestContract input,
+        public override async Task<IGetAllUnitsResultContract> Ask(
+            IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await this._context.WorkerRoles
-                .MapAllToAsync<IWorkersRoleViewModel>();
-            return new GetAllWorkerRolesSuccessResultContract() {Data = result};
+            var result = await (_context.Units
+                .Where(c => c.InstanceId == input.InstanceId)
+                .MapAllToAsync<IUnitViewModel>());
+            return new GetAllUnitsSuccessResultContract() {Data = result};
         }
     }
 }

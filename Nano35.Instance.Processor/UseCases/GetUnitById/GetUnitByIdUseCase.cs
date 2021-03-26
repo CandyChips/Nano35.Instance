@@ -8,14 +8,14 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetUnitById
 {
-    public class GetUnitByIdRequest :
+    public class GetUnitByIdUseCase :
         EndPointNodeBase<
             IGetUnitByIdRequestContract,
             IGetUnitByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetUnitByIdRequest(
+        public GetUnitByIdUseCase(
             ApplicationContext context)
         {
             _context = context;

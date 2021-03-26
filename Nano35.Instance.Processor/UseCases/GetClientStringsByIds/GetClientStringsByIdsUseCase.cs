@@ -7,12 +7,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
 {
-    public class GetClientStringsByIdsRequest :
+    public class GetClientStringsByIdsUseCase :
         EndPointNodeBase<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetClientStringsByIdsRequest(ApplicationContext context) { _context = context; }
+        public GetClientStringsByIdsUseCase(ApplicationContext context) { _context = context; }
         
         public override async Task<IGetClientStringsByIdsResultContract> Ask(
             IGetClientStringsByIdsRequestContract input,

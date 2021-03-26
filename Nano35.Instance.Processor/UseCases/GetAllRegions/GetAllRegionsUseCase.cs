@@ -8,14 +8,14 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllRegions
 {
-    public class GetAllRegionsRequest :
+    public class GetAllRegionsUseCase :
         EndPointNodeBase<
             IGetAllRegionsRequestContract,
             IGetAllRegionsResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetAllRegionsRequest(
+        public GetAllRegionsUseCase(
             ApplicationContext context)
         {
             _context = context;

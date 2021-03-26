@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             var result =
                 await new LoggedGetAllRegionsRequest(logger,
                     new ValidatedGetAllRegionsRequest(
-                        new GetAllRegionsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllRegionsUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

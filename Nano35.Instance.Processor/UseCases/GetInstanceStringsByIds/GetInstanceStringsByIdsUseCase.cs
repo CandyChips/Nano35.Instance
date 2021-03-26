@@ -8,12 +8,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
 {
-    public class GetInstanceStringsByIdsRequest :
+    public class GetInstanceStringsByIdsUseCase :
         EndPointNodeBase<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetInstanceStringsByIdsRequest(ApplicationContext context) { _context = context; }
+        public GetInstanceStringsByIdsUseCase(ApplicationContext context) { _context = context; }
         
         private class GetInstanceStringsByIdsSuccessResultContract : 
             IGetInstanceStringsByIdsSuccessResultContract

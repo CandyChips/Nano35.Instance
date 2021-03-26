@@ -8,14 +8,14 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
 {
-    public class GetAllClientStatesRequest :
+    public class GetAllClientStatesUseCase :
         EndPointNodeBase<
             IGetAllClientStatesRequestContract,
             IGetAllClientStatesResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetAllClientStatesRequest(
+        public GetAllClientStatesUseCase(
             ApplicationContext context)
         {
             _context = context;

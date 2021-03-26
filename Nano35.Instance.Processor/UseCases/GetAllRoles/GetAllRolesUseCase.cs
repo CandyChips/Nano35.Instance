@@ -8,14 +8,14 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllRoles
 {
-    public class GetAllRolesRequest :
+    public class GetAllRolesUseCase :
         EndPointNodeBase<
             IGetAllRolesRequestContract, 
             IGetAllRolesResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetAllRolesRequest(
+        public GetAllRolesUseCase(
             ApplicationContext context)
         {
             _context = context;
