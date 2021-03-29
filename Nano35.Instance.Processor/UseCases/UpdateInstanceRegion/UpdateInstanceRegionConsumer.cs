@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
                 await new LoggedUpdateInstanceRegionRequest(logger,
                     new ValidatedUpdateInstanceRegionRequest(
                         new TransactedUpdateInstanceRegionRequest(dbcontect,
-                            new UpdateInstanceRegionRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateInstanceRegionUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

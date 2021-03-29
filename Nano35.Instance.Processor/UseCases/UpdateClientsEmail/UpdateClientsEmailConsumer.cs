@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
                 await new LoggedUpdateClientsEmailRequest(logger,
                     new ValidatedUpdateClientsEmailRequest(
                         new TransactedUpdateClientsEmailRequest(dbcontect,
-                            new UpdateClientsEmailRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateClientsEmailUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             var result =
                 await new LoggedGetAllWorkersRequest(logger,
                     new ValidatedGetAllWorkersRequest(
-                        new GetAllWorkersRequest(dbContext, bus))).Ask(message, context.CancellationToken);
+                        new GetAllWorkersUseCase(dbContext, bus))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

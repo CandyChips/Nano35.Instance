@@ -9,14 +9,14 @@ using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringById
 {
-    public class GetClientStringByIdRequest :
+    public class GetClientStringByIdUseCase :
         EndPointNodeBase<
             IGetClientStringByIdRequestContract,
             IGetClientStringByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public GetClientStringByIdRequest(ApplicationContext context) { _context = context; }
+        public GetClientStringByIdUseCase(ApplicationContext context) { _context = context; }
         
         public override async Task<IGetClientStringByIdResultContract> Ask(
             IGetClientStringByIdRequestContract input,

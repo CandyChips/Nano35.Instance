@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
             var result =
                 await new LoggedGetInstanceStringsByIdsRequest(logger,
                     new ValidatedGetInstanceStringsByIdsRequest(
-                        new GetInstanceStringsByIdsRequest(dbContext))
+                        new GetInstanceStringsByIdsUseCase(dbContext))
                 ).Ask(message, context.CancellationToken);
             
             switch (result)

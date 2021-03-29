@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsName
                 await new LoggedUpdateClientsNameRequest(logger,
                     new ValidatedUpdateClientsNameRequest(
                         new TransactedUpdateClientsNameRequest(dbcontect,
-                            new UpdateClientsNameRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateClientsNameUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

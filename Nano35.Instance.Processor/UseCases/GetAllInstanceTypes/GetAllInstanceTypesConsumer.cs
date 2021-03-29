@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
             var result =
                 await new LoggedGetAllInstanceTypesRequest(logger,
                     new ValidatedGetAllInstanceTypesRequest(
-                        new GetAllInstanceTypesRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllInstanceTypesUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

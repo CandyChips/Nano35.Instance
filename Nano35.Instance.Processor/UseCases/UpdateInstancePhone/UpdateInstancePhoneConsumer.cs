@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
                 await new LoggedUpdateInstancePhoneRequest(logger,
                     new ValidatedUpdateInstancePhoneRequest(
                         new TransactedUpdateInstancePhoneRequest(dbcontect,
-                            new UpdateInstancePhoneRequest(dbcontect)))).Ask(message, context.CancellationToken);
+                            new UpdateInstancePhoneUseCase(dbcontect)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -18,4 +18,8 @@
     <PackageReference Include="Nano35.Contracts" Version="1.9.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nano35.Instance.Api\Nano35.Instance.Api.csproj" />
+  </ItemGroup>
+
 </Project>

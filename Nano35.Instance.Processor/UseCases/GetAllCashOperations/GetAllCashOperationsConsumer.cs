@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
             var result =
                 await new LoggedGetAllCashOperationsRequest(logger,
                     new ValidatedGetAllCashOperationsRequest(
-                        new GetAllCashOperationsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllCashOperationsUseCase(dbContext))).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

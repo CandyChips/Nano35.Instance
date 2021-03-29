@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                 await new LoggedCreateWorkerRequest(logger,  
                     new ValidatedCreateWorkerRequest(
                         new TransactedCreateWorkerRequest(dbContext,
-                            new CreateWorkerRequest(bus, dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateWorkerUseCase(bus, dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

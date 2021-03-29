@@ -25,12 +25,10 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
             var logger = (ILogger<LoggedGetWorkerByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetWorkerByIdRequest>));
             
-            var message = context.Message;
-            
             var result =
                 await new LoggedGetWorkerByIdRequest(logger,
                     new ValidatedGetWorkerByIdRequest(
-                        new GetWorkerByIdRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetWorkerByIdUseCase(dbContext))).Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

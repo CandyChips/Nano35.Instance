@@ -29,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             var result =
                 await new LoggedGetAllClientsRequest(logger,
                     new ValidatedGetAllClientsRequest(
-                        new GetAllClientsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllClientsUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {
