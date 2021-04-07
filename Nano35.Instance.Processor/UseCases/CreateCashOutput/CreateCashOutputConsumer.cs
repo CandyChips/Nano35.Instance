@@ -28,9 +28,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashOutput
             
             var result =
                 await new LoggedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(logger,
-                        new ValidatedCreateCashOutputRequest(
                             new TransactedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(dbContext,
-                                new CreateCashOutputUseCase(dbContext))))
+                                new CreateCashOutputUseCase(dbContext)))
                     .Ask(message, context.CancellationToken);
             switch (result)
             {

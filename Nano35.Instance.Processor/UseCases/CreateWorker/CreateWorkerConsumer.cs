@@ -32,9 +32,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             // Send request to pipeline
             var result = 
                 await new LoggedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(logger,  
-                    new ValidatedCreateWorkerRequest(
                         new TransactedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(dbContext,
-                            new CreateWorkerUseCase(bus, dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateWorkerUseCase(bus, dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

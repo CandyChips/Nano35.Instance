@@ -30,9 +30,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             // Send request to pipeline
             var result = 
                 await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
-                    new ValidatedCreateClientRequest(
                         new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(dbContext,
-                            new CreateClientUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateClientUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

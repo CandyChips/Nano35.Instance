@@ -28,9 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringsByIds
             
             var result =
                 await new LoggedPipeNode<IGetUnitStringsByIdsRequestContract, IGetUnitStringsByIdsResultContract>(logger,
-                    new ValidatedGetUnitStringsByIdsRequest(
-                        new GetUnitStringsByIdsUseCase(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetUnitStringsByIdsUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

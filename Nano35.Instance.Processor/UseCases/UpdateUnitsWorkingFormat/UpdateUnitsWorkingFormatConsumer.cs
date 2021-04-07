@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
             
             var result =
                 await new LoggedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(logger,
-                    new ValidatedUpdateUnitsWorkingFormatRequest(
-                        new TransactedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(dbContext,
-                            new UpdateUnitsWorkingFormatUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(dbContext,
+                        new UpdateUnitsWorkingFormatUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

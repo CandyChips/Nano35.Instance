@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceInfo
             
             var result =
                 await new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(logger,
-                    new ValidatedUpdateInstanceInfoRequest(
                         new TransactedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(dbContext,
-                            new UpdateInstanceInfoUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateInstanceInfoUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

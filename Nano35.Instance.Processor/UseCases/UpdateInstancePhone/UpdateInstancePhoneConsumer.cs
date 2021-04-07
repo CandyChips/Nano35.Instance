@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
             
             var result =
                 await new LoggedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(logger,
-                    new ValidatedUpdateInstancePhoneRequest(
                         new TransactedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(dbContext,
-                            new UpdateInstancePhoneUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateInstancePhoneUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

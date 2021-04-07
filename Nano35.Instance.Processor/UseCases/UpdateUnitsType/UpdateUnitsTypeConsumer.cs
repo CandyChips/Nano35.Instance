@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsType
             
             var result =
                 await new LoggedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(logger,
-                    new ValidatedUpdateUnitsTypeRequest(
-                        new TransactedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(dbContext,
-                            new UpdateUnitsTypeUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(dbContext,
+                        new UpdateUnitsTypeUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

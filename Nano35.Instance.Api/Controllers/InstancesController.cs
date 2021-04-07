@@ -56,7 +56,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllInstancesOnHttpContext(
                 new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
-                        new ValidatedGetAllInstancesRequest(_services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
+                        new ValidatedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
                             new GetAllInstancesUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
             
         }
@@ -74,7 +75,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllCurrentInstancesOnHttpContext(
                 new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
-                        new ValidatedGetAllCurrentInstancesRequest(_services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
+                        new ValidatedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
                             new GetAllCurrentInstancesUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                     .Ask(new GetAllInstancesHttpQuery());
         }
@@ -92,7 +94,8 @@ namespace Nano35.Instance.Api.Controllers
             return await new ConvertedGetInstanceByIdOnHttpContext( 
                     new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
                         _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
-                        new ValidatedGetInstanceByIdRequest(_services.GetService(typeof(IValidator<IGetInstanceByIdRequestContract>)) as IValidator<IGetInstanceByIdRequestContract>,
+                        new ValidatedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
+                            _services.GetService(typeof(IValidator<IGetInstanceByIdRequestContract>)) as IValidator<IGetInstanceByIdRequestContract>,
                             new GetInstanceByIdUseCase(_services.GetService(typeof(IBus)) as IBus ))))
                     .Ask(query);
         }
@@ -109,9 +112,11 @@ namespace Nano35.Instance.Api.Controllers
                new ConvertedGetAllInstanceTypesOnHttpContext( 
                    new LoggedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(
                        _services.GetService(typeof(ILogger<IGetAllInstanceTypesRequestContract>)) as ILogger<IGetAllInstanceTypesRequestContract>,
-                        new CachedGetAllInstanceTypesRequest(_services.GetService(typeof(IDistributedCache)) as IDistributedCache,
-                            new GetAllInstanceTypesUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(new GetAllInstanceTypesHttpQuery());
+                       new ValidatedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(                      
+                           _services.GetService(typeof(IValidator<IGetAllInstanceTypesRequestContract>)) as IValidator<IGetAllInstanceTypesRequestContract>,
+                           new CachedGetAllInstanceTypesRequest(_services.GetService(typeof(IDistributedCache)) as IDistributedCache, 
+                               new GetAllInstanceTypesUseCase(_services.GetService(typeof(IBus)) as IBus)))))
+                       .Ask(new GetAllInstanceTypesHttpQuery());
         }
 
         [AllowAnonymous]
@@ -126,7 +131,9 @@ namespace Nano35.Instance.Api.Controllers
                new ConvertedGetAllRegionsOnHttpContext(
                new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
                    _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                    new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                   new ValidatedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
+                       _services.GetService(typeof(IValidator<IGetAllRegionsRequestContract>)) as IValidator<IGetAllRegionsRequestContract>,
+                       new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(new GetAllRegionsHttpQuery());
 
         }
@@ -145,7 +152,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedCreateInstanceOnHttpContext(
                 new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
                     _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
-                    new ValidatedCreateInstanceRequest(
+                    new ValidatedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
+                        _services.GetService(typeof(IValidator<ICreateInstanceRequestContract>)) as IValidator<ICreateInstanceRequestContract>,
                         new CreateInstanceUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                     .Ask(body);
         }
@@ -164,7 +172,9 @@ namespace Nano35.Instance.Api.Controllers
                new ConvertedCreateCashOutputOnHttpContext( 
                    new LoggedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(
                        _services.GetService(typeof(ILogger<ICreateCashOutputRequestContract>)) as ILogger<ICreateCashOutputRequestContract>,
-                       new CreateCashOutputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
+                       new ValidatedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(
+                           _services.GetService(typeof(IValidator<ICreateCashOutputRequestContract>)) as IValidator<ICreateCashOutputRequestContract>,
+                       new CreateCashOutputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                     .Ask(body);
         }
 
@@ -182,7 +192,9 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedCreateCashInputOnHttpContext(
                         new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(
                             _services.GetService(typeof(ILogger<ICreateCashInputRequestContract>)) as ILogger<ICreateCashInputRequestContract>,
-                            new CreateCashInputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
+                            new ValidatedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateCashInputRequestContract>)) as IValidator<ICreateCashInputRequestContract>,
+                            new CreateCashInputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                     .Ask(body);
           
         }
@@ -201,7 +213,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstanceEmailOnHttpContext( 
                     new LoggedPipeNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateInstanceEmailRequestContract>)) as ILogger<IUpdateInstanceEmailRequestContract>,
-                        new ValidatedUpdateInstanceEmailRequest(
+                        new ValidatedPipeNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateInstanceEmailRequestContract>)) as IValidator<IUpdateInstanceEmailRequestContract>,
                             new UpdateInstanceEmailUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(body);
 
@@ -221,7 +234,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstanceInfoOnHttpContext( 
                     new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateInstanceInfoRequestContract>)) as ILogger<IUpdateInstanceInfoRequestContract>,
-                        new ValidatedUpdateInstanceInfoRequest(
+                        new ValidatedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateInstanceInfoRequestContract>)) as IValidator<IUpdateInstanceInfoRequestContract>,
                             new UpdateInstanceInfoUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(body);
         }
@@ -240,7 +254,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstanceNameOnHttpContext( 
                         new LoggedPipeNode<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateInstanceNameRequestContract>)) as ILogger<IUpdateInstanceNameRequestContract>,
-                            new ValidatedUpdateInstanceNameRequest(
+                            new ValidatedPipeNode<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateInstanceNameRequestContract>)) as IValidator<IUpdateInstanceNameRequestContract>,
                                 new UpdateInstanceNameUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(body);
         }
@@ -259,7 +274,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstancePhoneOnHttpContext( 
                         new LoggedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateInstancePhoneRequestContract>)) as ILogger<IUpdateInstancePhoneRequestContract>,
-                            new ValidatedUpdateInstancePhoneRequest(
+                            new ValidatedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateInstancePhoneRequestContract>)) as IValidator<IUpdateInstancePhoneRequestContract>,
                                 new UpdateInstancePhoneUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(body);
 
@@ -279,7 +295,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstanceRealNameOnHttpContext( 
                         new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>)) as ILogger<IUpdateInstanceRealNameRequestContract>,
-                            new ValidatedUpdateInstanceRealNameRequest(
+                            new ValidatedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateInstanceRealNameRequestContract>)) as IValidator<IUpdateInstanceRealNameRequestContract>,
                                 new UpdateInstanceRealNameUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(body);
 
@@ -299,7 +316,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateInstanceRegionOnHttpContext( 
                         new LoggedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateInstanceRegionRequestContract>)) as ILogger<IUpdateInstanceRegionRequestContract>,
-                            new ValidatedUpdateInstanceRegionRequest(
+                            new ValidatedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateInstanceRegionRequestContract>)) as IValidator<IUpdateInstanceRegionRequestContract>,
                                 new UpdateInstanceRegionUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                     .Ask(body);
         }

@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsSelle
             
             var result =
                 await new LoggedPipeNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract>(logger,
-                    new ValidatedUpdateClientsSelleRequest(
                         new TransactedPipeNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract>(dbContext,
-                            new UpdateClientsSelleUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateClientsSelleUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

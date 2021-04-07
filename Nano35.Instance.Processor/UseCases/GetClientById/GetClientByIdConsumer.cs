@@ -29,8 +29,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
             
             var result =
                 await new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(logger,
-                    new ValidatedGetClientByIdRequest(
-                        new GetClientByIdUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetClientByIdUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -32,8 +32,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllCashOperationsRequestContract, IGetAllCashOperationsResultContract>(logger,
-                    new ValidatedGetAllCashOperationsRequest(
-                        new GetAllCashOperationsUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllCashOperationsUseCase(dbContext)).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

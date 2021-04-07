@@ -31,9 +31,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             // Send request to pipeline
             var result = 
                 await new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(logger,
-                    new ValidatedCreateUnitRequest(
                         new TransactedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(dbContext,
-                            new CreateUnitUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateUnitUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

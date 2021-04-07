@@ -28,8 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             
             var result =
                 await new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(logger,
-                    new ValidatedGetAllRegionsRequest(
-                        new GetAllRegionsUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllRegionsUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

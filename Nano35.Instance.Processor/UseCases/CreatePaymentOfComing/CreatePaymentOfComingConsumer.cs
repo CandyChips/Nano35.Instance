@@ -32,9 +32,8 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfComing
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreatePaymentOfComingRequestContract, ICreatePaymentOfComingResultContract>(logger,
-                    new ValidatedCreatePaymentOfComingRequest(
                         new TransactedPipeNode<ICreatePaymentOfComingRequestContract, ICreatePaymentOfComingResultContract>(dbContext,
-                            new CreatePaymentOfComingUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreatePaymentOfComingUseCase(dbContext))).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

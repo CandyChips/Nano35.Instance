@@ -28,8 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
             
             var result =
                 await new LoggedPipeNode<IGetAllRolesRequestContract, IGetAllRolesResultContract>(logger,
-                    new ValidatedGetAllRolesRequest(
-                        new GetAllRolesUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllRolesUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

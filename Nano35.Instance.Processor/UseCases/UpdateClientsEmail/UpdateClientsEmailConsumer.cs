@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
             
             var result =
                 await new LoggedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(logger,
-                    new ValidatedUpdateClientsEmailRequest(
                         new TransactedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(dbContext,
-                            new UpdateClientsEmailUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateClientsEmailUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -46,7 +46,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllWorkersOnHttpContext(
                     new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
-                        new ValidatedGetAllWorkersRequest(_services.GetService(typeof(IValidator<IGetAllWorkersRequestContract>)) as IValidator<IGetAllWorkersRequestContract>,
+                        new ValidatedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllWorkersRequestContract>)) as IValidator<IGetAllWorkersRequestContract>,
                             new GetAllWorkersUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
     
@@ -62,7 +63,9 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllWorkerRolesOnHttpContext(
                     new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
-                            new GetAllWorkerRolesUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                        new ValidatedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllWorkerRolesRequestContract>)) as IValidator<IGetAllWorkerRolesRequestContract>,
+                            new GetAllWorkerRolesUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(new GetAllWorkerRolesHttpQuery());
         }
 
@@ -80,7 +83,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedCreateWorkerOnHttpContext(
                     new LoggedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                         _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,
-                        new ValidatedCreateWorkerRequest(
+                        new ValidatedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
+                            _services.GetService(typeof(IValidator<ICreateWorkerRequestContract>)) as IValidator<ICreateWorkerRequestContract>,
                             new CreateWorkerUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -98,7 +102,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateWorkersRoleOnHttpContext(
                     new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as ILogger<IUpdateWorkersRoleRequestContract>,
-                        new ValidatedUpdateWorkersRoleRequest(
+                        new ValidatedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateWorkersRoleRequestContract>)) as IValidator<IUpdateWorkersRoleRequestContract>,
                             new UpdateWorkersRoleUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -116,7 +121,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateWorkersNameOnHttpContext(
                     new LoggedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateWorkersNameRequestContract>)) as ILogger<IUpdateWorkersNameRequestContract>,
-                        new ValidatedUpdateWorkersNameRequest(
+                        new ValidatedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateWorkersNameRequestContract>)) as IValidator<IUpdateWorkersNameRequestContract>,
                             new UpdateWorkersNameUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -134,7 +140,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateWorkersCommentOnHttpContext(
                     new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
-                        new ValidatedUpdateWorkersCommentRequest(
+                        new ValidatedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateWorkersCommentRequestContract>)) as IValidator<IUpdateWorkersCommentRequestContract>,
                             new UpdateWorkersCommentUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
     }

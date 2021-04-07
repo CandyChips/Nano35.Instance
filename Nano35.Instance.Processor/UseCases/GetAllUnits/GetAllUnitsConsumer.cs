@@ -28,8 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             
             var result =
                 await new LoggedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(logger,
-                    new ValidatedGetAllUnitsRequest(
-                        new GetAllUnitsUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllUnitsUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

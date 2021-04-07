@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
             
             var result =
                 await new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(logger,
-                    new ValidatedUpdateInstanceRealNameRequest(
                         new TransactedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
-                            new UpdateInstanceRealNameUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateInstanceRealNameUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

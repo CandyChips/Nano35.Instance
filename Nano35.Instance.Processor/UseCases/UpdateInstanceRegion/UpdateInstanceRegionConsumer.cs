@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
             
             var result =
                 await new LoggedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(logger,
-                    new ValidatedUpdateInstanceRegionRequest(
                         new TransactedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(dbContext,
-                            new UpdateInstanceRegionUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateInstanceRegionUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

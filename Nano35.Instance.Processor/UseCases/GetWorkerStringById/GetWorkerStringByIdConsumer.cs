@@ -27,8 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
             
             var result =
                 await new LoggedPipeNode<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract>(logger,
-                    new ValidatedGetWorkerStringByIdRequest(
-                        new GetWorkerStringByIdUseCase(dbContext))).Ask(message, context.CancellationToken);
+                        new GetWorkerStringByIdUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

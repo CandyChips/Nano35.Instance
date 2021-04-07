@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
             
             var result =
                 await new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(logger,
-                    new ValidatedUpdateWorkersCommentRequest(
-                        new TransactedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(dbContext,
-                            new UpdateWorkersCommentUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(dbContext, 
+                        new UpdateWorkersCommentUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

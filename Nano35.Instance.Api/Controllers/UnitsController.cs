@@ -49,7 +49,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllUnitsOnHttpContext(
                     new LoggedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>,
-                        new ValidatedGetAllUnitsRequest(_services.GetService(typeof(IValidator<IGetAllUnitsRequestContract>)) as IValidator<IGetAllUnitsRequestContract>,
+                        new ValidatedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllUnitsRequestContract>)) as IValidator<IGetAllUnitsRequestContract>,
                             new GetAllUnitsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
@@ -67,7 +68,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetUnitByIdOnHttpContext(
                     new LoggedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
                         _services.GetService(typeof(ILogger<IGetUnitByIdRequestContract>)) as ILogger<IGetUnitByIdRequestContract>,
-                        new ValidatedGetUnitByIdRequest(_services.GetService(typeof(IValidator<IGetUnitByIdRequestContract>)) as IValidator<IGetUnitByIdRequestContract>,
+                        new ValidatedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
+                            _services.GetService(typeof(IValidator<IGetUnitByIdRequestContract>)) as IValidator<IGetUnitByIdRequestContract>,
                             new GetUnitByIdUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
     
@@ -83,7 +85,9 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedGetAllUnitTypesOnHttpContext(
                     new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
-                        new GetAllUnitTypesUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                        new ValidatedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
+                            _services.GetService(typeof(IValidator<IGetAllUnitTypesRequestContract>)) as IValidator<IGetAllUnitTypesRequestContract>,
+                        new GetAllUnitTypesUseCase(_services.GetService(typeof(IBus)) as IBus))))
                     .Ask(new GetAllUnitTypesHttpQuery());
         }
 
@@ -101,7 +105,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedCreateUnitOnHttpContext(
                     new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                         _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
-                        new ValidatedCreateUnitRequest(
+                        new ValidatedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
+                            _services.GetService(typeof(IValidator<ICreateUnitRequestContract>)) as IValidator<ICreateUnitRequestContract>,
                             new CreateUnitUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -119,7 +124,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateUnitsNameOnHttpContext(
                     new LoggedPipeNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsNameRequestContract>)) as ILogger<IUpdateUnitsNameRequestContract>,
-                        new ValidatedUpdateUnitsNameRequest(
+                        new ValidatedPipeNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsNameRequestContract>)) as IValidator<IUpdateUnitsNameRequestContract>,
                             new UpdateUnitsNameUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -137,7 +143,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateUnitsPhoneOnHttpContext(
                     new LoggedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsPhoneRequestContract>)) as ILogger<IUpdateUnitsPhoneRequestContract>,
-                        new ValidatedUpdateUnitsPhoneRequest(
+                        new ValidatedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsPhoneRequestContract>)) as IValidator<IUpdateUnitsPhoneRequestContract>,
                             new UpdateUnitsPhoneUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -155,7 +162,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateUnitsAddressOnHttpContext(
                     new LoggedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>)) as ILogger<IUpdateUnitsAddressRequestContract>,
-                        new ValidatedUpdateUnitsAddressRequest(
+                        new ValidatedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsAddressRequestContract>)) as IValidator<IUpdateUnitsAddressRequestContract>,
                             new UpdateUnitsAddressUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -173,7 +181,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateUnitsTypeOnHttpContext(
                     new LoggedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsTypeRequestContract>)) as ILogger<IUpdateUnitsTypeRequestContract>,
-                        new ValidatedUpdateUnitsTypeRequest(
+                        new ValidatedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsTypeRequestContract>)) as IValidator<IUpdateUnitsTypeRequestContract>,
                             new UpdateUnitsTypeUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
 
@@ -191,7 +200,8 @@ namespace Nano35.Instance.Api.Controllers
                 new ConvertedUpdateUnitsWorkingFormatOnHttpContext(
                     new LoggedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsWorkingFormatRequestContract>)) as ILogger<IUpdateUnitsWorkingFormatRequestContract>,
-                        new ValidatedUpdateUnitsWorkingFormatRequest(
+                        new ValidatedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsWorkingFormatRequestContract>)) as IValidator<IUpdateUnitsWorkingFormatRequestContract>,
                             new UpdateUnitsWorkingFormatUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
         }
     }

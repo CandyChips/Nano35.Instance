@@ -29,9 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsType
             
             var result =
                 await new LoggedPipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(logger,
-                    new ValidatedUpdateClientsTypeRequest(
                         new TransactedPipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(dbContext,
-                            new UpdateClientsTypeUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                            new UpdateClientsTypeUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {
