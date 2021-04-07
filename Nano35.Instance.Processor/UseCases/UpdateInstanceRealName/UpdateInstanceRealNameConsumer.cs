@@ -22,16 +22,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
         public async Task Consume(
             ConsumeContext<IUpdateInstanceRealNameRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateInstanceRealNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateInstanceRealNameRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateInstanceRealNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateInstanceRealNameRequest(logger,
+                await new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(logger,
                     new ValidatedUpdateInstanceRealNameRequest(
-                        new TransactedUpdateInstanceRealNameRequest(dbcontect,
-                            new UpdateInstanceRealNameUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                        new TransactedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
+                            new UpdateInstanceRealNameUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

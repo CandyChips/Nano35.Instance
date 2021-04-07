@@ -22,16 +22,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsName
         public async Task Consume(
             ConsumeContext<IUpdateClientsNameRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateClientsNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsNameRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateClientsNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateClientsNameRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateClientsNameRequest(logger,
+                await new LoggedPipeNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>(logger,
                     new ValidatedUpdateClientsNameRequest(
-                        new TransactedUpdateClientsNameRequest(dbcontect,
-                            new UpdateClientsNameUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                        new TransactedPipeNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>(dbContext,
+                            new UpdateClientsNameUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

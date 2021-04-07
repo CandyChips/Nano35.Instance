@@ -24,17 +24,16 @@ namespace Nano35.Instance.Processor.UseCases.CreatePaymentOfSelle
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var logger =
-                (ILogger<LoggedCreatePaymentOfSelleRequest>) _services.GetService(
-                    typeof(ILogger<LoggedCreatePaymentOfSelleRequest>));
+                (ILogger<ICreatePaymentOfSelleRequestContract>) _services.GetService(typeof(ILogger<ICreatePaymentOfSelleRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreatePaymentOfSelleRequest(logger,
+                await new LoggedPipeNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract>(logger,
                     new ValidatedCreatePaymentOfSelleRequest(
-                        new TransactedCreatePaymentOfSelleRequest(dbContext,
+                        new TransactedPipeNode<ICreatePaymentOfSelleRequestContract, ICreatePaymentOfSelleResultContract>(dbContext,
                             new CreatePaymentOfSelleUseCase(dbContext)))).Ask(message, context.CancellationToken);
 
             // Check response of create client request

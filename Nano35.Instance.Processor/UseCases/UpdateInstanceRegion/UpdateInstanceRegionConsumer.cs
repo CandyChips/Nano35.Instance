@@ -22,16 +22,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
         public async Task Consume(
             ConsumeContext<IUpdateInstanceRegionRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateInstanceRegionRequest>) _services.GetService(typeof(ILogger<LoggedUpdateInstanceRegionRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateInstanceRegionRequestContract>) _services.GetService(typeof(ILogger<IUpdateInstanceRegionRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateInstanceRegionRequest(logger,
+                await new LoggedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(logger,
                     new ValidatedUpdateInstanceRegionRequest(
-                        new TransactedUpdateInstanceRegionRequest(dbcontect,
-                            new UpdateInstanceRegionUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                        new TransactedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(dbContext,
+                            new UpdateInstanceRegionUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

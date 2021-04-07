@@ -22,12 +22,12 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
             ConsumeContext<IGetAllRolesRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllRolesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllRolesRequest>));
+            var logger = (ILogger<IGetAllRolesRequestContract>) _services.GetService(typeof(ILogger<IGetAllRolesRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedGetAllRolesRequest(logger,
+                await new LoggedPipeNode<IGetAllRolesRequestContract, IGetAllRolesResultContract>(logger,
                     new ValidatedGetAllRolesRequest(
                         new GetAllRolesUseCase(dbContext))).Ask(message, context.CancellationToken);
             

@@ -22,12 +22,12 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringById
             ConsumeContext<IGetInstanceStringByIdRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetInstanceStringByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetInstanceStringByIdRequest>));
+            var logger = (ILogger<IGetInstanceStringByIdRequestContract>) _services.GetService(typeof(ILogger<IGetInstanceStringByIdRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedGetInstanceStringByIdRequest(logger,
+                await new LoggedPipeNode<IGetInstanceStringByIdRequestContract, IGetInstanceStringByIdResultContract>(logger,
                     new ValidatedGetInstanceStringByIdRequest(
                         new GetInstanceStringByIdUseCase(dbContext))).Ask(message, context.CancellationToken);
             

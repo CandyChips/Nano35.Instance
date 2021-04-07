@@ -23,16 +23,16 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateUnitRequest>) _services.GetService(typeof(ILogger<LoggedCreateUnitRequest>));
+            var logger = (ILogger<ICreateUnitRequestContract>) _services.GetService(typeof(ILogger<ICreateUnitRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result = 
-                await new LoggedCreateUnitRequest(logger,  
+                await new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(logger,
                     new ValidatedCreateUnitRequest(
-                        new TransactedCreateUnitRequest(dbContext,
+                        new TransactedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(dbContext,
                             new CreateUnitUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create client request

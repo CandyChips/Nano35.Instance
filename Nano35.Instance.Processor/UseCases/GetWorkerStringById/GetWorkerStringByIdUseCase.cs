@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
             IGetWorkerStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Workers.FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken: cancellationToken)).ToString();
+            var result = (await _context.Workers.FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken: cancellationToken)).Name.ToString();
             return new GetWorkerStringByIdSuccessResultContract() {Data = result};
         }
     }

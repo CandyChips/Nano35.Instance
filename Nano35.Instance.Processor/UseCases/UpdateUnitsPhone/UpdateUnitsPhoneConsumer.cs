@@ -22,16 +22,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsPhone
         public async Task Consume(
             ConsumeContext<IUpdateUnitsPhoneRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateUnitsPhoneRequest>) _services.GetService(typeof(ILogger<LoggedUpdateUnitsPhoneRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateUnitsPhoneRequestContract>) _services.GetService(typeof(ILogger<IUpdateUnitsPhoneRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateUnitsPhoneRequest(logger,
+                await new LoggedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(logger,
                     new ValidatedUpdateUnitsPhoneRequest(
-                        new TransactedUpdateUnitsPhoneRequest(dbcontect,
-                            new UpdateUnitsPhoneUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                        new TransactedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(dbContext,
+                            new UpdateUnitsPhoneUseCase(dbContext)))).Ask(message, context.CancellationToken);
             
             switch (result)
             {
