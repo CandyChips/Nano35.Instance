@@ -86,7 +86,7 @@ namespace Nano35.Instance.Processor.Configurations
                     
                     cfg.ReceiveEndpoint("ICreateWorkerRequestContract", e =>
                     {
-                        e.Consumer<GetAllWorkersConsumer>(provider);
+                        e.Consumer<CreateWorkerConsumer>(provider);
                     });
                     
                     cfg.ReceiveEndpoint("ICreateUnitRequestContract", e =>
@@ -164,6 +164,7 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<GetUnitByIdConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
+                x.AddRequestClient<IRegisterRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IRegisterRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

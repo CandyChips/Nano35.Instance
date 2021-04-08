@@ -41,11 +41,9 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
-            var client = _bus.CreateRequestClient<IRegisterRequestContract>(TimeSpan.FromSeconds(1000));
+            var client = _bus.CreateRequestClient<IRegisterRequestContract>();
             var response = await client
-                .GetResponse<
-                    IRegisterSuccessResultContract, 
-                    IRegisterErrorResultContract>(new
+                .GetResponse<IRegisterRequestContract, IRegisterResultContract>(new RegisterRequestContract()
                 {
                     NewUserId = input.NewId,
                     Phone = input.Phone,

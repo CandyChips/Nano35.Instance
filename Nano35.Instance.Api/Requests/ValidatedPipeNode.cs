@@ -25,6 +25,11 @@ namespace Nano35.Instance.Api.Requests
 
         public override async Task<TOut> Ask(TIn input)
         {
+            if (_validator == null)
+            {
+                return await DoNext(input);
+            }
+            
             var result = _validator.ValidateAsync(input).Result;
             if (!result.IsValid)
             {
