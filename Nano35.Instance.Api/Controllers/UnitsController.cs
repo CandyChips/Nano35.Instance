@@ -107,7 +107,10 @@ namespace Nano35.Instance.Api.Controllers
                         _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
                         new ValidatedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                             _services.GetService(typeof(IValidator<ICreateUnitRequestContract>)) as IValidator<ICreateUnitRequestContract>,
-                            new CreateUnitUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
+                            new CreateUnitUseCase(
+                                _services.GetService(typeof(IBus)) as IBus,
+                                _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                    .Ask(body);
         }
 
         [Authorize]

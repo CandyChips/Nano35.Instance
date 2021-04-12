@@ -16,7 +16,11 @@ namespace Nano35.Instance.Api.Requests.GetAllWorkers
 
         public override async Task<IActionResult> Ask(GetAllWorkersHttpQuery input)
         {
-            var converted = new GetAllWorkersRequestContract();
+            var converted = new GetAllWorkersRequestContract()
+            {
+                InstanceId = input.InstanceId,
+                WorkersRoleId = input.WorkersRoleId
+            };
 
             var response = await DoNext(converted);
             
