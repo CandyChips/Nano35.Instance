@@ -18,22 +18,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsPhone
         {
             _context = context;
         }
-        
-        private class UpdateUnitsPhoneSuccessResultContract : 
-            IUpdateUnitsPhoneSuccessResultContract
-        {
-            
-        }
 
         public override async Task<IUpdateUnitsPhoneResultContract> Ask(
             IUpdateUnitsPhoneRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
+            var result = await _context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken);
             result.Phone = input.Phone;
             result.CreatorId = input.UpdaterId;
-            
-            return new UpdateUnitsPhoneSuccessResultContract() ;
+            return new UpdateUnitsPhoneSuccessResultContract();
         }
     }
 }

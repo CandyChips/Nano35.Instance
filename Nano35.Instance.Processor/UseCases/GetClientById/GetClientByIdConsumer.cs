@@ -12,25 +12,15 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
     {
         private readonly IServiceProvider  _services;
         
-        public GetClientByIdConsumer(
-            IServiceProvider services)
+        public GetClientByIdConsumer(IServiceProvider services) { _services = services; }
+        
+        public async Task Consume(ConsumeContext<IGetClientByIdRequestContract> context)
         {
-            _services = services;
-        }
-
-
-        public async Task Consume(
-            ConsumeContext<IGetClientByIdRequestContract> context)
-        {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetClientByIdRequestContract>) _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(logger,
-                        new GetClientByIdUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(
+                _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>)) as ILogger<IGetClientByIdRequestContract>,
+                    new GetClientByIdUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetClientByIdSuccessResultContract:

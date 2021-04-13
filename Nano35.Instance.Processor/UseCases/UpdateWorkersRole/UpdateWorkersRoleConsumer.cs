@@ -12,26 +12,19 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateWorkersRoleConsumer(
-            IServiceProvider services)
+        public UpdateWorkersRoleConsumer(IServiceProvider services)
         {
             _services = services;
         }
 
-
-        public async Task Consume(
-            ConsumeContext<IUpdateWorkersRoleRequestContract> context)
+        public async Task Consume(ConsumeContext<IUpdateWorkersRoleRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateWorkersRoleRequestContract>) _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(logger,
-                    new TransactedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(dbContext,
-                        new UpdateWorkersRoleUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as ILogger<IUpdateWorkersRoleRequestContract>,
+                new TransactedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(dbContext,
+                    new UpdateWorkersRoleUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateWorkersRoleSuccessResultContract:

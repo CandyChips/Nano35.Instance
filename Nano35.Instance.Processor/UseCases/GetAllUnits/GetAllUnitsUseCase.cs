@@ -22,25 +22,13 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             _context = context;
         }
         
-        private class GetAllUnitsSuccessResultContract : 
-            IGetAllUnitsSuccessResultContract
-        {
-            public IEnumerable<IUnitViewModel> Data { get; set; }
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-
         public override async Task<IGetAllUnitsResultContract> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Units
+            var result = await _context.Units
                 .Where(c => c.InstanceId == input.InstanceId)
-                .MapAllToAsync<IUnitViewModel>());
+                .MapAllToAsync<IUnitViewModel>();
             return new GetAllUnitsSuccessResultContract() {Data = result};
         }
     }

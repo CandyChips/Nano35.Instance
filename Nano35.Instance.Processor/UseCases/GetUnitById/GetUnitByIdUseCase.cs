@@ -21,12 +21,6 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
             _context = context;
         }
         
-        private class GetUnitByIdSuccessResultContract : 
-            IGetUnitByIdSuccessResultContract
-        {
-            public IUnitViewModel Data { get; set; }
-        }
-
         public override async Task<IGetUnitByIdResultContract> Ask(
             IGetUnitByIdRequestContract input,
             CancellationToken cancellationToken)

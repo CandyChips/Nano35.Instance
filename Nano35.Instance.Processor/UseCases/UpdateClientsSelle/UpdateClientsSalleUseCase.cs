@@ -13,16 +13,9 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsSelle
     {
         private readonly ApplicationContext _context;
 
-        public UpdateClientsSelleUseCase(
-            ApplicationContext context)
+        public UpdateClientsSelleUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class UpdateClientsSelleSuccessResultContract : 
-            IUpdateClientsSelleSuccessResultContract
-        {
-            
         }
 
         public override async Task<IUpdateClientsSelleResultContract> Ask(
@@ -32,7 +25,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsSelle
             var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
             result.WorkerId = input.UpdaterId;
             result.Salle = (double)input.Selle;
-            
             return new UpdateClientsSelleSuccessResultContract() ;
         }
     }

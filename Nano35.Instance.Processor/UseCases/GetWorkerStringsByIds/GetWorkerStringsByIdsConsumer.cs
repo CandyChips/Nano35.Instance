@@ -22,13 +22,10 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds
             ConsumeContext<IGetWorkerStringsByIdsRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetWorkerStringsByIdsRequestContract>) _services.GetService(typeof(ILogger<IGetWorkerStringsByIdsRequestContract>));
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsResultContract>(logger,
-                        new GetWorkerStringsByIdsUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsResultContract>(
+                _services.GetService(typeof(ILogger<IGetWorkerStringsByIdsRequestContract>)) as ILogger<IGetWorkerStringsByIdsRequestContract>,
+                    new GetWorkerStringsByIdsUseCase(dbContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetWorkerStringsByIdsSuccessResultContract:

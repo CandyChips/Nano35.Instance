@@ -12,26 +12,19 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateUnitsWorkingFormatConsumer(
-            IServiceProvider services)
+        public UpdateUnitsWorkingFormatConsumer(IServiceProvider services)
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IUpdateUnitsWorkingFormatRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<IUpdateUnitsWorkingFormatRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateUnitsWorkingFormatRequestContract>) _services.GetService(typeof(ILogger<IUpdateUnitsWorkingFormatRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(logger,
-                    new TransactedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(dbContext,
-                        new UpdateUnitsWorkingFormatUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateUnitsWorkingFormatRequestContract>)) as ILogger<IUpdateUnitsWorkingFormatRequestContract>,
+                new TransactedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(dbContext,
+                    new UpdateUnitsWorkingFormatUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateUnitsWorkingFormatSuccessResultContract:

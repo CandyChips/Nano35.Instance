@@ -20,29 +20,10 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
 
-        public GetAllWorkersUseCase(
-            ApplicationContext context, 
-            IBus bus)
+        public GetAllWorkersUseCase(ApplicationContext context, IBus bus)
         {
             _context = context;
             _bus = bus;
-        }
-        
-        private class GetAllWorkersSuccessResultContract : 
-            IGetAllWorkersSuccessResultContract
-        {
-            public IEnumerable<IWorkerViewModel> Data { get; set; }
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-        
-        private class GetUserResult : IGetUserByIdRequestContract
-        {
-            public Guid UserId { get; set; }
         }
 
         public override async Task<IGetAllWorkersResultContract> Ask(
@@ -56,7 +37,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             {
                 var client = _bus.CreateRequestClient<IGetUserByIdRequestContract>(TimeSpan.FromSeconds(10));
                 var response = await client
-                    .GetResponse<IGetUserByIdSuccessResultContract, IGetUserByIdErrorResultContract>( new GetUserResult(){UserId = item.Id}, cancellationToken);
+                    .GetResponse<IGetUserByIdSuccessResultContract, IGetUserByIdErrorResultContract>(new GetUserByIdRequestContract(){UserId = item.Id}, cancellationToken);
 
                 if (response.Is(out Response<IGetUserByIdSuccessResultContract> successResponse))
                 {

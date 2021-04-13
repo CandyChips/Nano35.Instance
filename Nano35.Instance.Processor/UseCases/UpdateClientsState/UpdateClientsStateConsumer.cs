@@ -17,21 +17,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsState
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IUpdateClientsStateRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<IUpdateClientsStateRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateClientsStateRequestContract>) _services.GetService(typeof(ILogger<IUpdateClientsStateRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(logger,
-                        new TransactedPipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(dbContext,
-                            new UpdateClientsStateUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateClientsStateRequestContract>)) as ILogger<IUpdateClientsStateRequestContract>,
+                    new TransactedPipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(dbContext,
+                        new UpdateClientsStateUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateClientsStateSuccessResultContract:

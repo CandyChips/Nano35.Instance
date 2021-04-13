@@ -15,23 +15,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
     {
         private readonly ApplicationContext _context;
 
-        public GetAllUnitTypesUseCase(
-            ApplicationContext context)
-        {
-            _context = context;
-        }
-        
-        private class GetAllUnitTypesSuccessResultContract : 
-            IGetAllUnitTypesSuccessResultContract
-        {
-            public IEnumerable<IUnitTypeViewModel> Data { get; set; }
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
+        public GetAllUnitTypesUseCase(ApplicationContext context) { _context = context; }
 
         public override async Task<IGetAllUnitTypesResultContract> Ask(
             IGetAllUnitTypesRequestContract input,

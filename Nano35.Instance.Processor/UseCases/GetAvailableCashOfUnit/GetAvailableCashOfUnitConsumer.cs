@@ -12,29 +12,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
     {
         private readonly IServiceProvider _services;
 
-        public GetAvailableCashOfUnitConsumer(
-            IServiceProvider services)
+        public GetAvailableCashOfUnitConsumer(IServiceProvider services) { _services = services; }
+
+        public async Task Consume(ConsumeContext<IGetAvailableCashOfUnitRequestContract> context)
         {
-            _services = services;
-        }
-
-        public async Task Consume(
-            ConsumeContext<IGetAvailableCashOfUnitRequestContract> context)
-        {
-            // Setup configuration of pipeline
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger =
-                (ILogger<IGetAvailableCashOfUnitRequestContract>) _services.GetService(typeof(ILogger<IGetAvailableCashOfUnitRequestContract>));
-
-            // Explore message of request
-            var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedPipeNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract>(logger,
-                        new GetAvailableCashOfUnitUseCase(dbContext)).Ask(message, context.CancellationToken);
-
-            // Check response of create client request
+            var result = await new LoggedPipeNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract>(
+                _services.GetService(typeof(ILogger<IGetAvailableCashOfUnitRequestContract>)) as ILogger<IGetAvailableCashOfUnitRequestContract>,
+                new GetAvailableCashOfUnitUseCase(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetAvailableCashOfUnitSuccessResultContract:

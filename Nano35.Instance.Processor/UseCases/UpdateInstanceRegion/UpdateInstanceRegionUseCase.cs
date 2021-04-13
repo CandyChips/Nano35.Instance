@@ -13,16 +13,9 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
     {
         private readonly ApplicationContext _context;
 
-        public UpdateInstanceRegionUseCase(
-            ApplicationContext context)
+        public UpdateInstanceRegionUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class UpdateInstanceRegionSuccessResultContract : 
-            IUpdateInstanceRegionSuccessResultContract
-        {
-            
         }
 
         public override async Task<IUpdateInstanceRegionResultContract> Ask(
@@ -31,7 +24,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
         {
             var result = await (_context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken));
             result.RegionId = input.RegionId;
-
             return new UpdateInstanceRegionSuccessResultContract();
         }
     }

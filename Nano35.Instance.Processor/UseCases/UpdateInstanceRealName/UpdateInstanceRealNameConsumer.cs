@@ -12,26 +12,19 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateInstanceRealNameConsumer(
-            IServiceProvider services)
+        public UpdateInstanceRealNameConsumer(IServiceProvider services)
         {
             _services = services;
         }
 
-
-        public async Task Consume(
-            ConsumeContext<IUpdateInstanceRealNameRequestContract> context)
+        public async Task Consume(ConsumeContext<IUpdateInstanceRealNameRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateInstanceRealNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(logger,
-                        new TransactedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
-                            new UpdateInstanceRealNameUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>)) as ILogger<IUpdateInstanceRealNameRequestContract>,
+                new TransactedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
+                    new UpdateInstanceRealNameUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateInstanceRealNameSuccessResultContract:

@@ -15,24 +15,17 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
     {
         private readonly ApplicationContext _context;
 
-        public GetWorkerByIdUseCase(
-            ApplicationContext context)
+        public GetWorkerByIdUseCase(ApplicationContext context)
         {
             _context = context;
         }
         
-        private class GetWorkerByIdSuccessResultContract : 
-            IGetWorkerByIdSuccessResultContract
-        {
-            public IWorkerViewModel Data { get; set; }
-        }
-
         public override async Task<IGetWorkerByIdResultContract> Ask(
             IGetWorkerByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = (await _context.Workers
-                    .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken))
+                .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken))
                 .MapTo<IWorkerViewModel>();
             return new GetWorkerByIdSuccessResultContract() {Data = result};
         }

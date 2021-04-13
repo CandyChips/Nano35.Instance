@@ -19,12 +19,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsName
             _context = context;
         }
         
-        private class UpdateClientsNameSuccessResultContract : 
-            IUpdateClientsNameSuccessResultContract
-        {
-            
-        }
-
         public override async Task<IUpdateClientsNameResultContract> Ask(
             IUpdateClientsNameRequestContract input,
             CancellationToken cancellationToken)
@@ -32,7 +26,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsName
             var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
             result.WorkerId = input.UpdaterId;
             result.Name = input.Name;
-            
             return new UpdateClientsNameSuccessResultContract();
         }
     }

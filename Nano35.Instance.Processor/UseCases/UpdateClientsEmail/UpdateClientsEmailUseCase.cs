@@ -13,18 +13,11 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
     {
         private readonly ApplicationContext _context;
 
-        public UpdateClientsEmailUseCase(
-            ApplicationContext context)
+        public UpdateClientsEmailUseCase(ApplicationContext context)
         {
             _context = context;
         }
         
-        private class UpdateClientsEmailSuccessResultContract : 
-            IUpdateClientsEmailSuccessResultContract
-        {
-            
-        }
-
         public override async Task<IUpdateClientsEmailResultContract> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
@@ -32,7 +25,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
             var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
             result.WorkerId = input.UpdaterId;
             result.Email = input.Email;
-
             return new UpdateClientsEmailSuccessResultContract();
         }
     }

@@ -12,24 +12,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
     {
         private readonly IServiceProvider  _services;
         
-        public GetAllWorkersConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public GetAllWorkersConsumer(IServiceProvider services) { _services = services; }
         
-        public async Task Consume(
-            ConsumeContext<IGetAllWorkersRequestContract> context)
+        public async Task Consume(ConsumeContext<IGetAllWorkersRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllWorkersRequestContract>) _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(logger,
-                        new GetAllWorkersUseCase(dbContext, bus)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
+                    new GetAllWorkersUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext, 
+                        _services.GetService(typeof(IBus)) as IBus))
+                .Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

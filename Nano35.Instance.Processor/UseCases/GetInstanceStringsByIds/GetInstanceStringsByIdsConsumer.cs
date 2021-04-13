@@ -21,15 +21,11 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
         public async Task Consume(
             ConsumeContext<IGetInstanceStringsByIdsRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetInstanceStringsByIdsRequestContract>) _services.GetService(typeof(ILogger<IGetInstanceStringsByIdsRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsResultContract>(logger,
-                        new GetInstanceStringsByIdsUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsResultContract>(
+                _services.GetService(typeof(ILogger<IGetInstanceStringsByIdsRequestContract>)) as ILogger<IGetInstanceStringsByIdsRequestContract>,
+                new GetInstanceStringsByIdsUseCase(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetInstanceStringsByIdsSuccessResultContract:

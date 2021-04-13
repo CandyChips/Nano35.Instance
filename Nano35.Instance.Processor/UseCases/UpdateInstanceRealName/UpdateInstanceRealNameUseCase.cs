@@ -13,26 +13,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
     {
         private readonly ApplicationContext _context;
 
-        public UpdateInstanceRealNameUseCase(
-            ApplicationContext context)
+        public UpdateInstanceRealNameUseCase(ApplicationContext context)
         {
             _context = context;
         }
         
-        private class UpdateInstanceRealNameSuccessResultContract : 
-            IUpdateInstanceRealNameSuccessResultContract
-        {
-            
-        }
-
         public override async Task<IUpdateInstanceRealNameResultContract> Ask(
             IUpdateInstanceRealNameRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await ( _context.Instances
-                    .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken)
-                );
-
+            var result = await _context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
             result.OrgRealName = input.RealName;
             return new UpdateInstanceRealNameSuccessResultContract();
         }

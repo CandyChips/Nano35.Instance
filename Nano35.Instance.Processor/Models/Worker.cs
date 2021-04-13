@@ -19,6 +19,11 @@ namespace Nano35.Instance.Processor.Models
         //Forein keys
         public Guid WorkersRoleId { get; set; }
         public WorkersRole WorkersRole { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
     }
 
     public partial class FluentContext 

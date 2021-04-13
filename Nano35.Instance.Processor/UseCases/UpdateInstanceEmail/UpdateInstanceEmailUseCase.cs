@@ -13,16 +13,9 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceEmail
     {
         private readonly ApplicationContext _context;
 
-        public UpdateInstanceEmailUseCase(
-            ApplicationContext context)
+        public UpdateInstanceEmailUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class UpdateInstanceEmailSuccessResultContract : 
-            IUpdateInstanceEmailSuccessResultContract
-        {
-            
         }
 
         public override async Task<IUpdateInstanceEmailResultContract> Ask(
@@ -31,7 +24,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceEmail
         {
             var result = await _context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
             result.OrgEmail = input.Email;
-            
             return new UpdateInstanceEmailSuccessResultContract();
         }
     }

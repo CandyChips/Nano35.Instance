@@ -12,23 +12,18 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
     {
         private readonly IServiceProvider  _services;
         
-        public GetWorkerByIdConsumer(
-            IServiceProvider services)
+        public GetWorkerByIdConsumer(IServiceProvider services)
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IGetWorkerByIdRequestContract> context)
-        {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IGetWorkerByIdRequestContract>) _services.GetService(typeof(ILogger<IGetWorkerByIdRequestContract>));
-            
-            var result =
-                await new LoggedPipeNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>(logger,
-                        new GetWorkerByIdUseCase(dbContext)).Ask(context.Message, context.CancellationToken);
-            
+        
+        public async Task Consume(ConsumeContext<IGetWorkerByIdRequestContract> context)
+        { 
+            var result = await new LoggedPipeNode<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>(
+                _services.GetService(typeof(ILogger<IGetWorkerByIdRequestContract>)) as ILogger<IGetWorkerByIdRequestContract>,
+                    new GetWorkerByIdUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetWorkerByIdSuccessResultContract:

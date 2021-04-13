@@ -26,11 +26,7 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
 
-        public WorkersController(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public WorkersController(IServiceProvider services) { _services = services; }
         
         [Authorize]
         [HttpGet]
@@ -42,13 +38,14 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllWorkers(
             [FromQuery] GetAllWorkersHttpQuery query)
         {
-            return await 
-                new ConvertedGetAllWorkersOnHttpContext(
-                    new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
-                        new ValidatedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllWorkersRequestContract>)) as IValidator<IGetAllWorkersRequestContract>,
-                            new GetAllWorkersUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+            return await new ConvertedGetAllWorkersOnHttpContext(
+                new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
+                    new ValidatedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllWorkersRequestContract>)) as IValidator<IGetAllWorkersRequestContract>,
+                        new GetAllWorkersUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(query);
         }
     
         [AllowAnonymous]
@@ -59,14 +56,14 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkerRolesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllWorkerRoles()
         {
-            return await 
-                new ConvertedGetAllWorkerRolesOnHttpContext(
-                    new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
-                        new ValidatedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllWorkerRolesRequestContract>)) as IValidator<IGetAllWorkerRolesRequestContract>,
-                            new GetAllWorkerRolesUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(new GetAllWorkerRolesHttpQuery());
+            return await new ConvertedGetAllWorkerRolesOnHttpContext(
+                new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
+                    new ValidatedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllWorkerRolesRequestContract>)) as IValidator<IGetAllWorkerRolesRequestContract>,
+                        new GetAllWorkerRolesUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(new GetAllWorkerRolesHttpQuery());
         }
 
         [Authorize]
@@ -79,13 +76,15 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateWorker(
             [FromBody] CreateWorkerHttpBody body)
         {
-            return await 
-                new ConvertedCreateWorkerOnHttpContext(
-                    new LoggedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
-                        _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,
-                        new ValidatedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
-                            _services.GetService(typeof(IValidator<ICreateWorkerRequestContract>)) as IValidator<ICreateWorkerRequestContract>,
-                            new CreateWorkerUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
+            return await new ConvertedCreateWorkerOnHttpContext(
+                new LoggedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
+                    _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,
+                    new ValidatedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
+                        _services.GetService(typeof(IValidator<ICreateWorkerRequestContract>)) as IValidator<ICreateWorkerRequestContract>,
+                        new CreateWorkerUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                .Ask(body);
         }
 
         [Authorize]
@@ -98,13 +97,15 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersRole(
             [FromBody] UpdateWorkersRoleHttpBody body)
         {
-            return await 
-                new ConvertedUpdateWorkersRoleOnHttpContext(
-                    new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as ILogger<IUpdateWorkersRoleRequestContract>,
-                        new ValidatedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
-                            _services.GetService(typeof(IValidator<IUpdateWorkersRoleRequestContract>)) as IValidator<IUpdateWorkersRoleRequestContract>,
-                            new UpdateWorkersRoleUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
+            return await new ConvertedUpdateWorkersRoleOnHttpContext(
+                new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as ILogger<IUpdateWorkersRoleRequestContract>,
+                    new ValidatedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateWorkersRoleRequestContract>)) as IValidator<IUpdateWorkersRoleRequestContract>,
+                        new UpdateWorkersRoleUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                .Ask(body);
         }
 
         [Authorize]
@@ -117,13 +118,15 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersName(
             [FromBody] UpdateWorkersNameHttpBody body)
         {
-            return await 
-                new ConvertedUpdateWorkersNameOnHttpContext(
-                    new LoggedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateWorkersNameRequestContract>)) as ILogger<IUpdateWorkersNameRequestContract>,
-                        new ValidatedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
-                            _services.GetService(typeof(IValidator<IUpdateWorkersNameRequestContract>)) as IValidator<IUpdateWorkersNameRequestContract>,
-                            new UpdateWorkersNameUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
+            return await new ConvertedUpdateWorkersNameOnHttpContext(
+                new LoggedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateWorkersNameRequestContract>)) as ILogger<IUpdateWorkersNameRequestContract>,
+                    new ValidatedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateWorkersNameRequestContract>)) as IValidator<IUpdateWorkersNameRequestContract>,
+                        new UpdateWorkersNameUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                .Ask(body);
         }
 
         [Authorize]
@@ -136,13 +139,15 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateWorkersComment(
             [FromBody] UpdateWorkersCommentHttpBody body)
         {
-            return await 
-                new ConvertedUpdateWorkersCommentOnHttpContext(
-                    new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
-                        new ValidatedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
-                            _services.GetService(typeof(IValidator<IUpdateWorkersCommentRequestContract>)) as IValidator<IUpdateWorkersCommentRequestContract>,
-                            new UpdateWorkersCommentUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))).Ask(body);
+            return await new ConvertedUpdateWorkersCommentOnHttpContext(
+                new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
+                    new ValidatedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateWorkersCommentRequestContract>)) as IValidator<IUpdateWorkersCommentRequestContract>,
+                        new UpdateWorkersCommentUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                .Ask(body);
         }
     }
 }

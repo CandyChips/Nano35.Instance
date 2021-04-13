@@ -14,16 +14,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
     {
         private readonly ApplicationContext _context;
 
-        public GetAvailableCashOfUnitUseCase(
-            ApplicationContext context)
+        public GetAvailableCashOfUnitUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class GetAvailableCashOfUnitSuccessResultContract : 
-            IGetAvailableCashOfUnitSuccessResultContract
-        {
-            public double Cash { get; set; }
         }
         
         public override async Task<IGetAvailableCashOfUnitResultContract> Ask(
@@ -31,16 +24,6 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException(); 
-            var operation = new CashOperation()
-            {
-                //InstanceId = input.InstanceId,
-                //UnitId = input.UnitId,
-                //From = input.From,
-                //To = input.To,
-                //OperationType = input.CashOperationType
-            };
-            await _context.CashOperations.AddAsync(operation, cancellationToken);
-            return new GetAvailableCashOfUnitSuccessResultContract();
         }
     }
 }

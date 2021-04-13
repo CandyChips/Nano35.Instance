@@ -13,16 +13,9 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsState
     {
         private readonly ApplicationContext _context;
 
-        public UpdateClientsStateUseCase(
-            ApplicationContext context)
+        public UpdateClientsStateUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class UpdateClientsStateSuccessResultContract : 
-            IUpdateClientsStateSuccessResultContract
-        {
-            
         }
 
         public override async Task<IUpdateClientsStateResultContract> Ask(
@@ -32,7 +25,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsState
             var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
             result.WorkerId = input.UpdaterId;
             result.ClientStateId = input.StateId;
-            
             return new UpdateClientsStateSuccessResultContract() ;
         }
     }

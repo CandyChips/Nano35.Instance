@@ -18,12 +18,6 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringById
         {
             _context = context;
         }
-        
-        private class GetInstanceStringByIdSuccessResultContract : 
-            IGetInstanceStringByIdSuccessResultContract
-        {
-            public string Data { get; set; }
-        }
 
         public override async Task<IGetInstanceStringByIdResultContract> Ask(
             IGetInstanceStringByIdRequestContract input,

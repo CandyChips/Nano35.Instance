@@ -12,25 +12,18 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
     {
         private readonly IServiceProvider  _services;
         
-        public GetUnitByIdConsumer(
-            IServiceProvider services)
+        public GetUnitByIdConsumer(IServiceProvider services)
         {
             _services = services;
         }
 
-
-        public async Task Consume(
-            ConsumeContext<IGetUnitByIdRequestContract> context)
+        public async Task Consume(ConsumeContext<IGetUnitByIdRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetUnitByIdRequestContract>) _services.GetService(typeof(ILogger<IGetUnitByIdRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(logger,
-                        new GetUnitByIdUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
+                _services.GetService(typeof(ILogger<IGetUnitByIdRequestContract>)) as ILogger<IGetUnitByIdRequestContract>,
+                    new GetUnitByIdUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetUnitByIdSuccessResultContract:

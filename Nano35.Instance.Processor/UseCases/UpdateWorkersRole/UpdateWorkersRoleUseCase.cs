@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Services.Contexts;
 
@@ -13,23 +14,19 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
     {
         private readonly ApplicationContext _context;
 
-        public UpdateWorkersRoleUseCase(
-            ApplicationContext context)
+        public UpdateWorkersRoleUseCase(ApplicationContext context)
         {
             _context = context;
         }
         
-        private class UpdateWorkersRoleSuccessResultContract : 
-            IUpdateWorkersRoleSuccessResultContract
-        {
-            
-        }
 
         public override async Task<IUpdateWorkersRoleResultContract> Ask(
             IUpdateWorkersRoleRequestContract input,
             CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var entityOfWorker = await _context.Workers.FirstAsync(f => f.Id == input.WorkersId, cancellationToken: cancellationToken);
+            entityOfWorker.WorkersRoleId = input.RoleId;
+            return new UpdateWorkersRoleSuccessResultContract();
         }
     }
 }

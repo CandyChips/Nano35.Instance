@@ -13,24 +13,17 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
     {
         private readonly IServiceProvider  _services;
         
-        public GetClientStringsByIdsConsumer(
-            IServiceProvider services)
+        public GetClientStringsByIdsConsumer(IServiceProvider services)
         {
             _services = services;
         }
 
-        public async Task Consume(
-            ConsumeContext<IGetClientStringsByIdsRequestContract> context)
+        public async Task Consume(ConsumeContext<IGetClientStringsByIdsRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetClientStringsByIdsRequestContract>) _services.GetService(typeof(ILogger<IGetClientStringsByIdsRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsResultContract>(logger,
-                        new GetClientStringsByIdsUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsResultContract>(
+                _services.GetService(typeof(ILogger<IGetClientStringsByIdsRequestContract>)) as ILogger<IGetClientStringsByIdsRequestContract>,
+                    new GetClientStringsByIdsUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetClientStringsByIdsSuccessResultContract:

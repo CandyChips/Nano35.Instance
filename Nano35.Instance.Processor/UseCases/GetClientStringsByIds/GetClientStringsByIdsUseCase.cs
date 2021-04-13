@@ -8,7 +8,9 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
 {
     public class GetClientStringsByIdsUseCase :
-        EndPointNodeBase<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsResultContract>
+        EndPointNodeBase<
+            IGetClientStringsByIdsRequestContract,
+            IGetClientStringsByIdsResultContract>
     {
         private readonly ApplicationContext _context;
 

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using MassTransit.Testing.Indicators;
-using Microsoft.Extensions.Logging;
 using Nano35.Contracts;
 
 namespace Nano35.Instance.Api.Requests
@@ -26,10 +25,10 @@ namespace Nano35.Instance.Api.Requests
     /// Contract request reduction
     /// TMessage -> TResponse => ( TSuccess / TError )
     /// </summary>
-    /// <typeparam name="TMessage">Is class and IRequest</typeparam>
-    /// <typeparam name="TResponse">Is class and IResponse</typeparam>
-    /// <typeparam name="TSuccess">Is class ISuccess and IResponse</typeparam>
-    /// <typeparam name="TError">Is class IError and IResponse</typeparam>
+    /// <typeparam name="TMessage">   Is class and IRequest            </typeparam>
+    /// <typeparam name="TResponse">  Is class and IResponse           </typeparam>
+    /// <typeparam name="TSuccess">   Is class ISuccess and IResponse  </typeparam>
+    /// <typeparam name="TError">     Is class IError and IResponse    </typeparam>
     public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
         where TMessage : class, IRequest
         where TResponse : class, IResponse
@@ -78,27 +77,5 @@ namespace Nano35.Instance.Api.Requests
         where TOut : IResponse
     {
         public abstract Task<TOut> Ask(TIn input);
-    }
-    
-    public class LoggedPipeNode<TIn, TOut> : PipeNodeBase<TIn, TOut>
-        where TIn : IRequest
-        where TOut : IResponse
-    {
-        private readonly ILogger<TIn> _logger;
-
-        public LoggedPipeNode(
-            ILogger<TIn> logger,
-            IPipeNode<TIn, TOut> next) : base(next)
-        {
-            _logger = logger;
-        }
-
-        public override async Task<TOut> Ask(TIn input)
-        {
-            _logger.LogInformation($"{typeof(TIn)} starts on: {DateTime.Now}.");
-            var result = await DoNext(input);
-            _logger.LogInformation($"{typeof(TIn)} ends on: {DateTime.Now}.");
-            return result;
-        }
     }
 }

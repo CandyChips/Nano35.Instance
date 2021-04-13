@@ -22,7 +22,8 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
             IGetClientStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Clients.FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken));
+            var result = await _context.Clients
+                .FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken);
             return new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.Phone}"};
         }
     }

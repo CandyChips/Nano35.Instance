@@ -32,7 +32,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
             CancellationToken cancellationToken)
         {
             var result = (await _context.Instances
-                    .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken: cancellationToken))
+                .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken: cancellationToken))
                 .MapTo<IInstanceViewModel>();
             return new GetInstanceByIdSuccessResultContract() {Data = result};
         }

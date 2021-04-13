@@ -13,16 +13,9 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
     {
         private readonly ApplicationContext _context;
 
-        public UpdateUnitsAddressUseCase(
-            ApplicationContext context)
+        public UpdateUnitsAddressUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class UpdateUnitsAddressSuccessResultContract : 
-            IUpdateUnitsAddressSuccessResultContract
-        {
-            
         }
 
         public override async Task<IUpdateUnitsAddressResultContract> Ask(
@@ -32,8 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
             var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
             result.Adress = input.Address;
             result.CreatorId = input.UpdaterId;
-            
-            return new UpdateUnitsAddressSuccessResultContract() ;
+            return new UpdateUnitsAddressSuccessResultContract();
         }
     }
 }

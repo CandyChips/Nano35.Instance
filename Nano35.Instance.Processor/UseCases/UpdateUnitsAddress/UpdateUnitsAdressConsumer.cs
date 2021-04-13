@@ -17,21 +17,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IUpdateUnitsAddressRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<IUpdateUnitsAddressRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateUnitsAddressRequestContract>) _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(logger,
-                        new TransactedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(dbContext,
-                            new UpdateUnitsAddressUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>)) as ILogger<IUpdateUnitsAddressRequestContract>,
+                    new TransactedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(dbContext,
+                        new UpdateUnitsAddressUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateUnitsAddressSuccessResultContract:

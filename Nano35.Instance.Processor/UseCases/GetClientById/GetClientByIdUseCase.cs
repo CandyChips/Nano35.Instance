@@ -20,19 +20,13 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
         {
             _context = context;
         }
-        
-        private class GetClientByIdSuccessResultContract : 
-            IGetClientByIdSuccessResultContract
-        {
-            public IClientViewModel Data { get; set; }
-        }
 
         public override async Task<IGetClientByIdResultContract> Ask(
             IGetClientByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = (await _context.Clients
-                    .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken))
+                .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken))
                 .MapTo<IClientViewModel>();
             return new GetClientByIdSuccessResultContract() {Data = result};
         }

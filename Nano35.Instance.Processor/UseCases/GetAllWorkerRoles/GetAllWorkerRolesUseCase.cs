@@ -20,18 +20,6 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
         {
             _context = context;
         }
-        
-        private class GetAllWorkerRolesSuccessResultContract : 
-            IGetAllWorkerRolesSuccessResultContract
-        {
-            public IEnumerable<IWorkersRoleViewModel> Data { get; set; }
-        }
-
-        private class GetAllClientStatesErrorResultContract : 
-            IGetAllClientStatesErrorResultContract
-        {
-            public string Message { get; set; }
-        }
 
         public override async Task<IGetAllWorkerRolesResultContract> Ask(
             IGetAllWorkerRolesRequestContract input,

@@ -13,18 +13,11 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
     {
         private readonly ApplicationContext _context;
 
-        public UpdateUnitsNameUseCase(
-            ApplicationContext context)
+        public UpdateUnitsNameUseCase(ApplicationContext context)
         {
             _context = context;
         }
         
-        private class UpdateUnitsNameSuccessResultContract : 
-            IUpdateUnitsNameSuccessResultContract
-        {
-            
-        }
-
         public override async Task<IUpdateUnitsNameResultContract> Ask(
             IUpdateUnitsNameRequestContract input,
             CancellationToken cancellationToken)
@@ -32,8 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
             var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
             result.Name = input.Name;
             result.CreatorId = input.UpdaterId;
-            
-            return new UpdateUnitsNameSuccessResultContract() ;
+            return new UpdateUnitsNameSuccessResultContract();
         }
     }
 }

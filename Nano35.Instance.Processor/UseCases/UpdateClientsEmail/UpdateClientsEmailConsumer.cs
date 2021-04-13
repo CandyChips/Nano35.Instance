@@ -12,26 +12,19 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
     {
         private readonly IServiceProvider  _services;
         
-        public UpdateClientsEmailConsumer(
-            IServiceProvider services)
+        public UpdateClientsEmailConsumer(IServiceProvider services)
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IUpdateClientsEmailRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<IUpdateClientsEmailRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateClientsEmailRequestContract>) _services.GetService(typeof(ILogger<IUpdateClientsEmailRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(logger,
-                        new TransactedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(dbContext,
-                            new UpdateClientsEmailUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateClientsEmailRequestContract>)) as ILogger<IUpdateClientsEmailRequestContract>,
+                    new TransactedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(dbContext,
+                        new UpdateClientsEmailUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateClientsEmailSuccessResultContract:

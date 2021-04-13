@@ -17,21 +17,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceInfo
         {
             _services = services;
         }
-
-
-        public async Task Consume(
-            ConsumeContext<IUpdateInstanceInfoRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<IUpdateInstanceInfoRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<IUpdateInstanceInfoRequestContract>) _services.GetService(typeof(ILogger<IUpdateInstanceInfoRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(logger,
-                        new TransactedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(dbContext,
-                            new UpdateInstanceInfoUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var result = await new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateInstanceInfoRequestContract>)) as ILogger<IUpdateInstanceInfoRequestContract>,
+                    new TransactedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(dbContext,
+                        new UpdateInstanceInfoUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateInstanceInfoSuccessResultContract:
