@@ -20,17 +20,16 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateInstanceRequest>) _services.GetService(typeof(ILogger<LoggedCreateInstanceRequest>));
+            var logger = (ILogger<ICreateInstanceRequestContract>) _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result = 
-                await new LoggedCreateInstanceRequest(logger,  
-                    new ValidatedCreateInstanceRequest(
-                        new TransactedCreateInstanceRequest(dbContext,
-                            new CreateInstanceUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(logger,
+                        new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(dbContext,
+                            new CreateInstanceUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create instance request
             switch (result)

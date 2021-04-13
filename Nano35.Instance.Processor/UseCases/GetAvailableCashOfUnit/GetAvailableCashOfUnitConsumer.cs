@@ -24,17 +24,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAvailableCashOfUnit
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var logger =
-                (ILogger<LoggedGetAvailableCashOfUnitRequest>) _services.GetService(
-                    typeof(ILogger<LoggedGetAvailableCashOfUnitRequest>));
+                (ILogger<IGetAvailableCashOfUnitRequestContract>) _services.GetService(typeof(ILogger<IGetAvailableCashOfUnitRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedGetAvailableCashOfUnitRequest(logger,
-                    new ValidatedGetAvailableCashOfUnitRequest(
-                        new GetAvailableCashOfUnitUseCase(dbContext))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IGetAvailableCashOfUnitRequestContract, IGetAvailableCashOfUnitResultContract>(logger,
+                        new GetAvailableCashOfUnitUseCase(dbContext)).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

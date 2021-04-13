@@ -23,14 +23,13 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
             ConsumeContext<IGetClientByIdRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetClientByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetClientByIdRequest>));
+            var logger = (ILogger<IGetClientByIdRequestContract>) _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedGetClientByIdRequest(logger,
-                    new ValidatedGetClientByIdRequest(
-                        new GetClientByIdUseCase(dbContext))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(logger,
+                        new GetClientByIdUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

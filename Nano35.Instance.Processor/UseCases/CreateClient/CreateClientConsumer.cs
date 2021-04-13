@@ -22,17 +22,16 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateClientRequest>) _services.GetService(typeof(ILogger<LoggedCreateClientRequest>));
+            var logger = (ILogger<ICreateClientRequestContract>) _services.GetService(typeof(ILogger<ICreateClientRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result = 
-                await new LoggedCreateClientRequest(logger,  
-                    new ValidatedCreateClientRequest(
-                        new TransactedCreateClientRequest(dbContext,
-                            new CreateClientUseCase(dbContext)))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
+                        new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(dbContext,
+                            new CreateClientUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create client request
             switch (result)

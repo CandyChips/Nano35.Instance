@@ -22,15 +22,14 @@ namespace Nano35.Instance.Processor.UseCases.CreateCashInput
             ConsumeContext<ICreateCashInputRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateCashInputRequest>) _services.GetService(typeof(ILogger<LoggedCreateCashInputRequest>));
+            var logger = (ILogger<ICreateCashInputRequestContract>) _services.GetService(typeof(ILogger<ICreateCashInputRequestContract>));
 
             var message = context.Message;
             
             var result =
-                await new LoggedCreateCashInputRequest(logger,
-                        new ValidatedCreateCashInputRequest(
-                            new TransactedCreateCashInputRequest(dbContext,
-                                new CreateCashInputUseCase(dbContext))))
+                await new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(logger,
+                            new TransactedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(dbContext,
+                                new CreateCashInputUseCase(dbContext)))
                     .Ask(message, context.CancellationToken);
             switch (result)
             {

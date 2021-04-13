@@ -24,17 +24,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAllCashOperations
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var logger =
-                (ILogger<LoggedGetAllCashOperationsRequest>) _services.GetService(
-                    typeof(ILogger<LoggedGetAllCashOperationsRequest>));
+                (ILogger<IGetAllCashOperationsRequestContract>) _services.GetService(typeof(ILogger<IGetAllCashOperationsRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedGetAllCashOperationsRequest(logger,
-                    new ValidatedGetAllCashOperationsRequest(
-                        new GetAllCashOperationsUseCase(dbContext))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IGetAllCashOperationsRequestContract, IGetAllCashOperationsResultContract>(logger,
+                        new GetAllCashOperationsUseCase(dbContext)).Ask(message, context.CancellationToken);
 
             // Check response of create client request
             switch (result)

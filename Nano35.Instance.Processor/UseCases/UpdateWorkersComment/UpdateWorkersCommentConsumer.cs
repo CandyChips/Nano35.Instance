@@ -22,16 +22,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
         public async Task Consume(
             ConsumeContext<IUpdateWorkersCommentRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateWorkersCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateWorkersCommentRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateWorkersCommentRequestContract>) _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateWorkersCommentRequest(logger,
-                    new ValidatedUpdateWorkersCommentRequest(
-                        new TransactedUpdateWorkersCommentRequest(dbcontect,
-                            new UpdateWorkersCommentUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(logger,
+                    new TransactedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(dbContext, 
+                        new UpdateWorkersCommentUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

@@ -22,14 +22,13 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
             ConsumeContext<IGetAllRegionsRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllRegionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllRegionsRequest>));
+            var logger = (ILogger<IGetAllRegionsRequestContract>) _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedGetAllRegionsRequest(logger,
-                    new ValidatedGetAllRegionsRequest(
-                        new GetAllRegionsUseCase(dbContext))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(logger,
+                        new GetAllRegionsUseCase(dbContext)).Ask(message, context.CancellationToken);
             
             switch (result)
             {

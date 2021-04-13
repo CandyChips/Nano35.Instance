@@ -22,16 +22,15 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
         public async Task Consume(
             ConsumeContext<IUpdateClientsEmailRequestContract> context)
         {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
-            var logger = (ILogger<LoggedUpdateClientsEmailRequest>) _services.GetService(typeof(ILogger<LoggedUpdateClientsEmailRequest>));
+            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext)); 
+            var logger = (ILogger<IUpdateClientsEmailRequestContract>) _services.GetService(typeof(ILogger<IUpdateClientsEmailRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedUpdateClientsEmailRequest(logger,
-                    new ValidatedUpdateClientsEmailRequest(
-                        new TransactedUpdateClientsEmailRequest(dbcontect,
-                            new UpdateClientsEmailUseCase(dbcontect)))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(logger,
+                        new TransactedPipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(dbContext,
+                            new UpdateClientsEmailUseCase(dbContext))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

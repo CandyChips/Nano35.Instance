@@ -23,14 +23,13 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllWorkersRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWorkersRequest>));
+            var logger = (ILogger<IGetAllWorkersRequestContract>) _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>));
             
             var message = context.Message;
             
             var result =
-                await new LoggedGetAllWorkersRequest(logger,
-                    new ValidatedGetAllWorkersRequest(
-                        new GetAllWorkersUseCase(dbContext, bus))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(logger,
+                        new GetAllWorkersUseCase(dbContext, bus)).Ask(message, context.CancellationToken);
             
             switch (result)
             {
