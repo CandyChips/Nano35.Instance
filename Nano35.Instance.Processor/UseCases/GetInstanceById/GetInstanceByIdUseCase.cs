@@ -15,26 +15,29 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
     {
         private readonly ApplicationContext _context;
 
-        public GetInstanceByIdUseCase(
-            ApplicationContext context)
+        public GetInstanceByIdUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class GetInstanceByIdSuccessResultContract : 
-            IGetInstanceByIdSuccessResultContract
-        {
-            public IInstanceViewModel Data { get; set; }
         }
 
         public override async Task<IGetInstanceByIdResultContract> Ask(
             IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Instances
-                .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken: cancellationToken))
-                .MapTo<IInstanceViewModel>();
-            return new GetInstanceByIdSuccessResultContract() {Data = result};
+            var result = await _context.Instances
+                .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken: cancellationToken);
+            return new GetInstanceByIdSuccessResultContract()
+            {
+                Data = new InstanceViewModel()
+                {
+                    Id = result.Id,
+                    CompanyInfo = result.CompanyInfo,
+                    OrgEmail = result.OrgEmail,
+                    OrgName = result.OrgName,
+                    RegionId = result.RegionId,
+                    OrgRealName = result.OrgRealName
+                }
+            };
         }
     }
 }

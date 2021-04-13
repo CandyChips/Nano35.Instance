@@ -26,9 +26,20 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
             CancellationToken cancellationToken)
         {
             var result = (await _context.Units
-                    .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken))
-                .MapTo<IUnitViewModel>();
-            return new GetUnitByIdSuccessResultContract() {Data = result};
+                .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken));
+            return new GetUnitByIdSuccessResultContract()  
+            {
+                Data =
+                    new UnitViewModel()
+                    {
+                        Id = result.Id,
+                        Address = result.Adress,
+                        Name = result.Name, 
+                        Phone = result.Phone, 
+                        UnitType = result.UnitType.Name,
+                        WorkingFormat = result.WorkingFormat
+                    }
+            };
         }
     }
 }

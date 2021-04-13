@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -21,18 +23,18 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
             _context = context;
         }
         
-        private class GetAllInstanceTypesSuccessResultContract : 
-            IGetAllInstanceTypesSuccessResultContract
-        {
-            public IEnumerable<IInstanceTypeViewModel> Data { get; set; }
-        }
-
         public override async Task<IGetAllInstanceTypesResultContract> Ask(
             IGetAllInstanceTypesRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context.InstanceTypes
-                .MapAllToAsync<IInstanceTypeViewModel>();
+                .Select(a =>
+                    new InstanceTypeViewModel()
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
             return new GetAllInstanceTypesSuccessResultContract() {Data = result};
         }
     }

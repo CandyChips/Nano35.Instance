@@ -96,7 +96,7 @@ namespace Nano35.Instance.Processor.Models
                     .MapFrom(s => s.Id))
                 .ForMember(dest => dest.Name, source => source
                     .MapFrom(s => s.Name))
-                .ForMember(dest => dest.Adress, source => source
+                .ForMember(dest => dest.Address, source => source
                     .MapFrom(s => s.Adress))
                 .ForMember(dest => dest.WorkingFormat, source => source
                     .MapFrom(s => s.WorkingFormat))

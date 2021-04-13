@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -15,24 +17,23 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
     {
         private readonly ApplicationContext _context;
 
-        public GetAllRegionsUseCase(
-            ApplicationContext context)
+        public GetAllRegionsUseCase(ApplicationContext context)
         {
             _context = context;
-        }
-        
-        private class GetAllRegionsSuccessResultContract : 
-            IGetAllRegionsSuccessResultContract
-        {
-            public IEnumerable<IRegionViewModel> Data { get; set; }
         }
 
         public override async Task<IGetAllRegionsResultContract> Ask(
             IGetAllRegionsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await this._context.Regions
-                .MapAllToAsync<IRegionViewModel>();
+            var result = await _context.Regions
+                .Select(a =>
+                    new RegionViewModel()
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
             return new GetAllRegionsSuccessResultContract() {Data = result};
         }
     }

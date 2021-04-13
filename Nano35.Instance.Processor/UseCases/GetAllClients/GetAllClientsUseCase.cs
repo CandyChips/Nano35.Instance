@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -22,19 +23,27 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             _context = context;
         }
         
-        private class GetAllClientsSuccessResultContract : 
-            IGetAllClientsSuccessResultContract
-        {
-            public IEnumerable<IClientViewModel> Data { get; set; }
-        }
         
         public override async Task<IGetAllClientsResultContract> Ask(
             IGetAllClientsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Clients
+            var result = await _context.Clients
                 .Where(c => c.InstanceId == input.InstanceId)
-                .MapAllToAsync<IClientViewModel>());
+                .Select(a => 
+                    new ClientViewModel()
+                    {
+                        Id = a.Id,
+                        ClientState = a.ClientState.Name,
+                        ClientStateId = a.ClientStateId,
+                        ClientType = a.ClientType.Name,
+                        ClientTypeId = a.ClientTypeId,
+                        Email = a.Email,
+                        Name = a.Name,
+                        Phone = a.Phone,
+                        Selle = a.Salle
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
             return new GetAllClientsSuccessResultContract() {Data = result};
         }
     }   

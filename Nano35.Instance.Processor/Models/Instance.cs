@@ -88,7 +88,6 @@ namespace Nano35.Instance.Processor.Models
                     .MapFrom(source => source.CompanyInfo))
                 .ForMember(dest => dest.RegionId, source => source
                     .MapFrom(source => source.RegionId));
-
         }
     }
 }

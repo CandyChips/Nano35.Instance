@@ -19,20 +19,20 @@ namespace Nano35.Instance.Processor
 
                 try
                 {
-                    ApplicationContext context = services.GetRequiredService<ApplicationContext>();
+                    var context = services.GetRequiredService<ApplicationContext>();
                     await DataInitializer.InitializeRolesAsync(context);
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
-                    throw ex;
+                    throw;
                 }
             }
-            host.Run();
+            await host.RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

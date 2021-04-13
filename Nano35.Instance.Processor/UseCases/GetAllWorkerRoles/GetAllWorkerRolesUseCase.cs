@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -25,8 +27,14 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
             IGetAllWorkerRolesRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await this._context.WorkerRoles
-                .MapAllToAsync<IWorkersRoleViewModel>();
+            var result = await _context.WorkerRoles
+                .Select(a => 
+                    new WorkersRoleViewModel()
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
             return new GetAllWorkerRolesSuccessResultContract() {Data = result};
         }
     }

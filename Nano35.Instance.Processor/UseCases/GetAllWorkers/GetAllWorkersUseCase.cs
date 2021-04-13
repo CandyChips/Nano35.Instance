@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
@@ -30,9 +31,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             IGetAllWorkersRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Workers
+            var result = await _context.Workers
                 .Where(c => c.InstanceId == input.InstanceId)
-                .MapAllToAsync<IWorkerViewModel>());
+                .Select(a =>
+                    new WorkerViewModel()
+                    {
+                        Id = a.Id,
+                        Comment = a.Comment,
+                        Role = a.WorkersRole.Name
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
             foreach (var item in result)
             {
                 var client = _bus.CreateRequestClient<IGetUserByIdRequestContract>(TimeSpan.FromSeconds(10));

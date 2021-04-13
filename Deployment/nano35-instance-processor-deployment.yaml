@@ -7,7 +7,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      type: nano35-processor
       app: nano35-instance-processor
   template:
     metadata:
