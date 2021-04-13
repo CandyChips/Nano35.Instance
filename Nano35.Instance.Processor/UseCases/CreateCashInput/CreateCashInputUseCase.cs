@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MassTransit.Transactions;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
-using Nano35.Instance.Processor.UseCases.CreateCashOutput;
 
 namespace Nano35.Instance.Processor.UseCases.CreateCashInput
 {

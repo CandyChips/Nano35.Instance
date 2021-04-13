@@ -1,7 +1,5 @@
 using System;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts.Instance.Models;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -68,26 +66,6 @@ namespace Nano35.Instance.Processor.Models
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => p.RegionId);
-        }
-    }
-
-    public class InstancesAutoMapperProfile : Profile
-    {
-        public InstancesAutoMapperProfile()
-        {
-            CreateMap<Instance, IInstanceViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.OrgName, source => source
-                    .MapFrom(source => source.OrgName))
-                .ForMember(dest => dest.OrgRealName, source => source
-                    .MapFrom(source => source.OrgRealName))
-                .ForMember(dest => dest.OrgEmail, source => source
-                    .MapFrom(source => source.OrgEmail))
-                .ForMember(dest => dest.CompanyInfo, source => source
-                    .MapFrom(source => source.CompanyInfo))
-                .ForMember(dest => dest.RegionId, source => source
-                    .MapFrom(source => source.RegionId));
         }
     }
 }

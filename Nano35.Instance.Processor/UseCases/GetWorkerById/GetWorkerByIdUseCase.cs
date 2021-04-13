@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
-using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetWorkerById
 {
@@ -24,10 +23,16 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
             IGetWorkerByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Workers
-                .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken))
-                .MapTo<IWorkerViewModel>();
-            return new GetWorkerByIdSuccessResultContract() {Data = result};
+            var result = await _context.Workers
+                .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken);
+            return new GetWorkerByIdSuccessResultContract()
+            {
+                Data = new WorkerViewModel()
+                {
+                    Id = result.Id,
+                    Comment = result.Comment
+                }
+            };
         }
     }
 }

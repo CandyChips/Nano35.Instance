@@ -19,7 +19,6 @@ namespace Nano35.Instance.Processor
         
         public void ConfigureServices(IServiceCollection services)
         {
-            new Configurator(services, new AutoMapperConfiguration()).Configure();
             new Configurator(services, new EntityFrameworkConfiguration(Configuration)).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
         }

@@ -4,7 +4,6 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Services.Contexts;
-using Nano35.Instance.Processor.UseCases.GetClientStringsByIds;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
 {

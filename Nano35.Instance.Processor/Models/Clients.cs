@@ -1,7 +1,6 @@
 using System;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts.Instance.Models;
+
 namespace Nano35.Instance.Processor.Models
 {
     public class Client
@@ -82,30 +81,6 @@ namespace Nano35.Instance.Processor.Models
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new { p.WorkerId,  p.InstanceId });
-        }
-    }
-
-    public class ClientsAutoMapperProfile : Profile
-    {
-        public ClientsAutoMapperProfile()
-        {
-            CreateMap<Models.Client, IClientViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.Name, source => source
-                    .MapFrom(source => source.Name))
-                .ForMember(dest => dest.Email, source => source
-                    .MapFrom(source => source.Email))
-                .ForMember(dest => dest.Phone, source => source
-                    .MapFrom(source => source.Phone))
-                .ForMember(dest => dest.ClientTypeId, source => source
-                    .MapFrom(source => source.ClientType.Id))
-                .ForMember(dest => dest.ClientType, source => source
-                    .MapFrom(source => source.ClientType.Name))
-                .ForMember(dest => dest.ClientStateId, source => source
-                    .MapFrom(source => source.ClientStateId))
-                .ForMember(dest => dest.ClientState, source => source
-                    .MapFrom(source => source.ClientState.Name));
         }
     }
 }

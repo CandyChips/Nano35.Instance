@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Models;
 
@@ -26,18 +25,6 @@ namespace Nano35.Instance.Processor.Models
                 .Property(b => b.Name)    
                 .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
-        }
-    }
-
-    public class WorkersRoleAutoMapperProfile : Profile
-    {
-        public WorkersRoleAutoMapperProfile()
-        {
-            CreateMap<WorkersRole, IWorkersRoleViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(s => s.Id))
-                .ForMember(dest => dest.Name, source => source
-                    .MapFrom(s => s.Name));
         }
     }
 }

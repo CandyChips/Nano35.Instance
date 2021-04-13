@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
-using Nano35.Instance.Processor.Services.MappingProfiles;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientById
 {
@@ -25,10 +24,23 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
             IGetClientByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Clients
-                .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken))
-                .MapTo<IClientViewModel>();
-            return new GetClientByIdSuccessResultContract() {Data = result};
+            var result = await _context.Clients
+                .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken);
+            return new GetClientByIdSuccessResultContract()
+            {
+                Data = new ClientViewModel()
+                {
+                    Id = result.Id, 
+                    Email = result.Email,
+                    Name = result.Name, 
+                    Phone = result.Phone, 
+                    Selle = result.Salle, 
+                    ClientState = result.ClientState.Name,
+                    ClientType = result.ClientType.Name,
+                    ClientStateId = result.ClientStateId,
+                    ClientTypeId = result.ClientTypeId
+                }
+            };
         }
     }
 }
