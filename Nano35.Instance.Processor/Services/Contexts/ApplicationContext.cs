@@ -31,6 +31,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
         
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
             Update();
         }
