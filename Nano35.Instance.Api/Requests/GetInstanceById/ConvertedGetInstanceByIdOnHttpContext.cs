@@ -16,7 +16,10 @@ namespace Nano35.Instance.Api.Requests.GetInstanceById
 
         public override async Task<IActionResult> Ask(GetInstanceByIdHttpQuery input)
         {
-            var converted = new GetInstanceByIdRequestContract();
+            var converted = new GetInstanceByIdRequestContract()
+            {
+                InstanceId = input.Id
+            };
 
             var response = await DoNext(converted);
             

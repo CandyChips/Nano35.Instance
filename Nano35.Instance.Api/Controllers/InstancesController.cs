@@ -76,13 +76,13 @@ namespace Nano35.Instance.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetInstanceById/Id={InstanceId}")]
+        [Route("GetInstanceById")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public async Task<IActionResult> GetInstanceById(
-            [FromRoute] GetInstanceByIdHttpQuery query)
+            [FromQuery] GetInstanceByIdHttpQuery query)
         {
             return await new ConvertedGetInstanceByIdOnHttpContext( 
                 new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(

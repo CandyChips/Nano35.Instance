@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,25 @@ using Xunit.Abstractions;
 
 namespace Nano35.Instance.Tests
 {
+    public class ApplicationContextWrapper : IDisposable
+    {
+        public ApplicationContext Context { get; private set; }
+        
+        public ApplicationContextWrapper()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+            optionsBuilder.UseSqlServer("server=192.168.100.120; Initial Catalog=Nano35.Instance.Test.DB; User id=sa; Password=Cerber666;");
+            Context = new ApplicationContext(optionsBuilder.Options);
+            DataInitializer.InitializeRolesAsync(Context);
+        }
+        
+        public void Dispose()
+        {
+            Context.Database.EnsureDeleted();
+            Context.Dispose();
+        }
+    }
+    
     public class UtilityTests
     {
         [Fact]
@@ -51,6 +71,74 @@ namespace Nano35.Instance.Tests
             Assert.Equal(result, phonesNormal);
         }
     }
+
+    public class ClientTests
+    {
+        private ApplicationContextWrapper _db = new ApplicationContextWrapper();
+
+        [Fact]
+        public async Task CreateClient()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task GetClientById()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task GetAllClients()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsEmail()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsName()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsPhone()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsSelle()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsState()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+        
+        [Fact]
+        public async Task UpdateClientsType()
+        {
+            // ToDo
+            Assert.Equal(true, false);
+        }
+    }
     
     /// <summary>
     /// https://stackoverflow.com/questions/38890269/how-to-isolate-ef-inmemory-database-per-xunit-test
@@ -58,28 +146,18 @@ namespace Nano35.Instance.Tests
     public class CreateTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
-        private ApplicationContext _context;
+        private readonly ApplicationContextWrapper _context;
 
         public CreateTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-        }
-
-        private void Initialize()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-            optionsBuilder.UseSqlServer("server=192.168.100.120; Initial Catalog=Nano35.InstanceTest.DB; User id=sa; Password=Cerber666;");
-            _context = new ApplicationContext(optionsBuilder.Options);
-            
-            //add incert support tables
+            _context = new ApplicationContextWrapper();
         }
         
         [Fact]
         public async void CreateCashOperationTest1()
         {            
             // Arrange
-            Initialize();
-            
             var types = new List<CashOperation>()
             {
                 new CashOperation()
@@ -112,19 +190,17 @@ namespace Nano35.Instance.Tests
             // Act
             var result =
                 await new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(logger,
-                        new TransactedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(_context,
-                            new CreateCashInputUseCase(_context)))
+                        new TransactedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(_context.Context,
+                            new CreateCashInputUseCase(_context.Context)))
                     .Ask(message, context.CancellationToken);
  
             // Assert
-            Assert.Equal(types, _context.CashOperations.ToList());
+            Assert.Equal(types, _context.Context.CashOperations.ToList());
         }
         [Fact]
         public async void CreateClientTest1()
         {            
             // Arrange
-            Initialize();
-            
             var types = new List<Client>()
             {   //expected values
                 new Client()
@@ -164,17 +240,16 @@ namespace Nano35.Instance.Tests
             // Act
             var result = 
                 await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
-                    new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(_context,
-                        new CreateClientUseCase(_context))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(_context.Context,
+                        new CreateClientUseCase(_context.Context))).Ask(message, context.CancellationToken);
  
             // Assert
-            Assert.Equal(types, _context.Clients.ToList());
+            Assert.Equal(types, _context.Context.Clients.ToList());
         }
         [Fact]
         public async void CreateInstanceTest1()
         {            
             // Arrange
-            Initialize();
 
             var Id = Guid.NewGuid();
             
@@ -216,13 +291,11 @@ namespace Nano35.Instance.Tests
             // Act
             var result = 
                 await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(logger,
-                    new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(_context,
-                        new CreateInstanceUseCase(_context))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(_context.Context,
+                        new CreateInstanceUseCase(_context.Context))).Ask(message, context.CancellationToken);
 
             // Assert
-            Assert.Equal(types, _context.Instances.ToList());
-
-            _context.Database.EnsureDeleted();
+            Assert.Equal(types, _context.Context.Instances.ToList());
         }
     }
 
