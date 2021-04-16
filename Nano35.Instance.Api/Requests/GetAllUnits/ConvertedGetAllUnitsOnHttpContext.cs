@@ -16,7 +16,11 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
 
         public override async Task<IActionResult> Ask(GetAllUnitsHttpQuery input)
         {
-            var converted = new GetAllUnitsRequestContract();
+            var converted = new GetAllUnitsRequestContract()
+            {
+                InstanceId = input.InstanceId,
+                UnitTypeId = input.UnitTypeId
+            };
 
             var response = await DoNext(converted);
             

@@ -25,6 +25,11 @@ namespace Nano35.Instance.Processor.Models
         
         public Guid UnitTypeId { get; set; }
         public UnitType UnitType { get; set; }
+
+        public override string ToString()
+        {
+            return $@"{Adress} - {Name}";
+        }
     }
 
     public partial class FluentContext 
