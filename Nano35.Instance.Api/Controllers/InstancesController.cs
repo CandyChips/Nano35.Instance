@@ -39,7 +39,6 @@ namespace Nano35.Instance.Api.Controllers
     
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetAllInstances")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
@@ -58,7 +57,7 @@ namespace Nano35.Instance.Api.Controllers
         
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetAllCurrentInstances")]
+        [Route("Current")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))]
@@ -76,13 +75,12 @@ namespace Nano35.Instance.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetInstanceById")]
+        [Route("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetInstanceById(
-            [FromQuery] GetInstanceByIdHttpQuery query)
+        public async Task<IActionResult> GetInstanceById(Guid id)
         {
             return await new ConvertedGetInstanceByIdOnHttpContext( 
                 new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
@@ -90,46 +88,12 @@ namespace Nano35.Instance.Api.Controllers
                     new ValidatedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
                         _services.GetService(typeof(IValidator<IGetInstanceByIdRequestContract>)) as IValidator<IGetInstanceByIdRequestContract>,
                         new GetInstanceByIdUseCase(_services.GetService(typeof(IBus)) as IBus ))))
-                .Ask(query);
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllInstanceTypes")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstanceTypesErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllInstanceTypes()
-        {
-            return await new ConvertedGetAllInstanceTypesOnHttpContext( 
-                new LoggedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstanceTypesRequestContract>)) as ILogger<IGetAllInstanceTypesRequestContract>,
-                    new ValidatedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(                      
-                        _services.GetService(typeof(IValidator<IGetAllInstanceTypesRequestContract>)) as IValidator<IGetAllInstanceTypesRequestContract>,
-                        new GetAllInstanceTypesUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllInstanceTypesHttpQuery());
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllRegions")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllRegions()
-        {
-            return await new ConvertedGetAllRegionsOnHttpContext(
-                new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                   _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                   new ValidatedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                       _services.GetService(typeof(IValidator<IGetAllRegionsRequestContract>)) as IValidator<IGetAllRegionsRequestContract>,
-                       new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllRegionsHttpQuery());
+                .Ask(id);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateInstance")]
+        [Route("Instance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateInstanceErrorHttpResponse))] 
@@ -148,7 +112,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("CreateCashOutput")]
+        [Route("CashOutput")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashOutputSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashOutputErrorHttpResponse))] 
@@ -167,7 +131,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("CreateCashInput")]
+        [Route("CashInput")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashInputSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashInputErrorHttpResponse))] 
@@ -186,7 +150,7 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceEmail")]
+        [Route("Email")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceEmailErrorHttpResponse))] 
@@ -205,7 +169,7 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceInfo")]
+        [Route("Info")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceInfoErrorHttpResponse))] 
@@ -224,7 +188,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceName")]
+        [Route("Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceNameErrorHttpResponse))]
@@ -243,7 +207,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstancePhone")]
+        [Route("Phone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstancePhoneErrorHttpResponse))] 
@@ -263,7 +227,7 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceRealName")]
+        [Route("RealName")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRealNameErrorHttpResponse))] 
@@ -283,7 +247,7 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceRegion")]
+        [Route("Region")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRegionErrorHttpResponse))] 
@@ -300,6 +264,18 @@ namespace Nano35.Instance.Api.Controllers
                             _services.GetService(typeof(IBus)) as IBus,
                             _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
+        }
+        
+        [AllowAnonymous]
+        [HttpDelete]
+        [Route("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteInstance(Guid id)
+        {
+            return Ok(id);
         }
     }
 }

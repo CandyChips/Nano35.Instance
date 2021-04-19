@@ -30,7 +30,6 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpGet]
-        [Route("GetAllWorkers")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWorkersSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkersErrorHttpResponse))] 
@@ -47,28 +46,10 @@ namespace Nano35.Instance.Api.Controllers
                             _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(query);
         }
-    
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllWorkerRoles")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWorkerRolesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkerRolesErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllWorkerRoles()
-        {
-            return await new ConvertedGetAllWorkerRolesOnHttpContext(
-                new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
-                    new ValidatedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllWorkerRolesRequestContract>)) as IValidator<IGetAllWorkerRolesRequestContract>,
-                        new GetAllWorkerRolesUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllWorkerRolesHttpQuery());
-        }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateWorker")]
+        [Route("Worker")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateWorkerSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateWorkerErrorHttpResponse))] 
@@ -89,7 +70,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateWorkersRole")]
+        [Route("Role")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersRoleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersRoleErrorHttpResponse))] 
@@ -110,7 +91,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateWorkersName")]
+        [Route("Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersNameErrorHttpResponse))] 
@@ -131,7 +112,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateWorkersComment")]
+        [Route("Comment")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersCommentSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersCommentErrorHttpResponse))] 

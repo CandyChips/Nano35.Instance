@@ -33,7 +33,6 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpGet]
-        [Route("GetAllUnits")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllUnitsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitsErrorHttpResponse))] 
@@ -53,13 +52,12 @@ namespace Nano35.Instance.Api.Controllers
         
         [Authorize]
         [HttpGet]
-        [Route("GetUnitById")]
+        [Route("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetUnitByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetUnitByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetUnitById(
-            [FromQuery] GetUnitByIdHttpQuery query)
+        public async Task<IActionResult> GetUnitById(Guid id)
         {
             return await new ConvertedGetUnitByIdOnHttpContext(
                 new LoggedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
@@ -68,30 +66,13 @@ namespace Nano35.Instance.Api.Controllers
                         _services.GetService(typeof(IValidator<IGetUnitByIdRequestContract>)) as IValidator<IGetUnitByIdRequestContract>,
                         new GetUnitByIdUseCase(
                             _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(query);
+                .Ask(id);
         }
     
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllUnitTypes")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllUnitTypesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitTypesErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllUnitTypes()
-        {
-            return await new ConvertedGetAllUnitTypesOnHttpContext(
-                new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
-                    new ValidatedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllUnitTypesRequestContract>)) as IValidator<IGetAllUnitTypesRequestContract>,
-                    new GetAllUnitTypesUseCase(
-                        _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllUnitTypesHttpQuery());
-        }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateUnit")]
+        [Route("Unit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUnitSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateUnitErrorHttpResponse))] 
@@ -112,7 +93,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateUnitsName")]
+        [Route("Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsNameErrorHttpResponse))] 
@@ -133,7 +114,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateUnitsPhone")]
+        [Route("Phone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsPhoneErrorHttpResponse))] 
@@ -154,7 +135,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateUnitsAddress")]
+        [Route("Address")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsAddressErrorHttpResponse))] 
@@ -175,7 +156,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateUnitsType")]
+        [Route("Type")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsTypeErrorHttpResponse))] 
@@ -184,19 +165,19 @@ namespace Nano35.Instance.Api.Controllers
             [FromBody] UpdateUnitsTypeHttpBody body)
         {
             return await new ConvertedUpdateUnitsTypeOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateUnitsTypeRequestContract>)) as ILogger<IUpdateUnitsTypeRequestContract>,
-                    new ValidatedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateUnitsTypeRequestContract>)) as IValidator<IUpdateUnitsTypeRequestContract>,
-                        new UpdateUnitsTypeUseCase(
-                            _services.GetService(typeof(IBus)) as IBus, 
-                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+                    new LoggedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateUnitsTypeRequestContract>)) as ILogger<IUpdateUnitsTypeRequestContract>,
+                        new ValidatedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
+                            _services.GetService(typeof(IValidator<IUpdateUnitsTypeRequestContract>)) as IValidator<IUpdateUnitsTypeRequestContract>,
+                            new UpdateUnitsTypeUseCase(
+                                _services.GetService(typeof(IBus)) as IBus, 
+                                _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
         }
-
+        
         [Authorize]
         [HttpPatch]
-        [Route("UpdateUnitsWorkingFormat")]
+        [Route("WorkingFormat")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsWorkingFormatErrorHttpResponse))] 
