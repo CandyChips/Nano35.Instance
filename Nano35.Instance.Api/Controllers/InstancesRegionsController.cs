@@ -34,11 +34,12 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllRegions()
         {
-            return await new ConvertedGetAllRegionsOnHttpContext(
-                    new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                        new ValidatedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllRegionsRequestContract>)) as IValidator<IGetAllRegionsRequestContract>,
+            return await 
+                new ValidatedPipeNode<GetAllRegionsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllRegionsHttpQuery>)) as IValidator<GetAllRegionsHttpQuery>,
+                    new ConvertedGetAllRegionsOnHttpContext(
+                        new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
                             new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus))))
                 .Ask(new GetAllRegionsHttpQuery());
         }

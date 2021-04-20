@@ -33,14 +33,12 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientTypesErrorHttpResponse))]
         public async Task<IActionResult> GetAllClientTypes()
         {
-            return await new ConvertedGetAllClientTypesOnHttpContext(
+            return await new ValidatedPipeNode<GetAllClientTypesHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllClientTypesHttpQuery>)) as IValidator<GetAllClientTypesHttpQuery>,
+                    new ConvertedGetAllClientTypesOnHttpContext(
                     new LoggedPipeNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllClientTypesRequestContract>)) as
-                            ILogger<IGetAllClientTypesRequestContract>,
-                        new ValidatedPipeNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllClientTypesRequestContract>)) as
-                                IValidator<IGetAllClientTypesRequestContract>,
-                            new GetAllClientTypesUseCase(
+                        _services.GetService(typeof(ILogger<IGetAllClientTypesRequestContract>)) as ILogger<IGetAllClientTypesRequestContract>,
+                        new GetAllClientTypesUseCase(
                                 _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(new GetAllClientTypesHttpQuery());
         }

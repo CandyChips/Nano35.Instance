@@ -35,13 +35,14 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitTypesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllUnitTypes()
         {
-            return await new ConvertedGetAllUnitTypesOnHttpContext(
-                    new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
-                        new ValidatedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllUnitTypesRequestContract>)) as IValidator<IGetAllUnitTypesRequestContract>,
+            return await 
+                new ValidatedPipeNode<GetAllUnitTypesHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllUnitTypesHttpQuery>)) as IValidator<GetAllUnitTypesHttpQuery>,
+                    new ConvertedGetAllUnitTypesOnHttpContext(
+                        new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
                             new GetAllUnitTypesUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
+                                    _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(new GetAllUnitTypesHttpQuery());
         }
 
