@@ -39,7 +39,6 @@ namespace Nano35.Instance.Api.Controllers
     
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetAllInstances")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
@@ -47,89 +46,61 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> GetAllInstances(
             [FromQuery] GetAllInstancesHttpQuery query)
         {
-            return await new ConvertedGetAllInstancesOnHttpContext(
-                new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
-                    new ValidatedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
-                        new GetAllInstancesUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            return await 
+                new ValidatedPipeNode<GetAllInstancesHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllInstancesHttpQuery>)) as IValidator<GetAllInstancesHttpQuery>,
+                    new ConvertedGetAllInstancesOnHttpContext(
+                    new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
+                        new GetAllInstancesUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(query);
         }
         
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetAllCurrentInstances")]
+        [Route("Current")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAllCurrentInstances()
         {
-            return await new ConvertedGetAllCurrentInstancesOnHttpContext(
-                new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
-                    new ValidatedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllInstancesRequestContract>)) as IValidator<IGetAllInstancesRequestContract>,
-                        new GetAllCurrentInstancesUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+            return await
+                new ValidatedPipeNode<GetAllInstancesHttpQuery, IActionResult>(
+                        _services.GetService(typeof(IValidator<GetAllInstancesHttpQuery>)) as IValidator<GetAllInstancesHttpQuery>, 
+                        new ConvertedGetAllCurrentInstancesOnHttpContext(
+                            new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
+                                _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
+                                new GetAllCurrentInstancesUseCase(
+                                    _services.GetService(typeof(IBus)) as IBus, 
+                                    _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(new GetAllInstancesHttpQuery());
         }
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("GetInstanceById")]
+        [Route("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public async Task<IActionResult> GetInstanceById(
-            [FromQuery] GetInstanceByIdHttpQuery query)
+        public async Task<IActionResult> GetInstanceById(Guid id)
         {
-            return await new ConvertedGetInstanceByIdOnHttpContext( 
-                new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
-                    _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
-                    new ValidatedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
-                        _services.GetService(typeof(IValidator<IGetInstanceByIdRequestContract>)) as IValidator<IGetInstanceByIdRequestContract>,
-                        new GetInstanceByIdUseCase(_services.GetService(typeof(IBus)) as IBus ))))
-                .Ask(query);
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllInstanceTypes")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstanceTypesErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllInstanceTypes()
-        {
-            return await new ConvertedGetAllInstanceTypesOnHttpContext( 
-                new LoggedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstanceTypesRequestContract>)) as ILogger<IGetAllInstanceTypesRequestContract>,
-                    new ValidatedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(                      
-                        _services.GetService(typeof(IValidator<IGetAllInstanceTypesRequestContract>)) as IValidator<IGetAllInstanceTypesRequestContract>,
-                        new GetAllInstanceTypesUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllInstanceTypesHttpQuery());
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("GetAllRegions")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllRegions()
-        {
-            return await new ConvertedGetAllRegionsOnHttpContext(
-                new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                   _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                   new ValidatedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                       _services.GetService(typeof(IValidator<IGetAllRegionsRequestContract>)) as IValidator<IGetAllRegionsRequestContract>,
-                       new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllRegionsHttpQuery());
+            return await
+                new ValidatedPipeNode<Guid, IActionResult>(
+                        _services.GetService(typeof(IValidator<Guid>)) as IValidator<Guid>, 
+                        new ConvertedGetInstanceByIdOnHttpContext( 
+                            new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
+                                _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
+                                new GetInstanceByIdUseCase(
+                                    _services.GetService(typeof(IBus)) as IBus ))))
+                .Ask(id);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateInstance")]
+        [Route("Instance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateInstanceErrorHttpResponse))] 
@@ -137,18 +108,21 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateInstance(
             [FromBody] CreateInstanceHttpBody body)
         {
-            return await new ConvertedCreateInstanceOnHttpContext(
-                new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
-                    new ValidatedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
-                        _services.GetService(typeof(IValidator<ICreateInstanceRequestContract>)) as IValidator<ICreateInstanceRequestContract>,
-                        new CreateInstanceUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+            return await
+                new ValidatedPipeNode<CreateInstanceHttpBody, IActionResult>(
+                        _services.GetService(typeof(IValidator<CreateInstanceHttpBody>)) as IValidator<CreateInstanceHttpBody>,
+                    new ConvertedCreateInstanceOnHttpContext(
+                        new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
+                            new CreateInstanceUseCase(
+                                _services.GetService(typeof(IBus)) as IBus, 
+                                _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateCashOutput")]
+        [Route("CashOutput")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashOutputSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashOutputErrorHttpResponse))] 
@@ -156,18 +130,21 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateCashOutput(
             [FromBody] CreateCashOutputHttpBody body)
         {
-            return await new ConvertedCreateCashOutputOnHttpContext( 
-                new LoggedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateCashOutputRequestContract>)) as ILogger<ICreateCashOutputRequestContract>,
-                    new ValidatedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(
-                       _services.GetService(typeof(IValidator<ICreateCashOutputRequestContract>)) as IValidator<ICreateCashOutputRequestContract>,
-                    new CreateCashOutputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+            return await
+                new ValidatedPipeNode<CreateCashOutputHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateCashOutputHttpBody>)) as IValidator<CreateCashOutputHttpBody>, 
+                    new ConvertedCreateCashOutputOnHttpContext( 
+                        new LoggedPipeNode<ICreateCashOutputRequestContract, ICreateCashOutputResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateCashOutputRequestContract>)) as ILogger<ICreateCashOutputRequestContract>,
+                            new CreateCashOutputUseCase(
+                                _services.GetService(typeof(IBus)) as IBus, 
+                                _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("CreateCashInput")]
+        [Route("CashInput")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCashInputSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCashInputErrorHttpResponse))] 
@@ -175,18 +152,21 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> CreateCashInput(
             [FromBody] CreateCashInputHttpBody body)
         {
-            return await new ConvertedCreateCashInputOnHttpContext(
-                new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateCashInputRequestContract>)) as ILogger<ICreateCashInputRequestContract>,
-                    new ValidatedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(
-                        _services.GetService(typeof(IValidator<ICreateCashInputRequestContract>)) as IValidator<ICreateCashInputRequestContract>,
-                    new CreateCashInputUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+            return await 
+                new ValidatedPipeNode<CreateCashInputHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateCashInputHttpBody>)) as IValidator<CreateCashInputHttpBody>,
+                    new ConvertedCreateCashInputOnHttpContext(
+                        new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateCashInputRequestContract>)) as ILogger<ICreateCashInputRequestContract>,
+                            new CreateCashInputUseCase(
+                                _services.GetService(typeof(IBus)) as IBus, 
+                                _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
         }
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceEmail")]
+        [Route("Email")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceEmailErrorHttpResponse))] 
@@ -194,18 +174,20 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceEmail(
             [FromBody] UpdateInstanceEmailHttpBody body)
         {
-            return await new ConvertedUpdateInstanceEmailOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstanceEmailRequestContract>)) as ILogger<IUpdateInstanceEmailRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstanceEmailRequestContract>)) as IValidator<IUpdateInstanceEmailRequestContract>,
-                        new UpdateInstanceEmailUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            return await 
+                new ValidatedPipeNode<UpdateInstanceEmailHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstanceEmailHttpBody>)) as IValidator<UpdateInstanceEmailHttpBody>,
+                    new ConvertedUpdateInstanceEmailOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstanceEmailRequestContract, IUpdateInstanceEmailResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstanceEmailRequestContract>)) as ILogger<IUpdateInstanceEmailRequestContract>,
+                            new UpdateInstanceEmailUseCase(
+                                _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceInfo")]
+        [Route("Info")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceInfoErrorHttpResponse))] 
@@ -213,18 +195,20 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceInfo(
             [FromBody] UpdateInstanceInfoHttpBody body)
         {
-            return await new ConvertedUpdateInstanceInfoOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstanceInfoRequestContract>)) as ILogger<IUpdateInstanceInfoRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstanceInfoRequestContract>)) as IValidator<IUpdateInstanceInfoRequestContract>,
-                        new UpdateInstanceInfoUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            return await 
+                new ValidatedPipeNode<UpdateInstanceInfoHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstanceInfoHttpBody>)) as IValidator<UpdateInstanceInfoHttpBody>,
+                    new ConvertedUpdateInstanceInfoOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstanceInfoRequestContract>)) as ILogger<IUpdateInstanceInfoRequestContract>,
+                            new UpdateInstanceInfoUseCase(
+                                _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceName")]
+        [Route("Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceNameErrorHttpResponse))]
@@ -232,18 +216,20 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceName(
             [FromBody] UpdateInstanceNameHttpBody body)
         {
-            return await new ConvertedUpdateInstanceNameOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstanceNameRequestContract>)) as ILogger<IUpdateInstanceNameRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstanceNameRequestContract>)) as IValidator<IUpdateInstanceNameRequestContract>,
-                        new UpdateInstanceNameUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            return await 
+                new ValidatedPipeNode<UpdateInstanceNameHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstanceNameHttpBody>)) as IValidator<UpdateInstanceNameHttpBody>,
+                    new ConvertedUpdateInstanceNameOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstanceNameRequestContract>)) as ILogger<IUpdateInstanceNameRequestContract>,
+                            new UpdateInstanceNameUseCase(
+                                _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
 
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstancePhone")]
+        [Route("Phone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstancePhoneErrorHttpResponse))] 
@@ -251,19 +237,20 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstancePhone(
             [FromBody] UpdateInstancePhoneHttpBody body)
         {
-            return await new ConvertedUpdateInstancePhoneOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstancePhoneRequestContract>)) as ILogger<IUpdateInstancePhoneRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstancePhoneRequestContract>)) as IValidator<IUpdateInstancePhoneRequestContract>,
-                        new UpdateInstancePhoneUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+            return await 
+                new ValidatedPipeNode<UpdateInstancePhoneHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstancePhoneHttpBody>)) as IValidator<UpdateInstancePhoneHttpBody>,
+                    new ConvertedUpdateInstancePhoneOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstancePhoneRequestContract>)) as ILogger<IUpdateInstancePhoneRequestContract>,
+                            new UpdateInstancePhoneUseCase(
+                                _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceRealName")]
+        [Route("RealName")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRealNameErrorHttpResponse))] 
@@ -271,19 +258,19 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceRealName(
             [FromBody] UpdateInstanceRealNameHttpBody body)
         {
-            return await new ConvertedUpdateInstanceRealNameOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>)) as ILogger<IUpdateInstanceRealNameRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstanceRealNameRequestContract>)) as IValidator<IUpdateInstanceRealNameRequestContract>,
-                        new UpdateInstanceRealNameUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+            return await new ValidatedPipeNode<UpdateInstanceRealNameHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstanceRealNameHttpBody>)) as IValidator<UpdateInstanceRealNameHttpBody>,
+                    new ConvertedUpdateInstanceRealNameOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>)) as ILogger<IUpdateInstanceRealNameRequestContract>,
+                            new UpdateInstanceRealNameUseCase(
+                                    _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
         
         [Authorize]
         [HttpPatch]
-        [Route("UpdateInstanceRegion")]
+        [Route("Region")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRegionErrorHttpResponse))] 
@@ -291,15 +278,28 @@ namespace Nano35.Instance.Api.Controllers
         public async Task<IActionResult> UpdateInstanceRegion(
             [FromBody] UpdateInstanceRegionHttpBody body)
         {
-            return await new ConvertedUpdateInstanceRegionOnHttpContext( 
-                new LoggedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateInstanceRegionRequestContract>)) as ILogger<IUpdateInstanceRegionRequestContract>,
-                    new ValidatedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(
-                        _services.GetService(typeof(IValidator<IUpdateInstanceRegionRequestContract>)) as IValidator<IUpdateInstanceRegionRequestContract>,
-                        new UpdateInstanceRegionUseCase(
-                            _services.GetService(typeof(IBus)) as IBus,
-                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
+            return await 
+                new ValidatedPipeNode<UpdateInstanceRegionHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateInstanceRegionHttpBody>)) as IValidator<UpdateInstanceRegionHttpBody>,
+                    new ConvertedUpdateInstanceRegionOnHttpContext( 
+                        new LoggedPipeNode<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateInstanceRegionRequestContract>)) as ILogger<IUpdateInstanceRegionRequestContract>,
+                             new UpdateInstanceRegionUseCase(
+                                    _services.GetService(typeof(IBus)) as IBus,
+                                    _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))))
                 .Ask(body);
+        }
+        
+        [AllowAnonymous]
+        [HttpDelete]
+        [Route("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteInstance(Guid id)
+        {
+            return Ok(id);
         }
     }
 }

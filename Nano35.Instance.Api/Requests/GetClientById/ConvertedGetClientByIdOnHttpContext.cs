@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.HttpContext.instance;
@@ -7,16 +8,16 @@ namespace Nano35.Instance.Api.Requests.GetClientById
 {
     public class ConvertedGetClientByIdOnHttpContext :
         PipeInConvert
-        <GetClientByIdHttpQuery, 
+        <Guid, 
             IActionResult,
             IGetClientByIdRequestContract, 
             IGetClientByIdResultContract>
         {
         public ConvertedGetClientByIdOnHttpContext(IPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract> next) : base(next) {}
 
-        public override async Task<IActionResult> Ask(GetClientByIdHttpQuery input)
+        public override async Task<IActionResult> Ask(Guid input)
         {
-            var converted = new GetClientByIdRequestContract() { UnitId = input.Id };
+            var converted = new GetClientByIdRequestContract() { UnitId = input };
 
             var response = await DoNext(converted);
             

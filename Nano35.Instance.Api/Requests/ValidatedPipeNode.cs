@@ -11,8 +11,6 @@ namespace Nano35.Instance.Api.Requests
     }
     
     public class ValidatedPipeNode<TIn, TOut> : PipeNodeBase<TIn, TOut>
-        where TIn : IRequest
-        where TOut : IResponse
     {
         private readonly IValidator<TIn> _validator;
 
