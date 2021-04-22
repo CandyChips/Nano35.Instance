@@ -27,7 +27,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             CancellationToken cancellationToken)
         {
             var result = await _context.Clients
-                .Where(c => c.InstanceId == input.InstanceId)
+                .Where(c => c.InstanceId == input.InstanceId && c.Deleted == false)
                 .Select(a => 
                     new ClientViewModel()
                     {

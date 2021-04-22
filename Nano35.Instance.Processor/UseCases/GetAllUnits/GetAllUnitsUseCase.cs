@@ -26,7 +26,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             CancellationToken cancellationToken)
         {
             var result = await _context.Units
-                .Where(c => c.InstanceId == input.InstanceId)
+                .Where(c => c.InstanceId == input.InstanceId && c.Deleted == false)
                 .Select(a =>
                     new UnitViewModel()
                     {

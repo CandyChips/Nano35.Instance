@@ -7,6 +7,8 @@ using Nano35.Instance.Processor.UseCases.CreateClient;
 using Nano35.Instance.Processor.UseCases.CreateInstance;
 using Nano35.Instance.Processor.UseCases.CreateUnit;
 using Nano35.Instance.Processor.UseCases.CreateWorker;
+using Nano35.Instance.Processor.UseCases.DeleteClient;
+using Nano35.Instance.Processor.UseCases.DeleteUnit;
 using Nano35.Instance.Processor.UseCases.GetAllClients;
 using Nano35.Instance.Processor.UseCases.GetAllClientsStates;
 using Nano35.Instance.Processor.UseCases.GetAllClientsTypes;
@@ -145,7 +147,17 @@ namespace Nano35.Instance.Processor.Configurations
                     {
                         e.Consumer<GetInstanceStringByIdConsumer>(provider);
                     });
+                    cfg.ReceiveEndpoint("IDeleteUnitRequestContract", e =>
+                    {
+                        e.Consumer<DeleteUnitConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IDeleteClientRequestContract", e =>
+                    {
+                        e.Consumer<DeleteClientConsumer>(provider);
+                    });
                 }));
+                x.AddConsumer<DeleteUnitConsumer>();
+                x.AddConsumer<DeleteClientConsumer>();
                 x.AddConsumer<GetWorkerStringByIdConsumer>();
                 x.AddConsumer<GetClientStringByIdConsumer>();
                 x.AddConsumer<GetUnitStringByIdConsumer>();
