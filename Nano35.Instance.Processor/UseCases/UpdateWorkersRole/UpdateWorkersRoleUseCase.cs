@@ -12,19 +12,16 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersRole
             IUpdateWorkersRoleResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateWorkersRoleUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-        
+        public UpdateWorkersRoleUseCase(ApplicationContext context) { _context = context; }
 
         public override async Task<IUpdateWorkersRoleResultContract> Ask(
             IUpdateWorkersRoleRequestContract input,
             CancellationToken cancellationToken)
         {
-            var entityOfWorker = await _context.Workers.FirstAsync(f => f.Id == input.WorkersId, cancellationToken: cancellationToken);
+            var entityOfWorker = await _context.Workers.FirstAsync(f => f.Id == input.WorkersId, cancellationToken);
+            
             entityOfWorker.WorkersRoleId = input.RoleId;
+            
             return new UpdateWorkersRoleSuccessResultContract();
         }
     }

@@ -46,7 +46,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
             FluentContext.LicenseType(modelBuilder);
             FluentContext.Unit(modelBuilder);
             FluentContext.UnitType(modelBuilder);
-            FluentContext.Worker(modelBuilder);
+            modelBuilder.ApplyConfiguration(new Worker.Configuration());
             FluentContext.WorkersRole(modelBuilder);
             FluentContext.CashOperation(modelBuilder);
             base.OnModelCreating(modelBuilder);

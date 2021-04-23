@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -13,49 +15,44 @@ namespace Nano35.Instance.Processor.Models
         //Data
         public string Name { get; set; }
         public string Comment { get; set; }
-        
+
         //Forein keys
         public Guid WorkersRoleId { get; set; }
         public WorkersRole WorkersRole { get; set; }
+        public ICollection<Messenger> Messengers { get; set; }
 
         public override string ToString()
         {
             return $"{Name}";
         }
-    }
-
-    public partial class FluentContext 
-    {
-        public static void Worker(ModelBuilder modelBuilder)
+        
+        public Worker()
         {
-            //Primary key
-            modelBuilder.Entity<Worker>()
-                .HasKey(u => new {u.Id, u.InstanceId});  
-            
-            modelBuilder.Entity<Worker>()
-                .HasOne(p => p.Instance)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new { p.InstanceId });
-            
-            //Data
-            modelBuilder.Entity<Worker>()
-                .Property(b => b.Name)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            modelBuilder.Entity<Worker>()
-                .Property(b => b.Comment)
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            //Forgein keys
-            modelBuilder.Entity<Worker>()
-                .HasOne(p => p.WorkersRole)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new { p.WorkersRoleId })
-                .IsRequired();
+            Messengers = new List<Messenger>();
+        }
+
+        public class Configuration : IEntityTypeConfiguration<Worker>
+        {
+            public void Configure(EntityTypeBuilder<Worker> builder)
+            {
+                builder.ToTable("Workers");
+                builder.HasKey(u => new {u.Id, u.InstanceId});  
+                builder.HasOne(p => p.Instance)
+                       .WithMany()
+                       .OnDelete(DeleteBehavior.NoAction)
+                       .HasForeignKey(p => new { p.InstanceId });
+                builder.Property(b => b.Name)    
+                       .HasColumnType("nvarchar(MAX)")
+                       .IsRequired();
+                builder.Property(b => b.Comment)
+                       .HasColumnType("nvarchar(MAX)")
+                       .IsRequired();
+                builder.HasOne(p => p.WorkersRole)
+                       .WithMany()
+                       .OnDelete(DeleteBehavior.NoAction)
+                       .HasForeignKey(p => new { p.WorkersRoleId })
+                       .IsRequired();
+            }
         }
     }
 }

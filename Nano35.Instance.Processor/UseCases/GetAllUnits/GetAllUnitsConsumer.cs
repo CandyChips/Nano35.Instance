@@ -19,7 +19,8 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             var result = await new LoggedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
                 _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>,
                 new GetAllUnitsUseCase(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                    _services.GetService(typeof(IBus)) as IBus))
                 .Ask(context.Message, context.CancellationToken);
             
             switch (result)

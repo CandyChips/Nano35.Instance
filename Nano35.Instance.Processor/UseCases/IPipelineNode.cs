@@ -36,14 +36,6 @@ namespace Nano35.Instance.Processor.UseCases
         public abstract Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
     
-    /// <summary>
-    /// Contract request reduction
-    /// TMessage -> TResponse => ( TSuccess / TError )
-    /// </summary>
-    /// <typeparam name="TMessage">Is class and IRequest</typeparam>
-    /// <typeparam name="TResponse">Is class and IResponse</typeparam>
-    /// <typeparam name="TSuccess">Is class ISuccess and IResponse</typeparam>
-    /// <typeparam name="TError">Is class IError and IResponse</typeparam>
     public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
         where TMessage : class, IRequest
         where TResponse : class, IResponse

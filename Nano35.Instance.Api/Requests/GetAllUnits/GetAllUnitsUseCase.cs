@@ -12,14 +12,12 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
     {
         private readonly IBus _bus;
 
-        public GetAllUnitsUseCase(
-            IBus bus)
+        public GetAllUnitsUseCase(IBus bus)
         {
             _bus = bus;
         }
         
-        public override async Task<IGetAllUnitsResultContract> Ask(
-            IGetAllUnitsRequestContract input) =>
+        public override async Task<IGetAllUnitsResultContract> Ask(IGetAllUnitsRequestContract input) =>
             (await (new GetAllUnitsRequest(_bus, input)).GetResponse());
     }
 }
