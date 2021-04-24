@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts.Instance.Models;
 
 namespace Nano35.Instance.Processor.Models
@@ -7,24 +8,20 @@ namespace Nano35.Instance.Processor.Models
     public class WorkersRole
     {
         //Primary key
-        public Guid Id {get;set;}
+        public Guid Id { get; set; }
         //Data
         public string Name { get; set; }
-    }
-
-    public partial class FluentContext 
-    {
-        public static void WorkersRole(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<WorkersRole>
         {
-            //Primary key
-            modelBuilder.Entity<WorkersRole>()
-                .HasKey(u => u.Id);  
-            
-            //Data
-            modelBuilder.Entity<WorkersRole>()
-                .Property(b => b.Name)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
+            public void Configure(EntityTypeBuilder<WorkersRole> builder)
+            {
+                builder.ToTable("WorkersRoles");
+                builder.HasKey(u => u.Id);
+                builder.Property(b => b.Name)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+            }
         }
     }
 }

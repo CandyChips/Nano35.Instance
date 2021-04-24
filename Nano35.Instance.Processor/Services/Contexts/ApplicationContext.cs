@@ -37,17 +37,17 @@ namespace Nano35.Instance.Processor.Services.Contexts
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            FluentContext.Client(modelBuilder);
-            FluentContext.ClientState(modelBuilder);
-            FluentContext.ClientType(modelBuilder);
-            FluentContext.Instance(modelBuilder);
-            FluentContext.InstanceType(modelBuilder);
-            FluentContext.License(modelBuilder);
-            FluentContext.LicenseType(modelBuilder);
-            FluentContext.Unit(modelBuilder);
-            FluentContext.UnitType(modelBuilder);
+            modelBuilder.ApplyConfiguration(new Client.Configuration());
+            modelBuilder.ApplyConfiguration(new ClientState.Configuration());
+            modelBuilder.ApplyConfiguration(new ClientType.Configuration());
+            modelBuilder.ApplyConfiguration(new Models.Instance.Configuration());
+            modelBuilder.ApplyConfiguration(new InstanceType.Configuration());
+            modelBuilder.ApplyConfiguration(new License.Configuration());
+            modelBuilder.ApplyConfiguration(new LicenseType.Configuration());
+            modelBuilder.ApplyConfiguration(new Unit.Configuration());
+            modelBuilder.ApplyConfiguration(new UnitType.Configuration());
             modelBuilder.ApplyConfiguration(new Worker.Configuration());
-            FluentContext.WorkersRole(modelBuilder);
+            modelBuilder.ApplyConfiguration(new WorkersRole.Configuration());
             FluentContext.CashOperation(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }

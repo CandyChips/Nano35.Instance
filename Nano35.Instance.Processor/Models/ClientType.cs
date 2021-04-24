@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -9,20 +10,17 @@ namespace Nano35.Instance.Processor.Models
         public Guid Id { get; set; }
         //Data
         public string Name { get; set; }
-    }
-
-    public partial class FluentContext 
-    {
-        public static void ClientType(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<ClientType>
         {
-            //Primary key
-            modelBuilder.Entity<ClientType>()
-                .HasKey(u => u.Id);        
-            //Data
-            modelBuilder.Entity<ClientType>()
-                .Property(b => b.Name)  
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
+            public void Configure(EntityTypeBuilder<ClientType> builder)
+            {
+                builder.ToTable("ClientTypes");
+                builder.HasKey(u => u.Id);        
+                builder.Property(b => b.Name)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+            }
         }
     }
 }

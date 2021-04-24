@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -9,31 +10,23 @@ namespace Nano35.Instance.Processor.Models
         public string Name {get;set;}
         public string CashType {get;set;}
         public double Rate {get;set;}
-    }
-    
-    public partial class FluentContext
-    {
-        public static void Region(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<Region>
         {
-            //Primary key
-            modelBuilder.Entity<Region>()
-                .HasKey(u => u.Id);
-
-            //Data
-            modelBuilder.Entity<Region>()
-                .Property(b => b.Name)
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-
-            modelBuilder.Entity<Region>()
-                .Property(b => b.CashType)
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-
-            modelBuilder.Entity<Region>()
-                .Property(b => b.Rate)
-                .HasColumnType("real")
-                .IsRequired();
+            public void Configure(EntityTypeBuilder<Region> builder)
+            {
+                builder.ToTable("Regions");
+                builder.HasKey(u => u.Id);
+                builder.Property(b => b.Name)
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.CashType)
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.Rate)
+                    .HasColumnType("real")
+                    .IsRequired();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
@@ -18,54 +19,37 @@ namespace Nano35.Instance.Processor.Models
         public InstanceType InstanceType { get; set; }
         public Guid RegionId { get; set; }
         public Region Region { get; set; }
-    }
-
-    public partial class FluentContext 
-    {
-        public static void Instance(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<Instance>
         {
-            //Primary key
-            modelBuilder.Entity<Instance>()
-                .HasKey(u => u.Id);        
-            
-            //Data
-            modelBuilder.Entity<Instance>()
-                .Property(b => b.OrgName)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            modelBuilder.Entity<Instance>()
-                .Property(b => b.OrgRealName)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            modelBuilder.Entity<Instance>()
-                .Property(b => b.OrgEmail)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            modelBuilder.Entity<Instance>()
-                .Property(b => b.CompanyInfo)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
-            
-            modelBuilder.Entity<Instance>()
-                .Property(b => b.Deleted) 
-                .HasColumnType("bit")
-                .IsRequired();
-            
-            //Forgein keys
-            modelBuilder.Entity<Instance>()
-                .HasOne(p => p.InstanceType)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.InstanceTypeId);
-            
-            modelBuilder.Entity<Instance>()
-                .HasOne(p => p.Region)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.RegionId);
+            public void Configure(EntityTypeBuilder<Instance> builder)
+            {
+                builder.ToTable("Instances");
+                builder.HasKey(u => u.Id);        
+                builder.Property(b => b.OrgName)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.OrgRealName)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.OrgEmail)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.CompanyInfo)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.Deleted) 
+                    .HasColumnType("bit")
+                    .IsRequired();
+                builder.HasOne(p => p.InstanceType)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => p.InstanceTypeId);
+                builder.HasOne(p => p.Region)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => p.RegionId);
+            }
         }
     }
 }

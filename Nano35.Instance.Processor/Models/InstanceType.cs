@@ -1,29 +1,24 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
     public class InstanceType
     {
-        //Primary key
         public Guid Id { get; set; }
-        //Data
         public string Name { get; set; }
-    }
-
-    public partial class FluentContext 
-    {
-        public static void InstanceType(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<InstanceType>
         {
-            //Primary key
-            modelBuilder.Entity<InstanceType>()
-                .HasKey(u => u.Id);     
-            
-            //Data
-            modelBuilder.Entity<InstanceType>()
-                .Property(b => b.Name)    
-                .HasColumnType("nvarchar(MAX)")
-                .IsRequired();
+            public void Configure(EntityTypeBuilder<InstanceType> builder)
+            {
+                builder.ToTable("InstanceTypes");
+                builder.HasKey(u => u.Id);        
+                builder.Property(b => b.Name)    
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+            }
         }
     }
 }
