@@ -26,10 +26,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstances
             
             var message = context.Message;
             
-            var result =
-                await new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(logger,
-                    new ValidatedGetAllInstancesRequest(
-                        new GetAllInstancesUseCase(dbcontect))).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(logger,
+                new GetAllInstancesUseCase(dbcontect))
+                .Ask(message, context.CancellationToken);
             
             switch (result)
             {

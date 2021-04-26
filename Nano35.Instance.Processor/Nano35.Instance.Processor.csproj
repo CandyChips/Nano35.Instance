@@ -17,8 +17,4 @@
     <PackageReference Include="Nano35.Contracts" Version="2.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Nano35.Instance.Api\Nano35.Instance.Api.csproj" />
-  </ItemGroup>
-
 </Project>
