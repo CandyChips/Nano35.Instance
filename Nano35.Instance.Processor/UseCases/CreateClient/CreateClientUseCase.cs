@@ -35,7 +35,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                 Name = input.Name,
                 Email = input.Email,
                 Phone = input.Phone,
-                Salle = input.Selle,
                 Deleted = false,
                 WorkerId = input.UserId,
                 ClientStateId = input.ClientStateId,

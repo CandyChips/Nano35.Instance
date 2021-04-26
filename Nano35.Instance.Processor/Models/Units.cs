@@ -57,7 +57,7 @@ namespace Nano35.Instance.Processor.Models
                 builder.HasOne(p => p.Creator)
                     .WithMany()
                     .OnDelete(DeleteBehavior.NoAction)
-                    .HasForeignKey(p => new { p.CreatorId, p.InstanceId })
+                    .HasForeignKey(p => new { p.CreatorId })
                     .IsRequired();
             }
         }

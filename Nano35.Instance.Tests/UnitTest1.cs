@@ -4,18 +4,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Api.Helpers;
-using Nano35.Instance.Processor.Configurations;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
 using Nano35.Instance.Processor.UseCases;
-using Nano35.Instance.Processor.UseCases.CreateCashInput;
 using Nano35.Instance.Processor.UseCases.CreateClient;
 using Nano35.Instance.Processor.UseCases.CreateInstance;
 using Xunit;
@@ -155,49 +151,6 @@ namespace Nano35.Instance.Tests
         }
         
         [Fact]
-        public async void CreateCashOperationTest1()
-        {            
-            // Arrange
-            var types = new List<CashOperation>()
-            {
-                new CashOperation()
-                {
-                    Id = new Guid(), 
-                    UnitId = new Guid(), 
-                    InstanceId = new Guid(), 
-                    WorkerId = new Guid(),
-                    Description = "123", 
-                    Cash = 100.25
-                },
-            };
-            
-            var message = new CreateCashInputRequestContract()
-            {
-                NewId = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
-                UnitId = Guid.Parse("69329e05-c72a-e3c6-4c8a-232348b480fc"),
-                Description = "123",
-                InstanceId = Guid.Parse("86f7e707-3e34-09b7-a27d-d2016a8b8436"),
-                WorkerId = Guid.Parse("3fa85f64-eeee-4562-b3fc-2c963f66afa6"),
-                Cash = 100.25
-            };
-
-            var source = new CancellationTokenSource();
-            var cancellationToken = source.Token;
-            var context = Mock.Of<ConsumeContext<ICreateCashInputRequestContract>>(_ =>
-                _.CancellationToken == cancellationToken);
-            var logger = Mock.Of<ILogger<ICreateCashInputRequestContract>>();
-            
-            // Act
-            var result =
-                await new LoggedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(logger,
-                        new TransactedPipeNode<ICreateCashInputRequestContract, ICreateCashInputResultContract>(_context.Context,
-                            new CreateCashInputUseCase(_context.Context)))
-                    .Ask(message, context.CancellationToken);
- 
-            // Assert
-            Assert.Equal(types, _context.Context.CashOperations.ToList());
-        }
-        [Fact]
         public async void CreateClientTest1()
         {            
             // Arrange
@@ -209,7 +162,6 @@ namespace Nano35.Instance.Tests
                     Name = "Alex",
                     Email = "Alex@g.c",
                     Phone = "88005553535",
-                    Salle = 0,
                     Deleted = false,
                     ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
                     ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),

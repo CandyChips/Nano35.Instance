@@ -21,20 +21,17 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
         public async Task Consume(
             ConsumeContext<ICreateUnitRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateUnitRequestContract>) _services.GetService(typeof(ILogger<ICreateUnitRequestContract>));
-
-            // Explore message of request
-            var message = context.Message;
-
-            // Send request to pipeline
             var result = 
-                await new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(logger,
-                        new TransactedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(dbContext,
-                            new CreateUnitUseCase(dbContext))).Ask(message, context.CancellationToken);
+                await new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
+                    _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
+                        new TransactedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
+                            dbContext,
+                            new CreateUnitUseCase(
+                                dbContext,
+                                _services.GetService(typeof(IBus)) as IBus)))
+                    .Ask(context.Message, context.CancellationToken);
             
-            // Check response of create client request
             switch (result)
             {
                 case ICreateUnitSuccessResultContract:

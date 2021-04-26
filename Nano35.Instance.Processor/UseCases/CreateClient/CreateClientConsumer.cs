@@ -10,30 +10,22 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
     public class CreateClientConsumer : 
         IConsumer<ICreateClientRequestContract>
     {
-        private readonly IServiceProvider  _services;
+        private readonly IServiceProvider _services;
         
-        public CreateClientConsumer(
-            IServiceProvider services)
+        public CreateClientConsumer(IServiceProvider services)
         {
             _services = services;
         }
-        public async Task Consume(
-            ConsumeContext<ICreateClientRequestContract> context)
+        
+        public async Task Consume(ConsumeContext<ICreateClientRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateClientRequestContract>) _services.GetService(typeof(ILogger<ICreateClientRequestContract>));
-
-            // Explore message of request
-            var message = context.Message;
-
-            // Send request to pipeline
-            var result = 
-                await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
-                        new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(dbContext,
-                            new CreateClientUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
-            // Check response of create client request
+            var result = await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(
+                _services.GetService(typeof(ILogger<ICreateClientRequestContract>)) as ILogger<ICreateClientRequestContract>,
+                        new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(
+                            dbContext,
+                            new CreateClientUseCase(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case ICreateClientSuccessResultContract:

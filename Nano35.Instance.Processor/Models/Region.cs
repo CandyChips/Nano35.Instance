@@ -8,8 +8,6 @@ namespace Nano35.Instance.Processor.Models
     {
         public Guid Id {get;set;}
         public string Name {get;set;}
-        public string CashType {get;set;}
-        public double Rate {get;set;}
         
         public class Configuration : IEntityTypeConfiguration<Region>
         {
@@ -19,12 +17,6 @@ namespace Nano35.Instance.Processor.Models
                 builder.HasKey(u => u.Id);
                 builder.Property(b => b.Name)
                     .HasColumnType("nvarchar(MAX)")
-                    .IsRequired();
-                builder.Property(b => b.CashType)
-                    .HasColumnType("nvarchar(MAX)")
-                    .IsRequired();
-                builder.Property(b => b.Rate)
-                    .HasColumnType("real")
                     .IsRequired();
             }
         }

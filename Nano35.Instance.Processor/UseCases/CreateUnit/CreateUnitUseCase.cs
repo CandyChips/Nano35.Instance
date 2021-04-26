@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
+using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Instance.Processor.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -13,11 +15,12 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             ICreateUnitResultContract>
     {
         private readonly ApplicationContext _context;
+        private readonly IBus _bus;
 
-        public CreateUnitUseCase(
-            ApplicationContext context)
+        public CreateUnitUseCase(ApplicationContext context, IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
         private class CreateUnitSuccessResultContract : 
@@ -42,8 +45,27 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
                 InstanceId = input.InstanceId,
                 UnitTypeId = input.UnitTypeId
             };
+
+            var response = new RegisterCashbox(
+                        _bus, 
+                        new RegisterCashboxRequestContract() {UnitId = input.Id, Capital = 0}).GetResponse()
+                .Result switch
+                {
+                    IRegisterCashboxSuccessResultContract success => success,
+                    _ => throw new Exception()
+                };
             await _context.AddAsync(unit, cancellationToken);
             return new CreateUnitSuccessResultContract();
         }
+    }
+    
+    public class RegisterCashbox : 
+        MasstransitRequest
+        <IRegisterCashboxRequestContract, 
+            IRegisterCashboxResultContract,
+            IRegisterCashboxSuccessResultContract, 
+            IRegisterCashboxErrorResultContract>
+    {
+        public RegisterCashbox(IBus bus, IRegisterCashboxRequestContract request) : base(bus, request) {}
     }
 }

@@ -11,7 +11,6 @@ namespace Nano35.Instance.Processor.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public double Salle {get;set;}
         public bool Deleted { get; set; }
         public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
@@ -27,10 +26,9 @@ namespace Nano35.Instance.Processor.Models
             public void Configure(EntityTypeBuilder<Client> builder)
             {
                 builder.ToTable("Clients");
-                builder.HasKey(u => new {u.Id, u.InstanceId});  
-                builder.HasOne(p => p.Instance)
-                    .WithMany()
-                    .HasForeignKey(p => new {p.InstanceId});
+                builder.HasKey(u => new {u.Id});  
+                builder.Property(b => b.InstanceId)    
+                    .IsRequired();
                 builder.Property(b => b.Name)    
                     .HasColumnType("nvarchar(MAX)")
                     .IsRequired();
@@ -41,8 +39,6 @@ namespace Nano35.Instance.Processor.Models
                     .HasColumnType("nvarchar(MAX)")
                     .IsRequired();
                 builder.Property(b => b.Deleted)
-                    .IsRequired();
-                builder.Property(b => b.Salle)
                     .IsRequired();
                 builder.HasOne(p => p.ClientType)
                     .WithMany()
@@ -55,7 +51,10 @@ namespace Nano35.Instance.Processor.Models
                 builder.HasOne(p => p.Creator)
                     .WithMany()
                     .OnDelete(DeleteBehavior.NoAction)
-                    .HasForeignKey(p => new { p.WorkerId,  p.InstanceId });
+                    .HasForeignKey(p => new { p.WorkerId });
+                builder.HasOne(p => p.Instance)
+                    .WithMany()
+                    .HasForeignKey(p => new {p.InstanceId});
             }
         }
     }

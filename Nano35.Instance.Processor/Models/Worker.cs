@@ -20,12 +20,7 @@ namespace Nano35.Instance.Processor.Models
         public Guid WorkersRoleId { get; set; }
         public WorkersRole WorkersRole { get; set; }
         public ICollection<Messenger> Messengers { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Name}";
-        }
-        
+        public override string ToString() => Name;
         public Worker()
         {
             Messengers = new List<Messenger>();
@@ -36,22 +31,24 @@ namespace Nano35.Instance.Processor.Models
             public void Configure(EntityTypeBuilder<Worker> builder)
             {
                 builder.ToTable("Workers");
-                builder.HasKey(u => new {u.Id, u.InstanceId});  
-                builder.HasOne(p => p.Instance)
-                       .WithMany()
-                       .OnDelete(DeleteBehavior.NoAction)
-                       .HasForeignKey(p => new { p.InstanceId });
-                builder.Property(b => b.Name)    
-                       .HasColumnType("nvarchar(MAX)")
-                       .IsRequired();
+                builder.HasKey(u => new {u.Id});  
+                builder.Property(b => b.Name)
+                    .HasColumnType("nvarchar(MAX)")
+                    .IsRequired();
+                builder.Property(b => b.InstanceId)
+                    .IsRequired();
                 builder.Property(b => b.Comment)
-                       .HasColumnType("nvarchar(MAX)")
-                       .IsRequired();
+                   .HasColumnType("nvarchar(MAX)")
+                   .IsRequired();
+                builder.HasOne(p => p.Instance)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new { p.InstanceId });
                 builder.HasOne(p => p.WorkersRole)
-                       .WithMany()
-                       .OnDelete(DeleteBehavior.NoAction)
-                       .HasForeignKey(p => new { p.WorkersRoleId })
-                       .IsRequired();
+                   .WithMany(p => p.Workers)
+                   .OnDelete(DeleteBehavior.NoAction)
+                   .HasForeignKey(p => new { p.WorkersRoleId })
+                   .IsRequired();
             }
         }
     }

@@ -34,7 +34,6 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
                     Email = result.Email,
                     Name = result.Name, 
                     Phone = result.Phone, 
-                    Selle = result.Salle, 
                     ClientState = result.ClientState.Name,
                     ClientType = result.ClientType.Name,
                     ClientStateId = result.ClientStateId,
