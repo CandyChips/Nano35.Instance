@@ -12,12 +12,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
             IUpdateInstanceRegionResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateInstanceRegionUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-
+        public UpdateInstanceRegionUseCase(ApplicationContext context) => _context = context;
         public override async Task<IUpdateInstanceRegionResultContract> Ask(
             IUpdateInstanceRegionRequestContract input,
             CancellationToken cancellationToken)

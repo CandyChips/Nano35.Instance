@@ -8,8 +8,7 @@ namespace Nano35.Instance.Api.Configurations
     public class ConfigurationOfAuthStateProvider : 
         IConfigurationOfService
     {
-        public void AddToServices(
-            IServiceCollection services)
+        public void AddToServices(IServiceCollection services)
         {
             services.AddScoped<ICustomAuthStateProvider, CookiesAuthStateProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

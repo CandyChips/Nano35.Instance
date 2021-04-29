@@ -11,12 +11,8 @@ namespace Nano35.Instance.Api
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-        
+        public Startup(IConfiguration configuration) => Configuration = configuration;
+
         public void ConfigureServices(IServiceCollection services)
         {
             new Configurator(services, new AuthenticationConfiguration()).Configure();
@@ -25,7 +21,6 @@ namespace Nano35.Instance.Api
             new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
             new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
-            new Configurator(services, new RedisConfiguration()).Configure();
             services.AddHealthChecks();
         }
         

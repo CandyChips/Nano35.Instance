@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Nano35.Contracts;
@@ -8,8 +9,7 @@ namespace Nano35.Instance.Api.Configurations
     public class SwaggerConfiguration : 
         IConfigurationOfService
     {
-        public void AddToServices(
-            IServiceCollection services)
+        public void AddToServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {

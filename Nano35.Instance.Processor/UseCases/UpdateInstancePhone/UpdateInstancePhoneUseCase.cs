@@ -12,13 +12,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
             IUpdateInstancePhoneResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateInstancePhoneUseCase(
-            ApplicationContext context)
-        {
-            _context = context;
-        }
-
+        public UpdateInstancePhoneUseCase(ApplicationContext context) => _context = context;
         public override async Task<IUpdateInstancePhoneResultContract> Ask(
             IUpdateInstancePhoneRequestContract input,
             CancellationToken cancellationToken)

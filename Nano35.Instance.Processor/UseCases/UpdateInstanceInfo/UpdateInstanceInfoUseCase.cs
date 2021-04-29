@@ -6,18 +6,10 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceInfo
 {
-    public class UpdateInstanceInfoUseCase :
-        EndPointNodeBase<
-            IUpdateInstanceInfoRequestContract, 
-            IUpdateInstanceInfoResultContract>
+    public class UpdateInstanceInfoUseCase : EndPointNodeBase<IUpdateInstanceInfoRequestContract, IUpdateInstanceInfoResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateInstanceInfoUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-
+        public UpdateInstanceInfoUseCase(ApplicationContext context) => _context = context;
         public override async Task<IUpdateInstanceInfoResultContract> Ask(
             IUpdateInstanceInfoRequestContract input,
             CancellationToken cancellationToken)

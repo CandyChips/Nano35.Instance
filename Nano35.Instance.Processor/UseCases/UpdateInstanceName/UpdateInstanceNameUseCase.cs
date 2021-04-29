@@ -12,12 +12,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceName
             IUpdateInstanceNameResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateInstanceNameUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-        
+        public UpdateInstanceNameUseCase(ApplicationContext context) => _context = context;
         public override async Task<IUpdateInstanceNameResultContract> Ask(
             IUpdateInstanceNameRequestContract input,
             CancellationToken cancellationToken)

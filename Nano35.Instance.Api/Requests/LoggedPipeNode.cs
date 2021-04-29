@@ -20,15 +20,18 @@ namespace Nano35.Instance.Api.Requests
 
         public override async Task<TOut> Ask(TIn input)
         {
-            _logger.LogInformation($"{typeof(TIn)} starts on: {DateTime.Now}.");
+            var starts = DateTime.Now;
             var result = await DoNext(input);
             switch (result)
             {
                 case ISuccess:
-                    _logger.LogInformation($"{typeof(TIn)} ends on: {DateTime.Now.ToString("dd.MM.yyyy")} with success");
+                    _logger.LogInformation($"{typeof(TIn)} ends by: {starts - DateTime.Now} with success.");
                     break;
                 case IError error:
-                    _logger.LogError($"{typeof(TIn)} ends on: {DateTime.Now.ToString("dd.MM.yyyy")} with error {error.Message}");
+                    _logger.LogInformation($"{typeof(TIn)} ends by: {starts - DateTime.Now} with error: {error}.");
+                    break;
+                default:
+                    _logger.LogInformation($"{typeof(TIn)} ends by: {starts - DateTime.Now} with strange error!!!");
                     break;
             }
             return result;

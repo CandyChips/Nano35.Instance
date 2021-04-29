@@ -8,7 +8,7 @@ namespace Nano35.Instance.Api.Middlewares
         {
             app.UseDeveloperExceptionPage();
             app.UseCors("Cors");
-            app.UseMiddleware<UseAuthMiddleware>();
+            //app.UseMiddleware<UseAuthMiddleware>();
             app.UseRouting(); 
             app.UseAuthentication();
             app.UseAuthorization();

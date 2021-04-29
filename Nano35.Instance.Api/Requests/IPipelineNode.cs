@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
-using MassTransit.Testing.Indicators;
 using Nano35.Contracts;
 
 namespace Nano35.Instance.Api.Requests
@@ -64,8 +62,8 @@ namespace Nano35.Instance.Api.Requests
         IPipeNode<TIn, TOut>
     {
         private readonly IPipeNode<TIn, TOut> _next;
-        protected PipeNodeBase(IPipeNode<TIn, TOut> next) { _next = next; }
-        protected Task<TOut> DoNext(TIn input) { return _next.Ask(input); }
+        protected PipeNodeBase(IPipeNode<TIn, TOut> next) => _next = next;
+        protected Task<TOut> DoNext(TIn input) => _next.Ask(input);
         public abstract Task<TOut> Ask(TIn input);
     }
 
