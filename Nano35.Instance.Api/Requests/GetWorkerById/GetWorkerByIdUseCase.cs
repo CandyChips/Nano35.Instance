@@ -13,6 +13,5 @@ namespace Nano35.Instance.Api.Requests.GetWorkerById
         public override async Task<IGetWorkerByIdResultContract> Ask(IGetWorkerByIdRequestContract input) =>
             await new MasstransitRequest<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract, IGetWorkerByIdSuccessResultContract, IGetWorkerByIdErrorResultContract>(_bus, input)
                 .GetResponse();
-
     }
 }

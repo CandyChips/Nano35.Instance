@@ -10,17 +10,8 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
     {
         private readonly ICustomAuthStateProvider _auth;
         private readonly IBus _bus;
-        
-        public CreateWorkerUseCase(
-            IBus bus, 
-            ICustomAuthStateProvider auth)
-        {
-            _bus = bus;
-            _auth = auth;
-        }
-        
-        public override async Task<ICreateWorkerResultContract> Ask(
-            ICreateWorkerRequestContract input)
+        public CreateWorkerUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
+        public override async Task<ICreateWorkerResultContract> Ask(ICreateWorkerRequestContract input)
         {
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
 

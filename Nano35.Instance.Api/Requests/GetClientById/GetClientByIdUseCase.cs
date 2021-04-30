@@ -4,8 +4,7 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetClientById
 {
-    public class GetClientByIdUseCase :
-        EndPointNodeBase<IGetClientByIdRequestContract, IGetClientByIdResultContract>
+    public class GetClientByIdUseCase : EndPointNodeBase<IGetClientByIdRequestContract, IGetClientByIdResultContract>
     {
         private readonly IBus _bus;
         public GetClientByIdUseCase(IBus bus) => _bus = bus;

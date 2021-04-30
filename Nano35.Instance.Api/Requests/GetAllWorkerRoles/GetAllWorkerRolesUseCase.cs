@@ -4,10 +4,7 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllWorkerRoles
 {
-    public class GetAllWorkerRolesUseCase :
-        EndPointNodeBase<
-            IGetAllWorkerRolesRequestContract, 
-            IGetAllWorkerRolesResultContract>
+    public class GetAllWorkerRolesUseCase : EndPointNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
     {
         private readonly IBus _bus;
         public GetAllWorkerRolesUseCase(IBus bus) => _bus = bus;

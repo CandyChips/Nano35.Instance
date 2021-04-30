@@ -35,13 +35,21 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientsErrorHttpResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public Task<IActionResult> GetAllClients([FromQuery] GetAllClientsHttpQuery query) =>
-            new ConvertedGetAllClientsOnHttpContext(
+        public IActionResult GetAllClients([FromQuery] GetAllClientsHttpQuery query) =>
                 new LoggedPipeNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllClientsRequestContract>)) as ILogger<IGetAllClientsRequestContract>,
                     new GetAllClientsUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(query);
+                        _services.GetService(typeof(IBus)) as IBus))
+                .Ask(new GetAllClientsRequestContract()
+                    {InstanceId = query.InstanceId,
+                     ClientStateId = query.ClientStateId,
+                     ClientTypeId = query.ClientTypeId})
+                .Result switch
+                {
+                    IGetAllClientsSuccessResultContract success => new OkObjectResult(success),
+                    IGetAllClientsErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
 
         [AllowAnonymous]
         [HttpGet("{id}")]
@@ -49,13 +57,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetClientByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetClientByIdErrorHttpResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public Task<IActionResult> GetClientById(Guid id) =>
-            new ConvertedGetClientByIdOnHttpContext(
-                new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(
-                    _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>)) as ILogger<IGetClientByIdRequestContract>,
-                    new GetClientByIdUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(id);
+        public IActionResult GetClientById(Guid id) =>
+            new LoggedPipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(
+                _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>)) as ILogger<IGetClientByIdRequestContract>,
+                new GetClientByIdUseCase(
+                    _services.GetService(typeof(IBus)) as IBus))
+            .Ask(new GetClientByIdRequestContract() { UnitId = id })
+            .Result switch
+            {
+                IGetClientByIdSuccessResultContract success => new OkObjectResult(success),
+                IGetClientByIdErrorResultContract error => new BadRequestObjectResult(error),
+                _ => new BadRequestObjectResult("")
+            };
 
         [AllowAnonymous]
         [HttpPost]
@@ -63,13 +76,27 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateClientSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateClientErrorHttpResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public Task<IActionResult> CreateClient([FromBody] CreateClientHttpBody body) =>
-            new ConvertedCreateClientOnHttpContext(
+        public IActionResult CreateClient([FromBody] CreateClientHttpBody body) =>
                 new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(
                     _services.GetService(typeof(ILogger<ICreateClientRequestContract>)) as ILogger<ICreateClientRequestContract>,
                     new CreateClientUseCase(_services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                    .Ask(body);
+                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(
+                        new CreateClientRequestContract()
+                            {Name = body.Name,
+                             Email = body.Email,
+                             Phone = body.Phone,
+                             Selle = body.Selle,
+                             InstanceId = body.InstanceId,
+                             ClientStateId = body.ClientStateId,
+                             ClientTypeId = body.ClientTypeId,
+                             NewId = body.NewId})
+                    .Result switch
+                {
+                    ICreateClientSuccessResultContract success => new OkObjectResult(success),
+                    ICreateClientErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
 
         [Authorize]
         [HttpPatch("{id}/Email")]

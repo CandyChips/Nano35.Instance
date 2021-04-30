@@ -4,8 +4,7 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllUnits
 {
-    public class GetAllUnitsUseCase :
-        EndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
+    public class GetAllUnitsUseCase : EndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
     {
         private readonly IBus _bus;
         public GetAllUnitsUseCase(IBus bus) => _bus = bus;

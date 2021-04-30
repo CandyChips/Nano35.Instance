@@ -5,22 +5,12 @@ using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.CreateUnit
 {
-    public partial class CreateUnitUseCase :
-        EndPointNodeBase<ICreateUnitRequestContract, ICreateUnitResultContract>
+    public partial class CreateUnitUseCase : EndPointNodeBase<ICreateUnitRequestContract, ICreateUnitResultContract>
     {
         private readonly IBus _bus;
         private readonly ICustomAuthStateProvider _auth;
-
-        public CreateUnitUseCase(
-            IBus bus,
-            ICustomAuthStateProvider auth)
-        {
-            _bus = bus;
-            _auth = auth;
-        }
-
-        public override async Task<ICreateUnitResultContract> Ask(
-            ICreateUnitRequestContract input)
+        public CreateUnitUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
+        public override async Task<ICreateUnitResultContract> Ask(ICreateUnitRequestContract input)
         {
             input.CreatorId = _auth.CurrentUserId;
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
