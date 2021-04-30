@@ -161,7 +161,6 @@ namespace Nano35.Instance.Tests
                     Id = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
                     Name = "Alex",
                     Email = "Alex@g.c",
-                    Phone = "88005553535",
                     Deleted = false,
                     ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
                     ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),

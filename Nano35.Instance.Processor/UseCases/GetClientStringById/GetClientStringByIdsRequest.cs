@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
         {
             var result = await _context.Clients
                 .FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken);
-            return new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.Phone}"};
+            return new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.ClientProfile.Phone}"};
         }
     }
 }

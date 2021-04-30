@@ -37,7 +37,7 @@ namespace Nano35.Instance.Api.Controllers
         public Task<IActionResult> GetAllUnits([FromQuery] GetAllUnitsHttpQuery query) =>
             new ConvertedGetAllUnitsOnHttpContext(
                 new LoggedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>,
+                    _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>, 
                     new GetAllUnitsUseCase(
                         _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(query);

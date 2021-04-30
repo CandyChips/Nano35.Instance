@@ -29,7 +29,8 @@ namespace Nano35.Instance.Api.Controllers
             new ConvertedGetAllInstanceTypesOnHttpContext( 
                 new LoggedPipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllInstanceTypesRequestContract>)) as ILogger<IGetAllInstanceTypesRequestContract>,
-                    new GetAllInstanceTypesUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                    new GetAllInstanceTypesUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(new GetAllInstanceTypesHttpQuery());
     }
 }

@@ -29,7 +29,8 @@ namespace Nano35.Instance.Api.Controllers
             new ConvertedGetAllRegionsOnHttpContext(
                 new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                    new GetAllRegionsUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                    new GetAllRegionsUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(new GetAllRegionsHttpQuery());
     }
 }

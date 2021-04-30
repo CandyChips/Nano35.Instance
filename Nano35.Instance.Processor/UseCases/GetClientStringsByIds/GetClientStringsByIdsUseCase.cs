@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
             CancellationToken cancellationToken)
         {
             var result = (await _context.Clients.Where(c => input.ClientIds.Contains(c.Id))
-                .Select(e => $"{e.Name} - {e.Phone}")
+                .Select(e => $"{e.Name} - {e.ClientProfile.Phone}")
                 .ToListAsync(cancellationToken));
             return new GetClientStringsByIdsSuccessResultContract() {Data = result};
         }

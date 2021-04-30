@@ -38,7 +38,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
                         ClientTypeId = a.ClientTypeId,
                         Email = a.Email,
                         Name = a.Name,
-                        Phone = a.Phone
+                        Phone = a.ClientProfile.Phone
                     })
                 .ToListAsync(cancellationToken: cancellationToken);
             return new GetAllClientsSuccessResultContract() {Data = result};
