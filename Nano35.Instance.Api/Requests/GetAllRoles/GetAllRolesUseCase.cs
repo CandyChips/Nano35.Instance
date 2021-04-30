@@ -10,15 +10,9 @@ namespace Nano35.Instance.Api.Requests.GetAllRoles
             IGetAllRolesResultContract>
     {
         private readonly IBus _bus;
-
-        public GetAllRolesUseCase(
-            IBus bus)
-        {
-            _bus = bus;
-        }
-        
-        public override async Task<IGetAllRolesResultContract> Ask(
-            IGetAllRolesRequestContract input) =>
-            (await (new GetAllRolesRequest(_bus, input)).GetResponse());
+        public GetAllRolesUseCase(IBus bus) => _bus = bus;
+        public override async Task<IGetAllRolesResultContract> Ask(IGetAllRolesRequestContract input) =>
+            await new MasstransitRequest<IGetAllRolesRequestContract, IGetAllRolesResultContract, IGetAllRolesSuccessResultContract, IGetAllRolesErrorResultContract>(_bus, input)
+                .GetResponse();
     }
 }

@@ -12,23 +12,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
     {
         private readonly IServiceProvider  _services;
         
-        public GetAllClientStatesConsumer(
-            IServiceProvider services)
+        public GetAllClientStatesConsumer(IServiceProvider services) => _services = services;
+
+        public async Task Consume(ConsumeContext<IGetAllClientStatesRequestContract> context)
         {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<IGetAllClientStatesRequestContract> context)
-        {
-            var dbcontect = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllClientStatesRequestContract>) _services.GetService(typeof(ILogger<IGetAllClientStatesRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>(logger,
-                        new GetAllClientStatesUseCase(dbcontect)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllClientStatesRequestContract>)) as ILogger<IGetAllClientStatesRequestContract>,
+                    new GetAllClientStatesUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

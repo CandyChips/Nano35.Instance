@@ -12,23 +12,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
     {
         private readonly IServiceProvider  _services;
         
-        public GetAllRegionsConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public GetAllRegionsConsumer(IServiceProvider services) => _services = services;
 
-        public async Task Consume(
-            ConsumeContext<IGetAllRegionsRequestContract> context)
+        public async Task Consume(ConsumeContext<IGetAllRegionsRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllRegionsRequestContract>) _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(logger,
-                        new GetAllRegionsUseCase(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
+                new GetAllRegionsUseCase(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

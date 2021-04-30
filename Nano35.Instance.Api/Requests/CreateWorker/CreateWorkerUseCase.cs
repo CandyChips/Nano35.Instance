@@ -24,7 +24,8 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
         {
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
 
-            return (await (new CreateWorkerRequest(_bus, input)).GetResponse());
+            return await new MasstransitRequest<ICreateWorkerRequestContract, ICreateWorkerResultContract, ICreateWorkerSuccessResultContract, ICreateWorkerErrorResultContract>(_bus, input)
+                    .GetResponse();
         }
     }
 }

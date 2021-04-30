@@ -25,12 +25,17 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientTypesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientTypesErrorHttpResponse))]
-        public Task<IActionResult> GetAllClientTypes() =>
-            new ConvertedGetAllClientTypesOnHttpContext(
-                new LoggedPipeNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllClientTypesRequestContract>)) as ILogger<IGetAllClientTypesRequestContract>,
-                    new GetAllClientTypesUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(new GetAllClientTypesHttpQuery());
+        public IActionResult GetAllClientTypes() =>
+            new LoggedPipeNode<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllClientTypesRequestContract>)) as ILogger<IGetAllClientTypesRequestContract>,
+                new GetAllClientTypesUseCase(
+                    _services.GetService(typeof(IBus)) as IBus))
+            .Ask(new GetAllClientTypesRequestContract())
+            .Result switch
+            {
+                IGetAllClientTypesSuccessResultContract success => new OkObjectResult(success),
+                IGetAllClientTypesErrorResultContract error => new BadRequestObjectResult(error),
+                _ => new BadRequestObjectResult("")
+            };
     }
 }

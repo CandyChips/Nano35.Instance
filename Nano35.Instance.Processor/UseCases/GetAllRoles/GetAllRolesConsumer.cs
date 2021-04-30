@@ -12,23 +12,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
     {
         private readonly IServiceProvider  _services;
         
-        public GetAllRolesConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public GetAllRolesConsumer(IServiceProvider services) => _services = services;
 
-        public async Task Consume(
-            ConsumeContext<IGetAllRolesRequestContract> context)
+        public async Task Consume(ConsumeContext<IGetAllRolesRequestContract> context)
         {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllRolesRequestContract>) _services.GetService(typeof(ILogger<IGetAllRolesRequestContract>));
-            
-            var message = context.Message;
-            
-            var result =
-                await new LoggedPipeNode<IGetAllRolesRequestContract, IGetAllRolesResultContract>(logger,
-                        new GetAllRolesUseCase(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllRolesRequestContract, IGetAllRolesResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllRolesRequestContract>)) as ILogger<IGetAllRolesRequestContract>,
+                new GetAllRolesUseCase(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

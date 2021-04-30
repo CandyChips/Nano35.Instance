@@ -13,25 +13,13 @@ namespace Nano35.Instance.Api.Requests.GetAllCurrentInstances
             IGetAllInstancesResultContract>
         {
         public ConvertedGetAllCurrentInstancesOnHttpContext(IPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract> next) : base(next) {}
-
-        public override async Task<IActionResult> Ask(GetAllInstancesHttpQuery input)
-        {
-            var converted = new GetAllInstancesRequestContract()
-            {
-                InstanceTypeId = input.InstanceTypeId,
-                RegionId = input.RegionId, 
-                UserId = input.UserId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
-            {
-                IGetAllInstancesSuccessResultContract success => new OkObjectResult(success),
-                IGetAllInstancesErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public override async Task<IActionResult> Ask(GetAllInstancesHttpQuery input) =>
+            await DoNext(new GetAllInstancesRequestContract { InstanceTypeId = input.InstanceTypeId, RegionId = input.RegionId, UserId = input.UserId }) switch
+                {
+                    IGetAllInstancesSuccessResultContract success => new OkObjectResult(success),
+                    IGetAllInstancesErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
         }
-    }
 }
 

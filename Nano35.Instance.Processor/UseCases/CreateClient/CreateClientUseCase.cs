@@ -20,12 +20,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             _context = context;
         }
         
-        private class CreateClientSuccessResultContract : 
-            ICreateClientSuccessResultContract
-        {
-            
-        }
-        
         public override async Task<ICreateClientResultContract> Ask(
             ICreateClientRequestContract input,
             CancellationToken cancellationToken)

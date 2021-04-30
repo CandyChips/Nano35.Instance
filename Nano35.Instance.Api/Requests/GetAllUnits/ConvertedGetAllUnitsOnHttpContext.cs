@@ -13,24 +13,13 @@ namespace Nano35.Instance.Api.Requests.GetAllUnits
             IGetAllUnitsResultContract>
         {
         public ConvertedGetAllUnitsOnHttpContext(IPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract> next) : base(next) {}
-
-        public override async Task<IActionResult> Ask(GetAllUnitsHttpQuery input)
-        {
-            var converted = new GetAllUnitsRequestContract()
-            {
-                InstanceId = input.InstanceId,
-                UnitTypeId = input.UnitTypeId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
-            {
-                IGetAllUnitsSuccessResultContract success => new OkObjectResult(success),
-                IGetAllUnitsErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public override async Task<IActionResult> Ask(GetAllUnitsHttpQuery input) =>
+            await DoNext(new GetAllUnitsRequestContract() { InstanceId = input.InstanceId, UnitTypeId = input.UnitTypeId }) switch
+                {
+                    IGetAllUnitsSuccessResultContract success => new OkObjectResult(success),
+                    IGetAllUnitsErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
         }
-    }
 }
 

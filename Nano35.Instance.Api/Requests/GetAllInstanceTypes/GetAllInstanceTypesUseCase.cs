@@ -10,15 +10,9 @@ namespace Nano35.Instance.Api.Requests.GetAllInstanceTypes
             IGetAllInstanceTypesResultContract>
     {
         private readonly IBus _bus;
-
-        public GetAllInstanceTypesUseCase(
-            IBus bus)
-        {
-            _bus = bus;
-        }
-        
-        public override async Task<IGetAllInstanceTypesResultContract> Ask(
-            IGetAllInstanceTypesRequestContract input) =>
-            (await (new GetAllInstanceTypesRequest(_bus, input)).GetResponse());
+        public GetAllInstanceTypesUseCase(IBus bus) => _bus = bus;
+        public override async Task<IGetAllInstanceTypesResultContract> Ask(IGetAllInstanceTypesRequestContract input) =>
+            await new MasstransitRequest<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract, IGetAllInstanceTypesSuccessResultContract, IGetAllInstanceTypesErrorResultContract>(_bus, input)
+                .GetResponse();
     }
 }

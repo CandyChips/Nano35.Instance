@@ -27,7 +27,7 @@ namespace Nano35.Instance.Api.Requests
     /// <typeparam name="TResponse">  Is class and IResponse           </typeparam>
     /// <typeparam name="TSuccess">   Is class ISuccess and IResponse  </typeparam>
     /// <typeparam name="TError">     Is class IError and IResponse    </typeparam>
-    public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
+    public class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
         where TMessage : class, IRequest
         where TResponse : class, IResponse
         where TSuccess : class, ISuccess, TResponse
@@ -36,7 +36,7 @@ namespace Nano35.Instance.Api.Requests
         private readonly IRequestClient<TMessage> _requestClient;
         private readonly TMessage _request;
 
-        protected MasstransitRequest(IBus bus, TMessage request)
+        public MasstransitRequest(IBus bus, TMessage request)
         {
             _requestClient = bus.CreateRequestClient<TMessage>(TimeSpan.FromSeconds(10));
             _request = request;

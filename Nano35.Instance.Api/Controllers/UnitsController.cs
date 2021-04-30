@@ -31,7 +31,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllUnitsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllUnitsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitsErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> GetAllUnits([FromQuery] GetAllUnitsHttpQuery query) =>
@@ -45,7 +45,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetUnitByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUnitByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetUnitByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> GetUnitById(Guid id) =>
@@ -75,7 +75,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Name")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsNameErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> UpdateUnitsName([FromBody] UpdateUnitsNameHttpBody body) =>
@@ -90,7 +90,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Phone")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsPhoneErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> UpdateUnitsPhone([FromBody] UpdateUnitsPhoneHttpBody body) =>
@@ -105,7 +105,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Address")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsAddressErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> UpdateUnitsAddress([FromBody] UpdateUnitsAddressHttpBody body) =>
@@ -120,7 +120,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Type")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsTypeErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> UpdateUnitsType([FromBody] UpdateUnitsTypeHttpBody body) =>
@@ -135,7 +135,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/WorkingFormat")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsWorkingFormatErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public Task<IActionResult> UpdateUnitsWorkingFormat([FromBody] UpdateUnitsWorkingFormatHttpBody body) =>

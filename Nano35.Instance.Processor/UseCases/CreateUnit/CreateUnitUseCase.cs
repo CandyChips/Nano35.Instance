@@ -23,12 +23,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             _bus = bus;
         }
         
-        private class CreateUnitSuccessResultContract : 
-            ICreateUnitSuccessResultContract
-        {
-            
-        }
-        
         public override async Task<ICreateUnitResultContract> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)

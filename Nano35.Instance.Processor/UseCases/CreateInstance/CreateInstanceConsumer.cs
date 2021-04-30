@@ -11,27 +11,17 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
         IConsumer<ICreateInstanceRequestContract>
     {
         private readonly IServiceProvider  _services;
-        public CreateInstanceConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public CreateInstanceConsumer(IServiceProvider services) => _services = services;
+
         public async Task Consume(ConsumeContext<ICreateInstanceRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateInstanceRequestContract>) _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>));
-
-            // Explore message of request
-            var message = context.Message;
-
-            // Send request to pipeline
             var result = 
-                await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(logger,
+                await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
                         new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(dbContext,
-                            new CreateInstanceUseCase(dbContext))).Ask(message, context.CancellationToken);
-            
-            // Check response of create instance request
+                            new CreateInstanceUseCase(dbContext)))
+                    .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case ICreateInstanceSuccessResultContract:

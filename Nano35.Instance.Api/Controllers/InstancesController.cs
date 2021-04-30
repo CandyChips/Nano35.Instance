@@ -9,8 +9,6 @@ using Nano35.Contracts.Instance.Artifacts;
 using Nano35.HttpContext.instance;
 using Nano35.Instance.Api.Helpers;
 using Nano35.Instance.Api.Requests;
-using Nano35.Instance.Api.Requests.CreateCashInput;
-using Nano35.Instance.Api.Requests.CreateCashOutput;
 using Nano35.Instance.Api.Requests.CreateInstance;
 using Nano35.Instance.Api.Requests.GetAllCurrentInstances;
 using Nano35.Instance.Api.Requests.GetAllInstances;

@@ -12,11 +12,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
     {
         private readonly IServiceProvider _services;
         
-        public CreateClientConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-        
+        public CreateClientConsumer(IServiceProvider services) => _services = services;
+
         public async Task Consume(ConsumeContext<ICreateClientRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));

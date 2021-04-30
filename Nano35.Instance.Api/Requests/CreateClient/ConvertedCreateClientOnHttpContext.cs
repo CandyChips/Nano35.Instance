@@ -14,29 +14,22 @@ namespace Nano35.Instance.Api.Requests.CreateClient
         {
         public ConvertedCreateClientOnHttpContext(IPipeNode<ICreateClientRequestContract, ICreateClientResultContract> next) : base(next) {}
 
-        public override async Task<IActionResult> Ask(CreateClientHttpBody input)
-        {
-            var converted = new CreateClientRequestContract()
-            {
-                Name = input.Name,
-                Email = input.Email,
-                Phone = input.Phone,
-                Selle = input.Selle,
-                InstanceId = input.InstanceId,
-                ClientStateId = input.ClientStateId,
-                ClientTypeId = input.ClientTypeId,
-                NewId = input.NewId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
-            {
-                ICreateClientSuccessResultContract success => new OkObjectResult(success),
-                ICreateClientErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public override async Task<IActionResult> Ask(CreateClientHttpBody input) =>
+            await DoNext(
+                    new CreateClientRequestContract()
+                        {Name = input.Name,
+                         Email = input.Email,
+                         Phone = input.Phone,
+                         Selle = input.Selle,
+                         InstanceId = input.InstanceId,
+                         ClientStateId = input.ClientStateId,
+                         ClientTypeId = input.ClientTypeId,
+                         NewId = input.NewId}) switch
+                {
+                    ICreateClientSuccessResultContract success => new OkObjectResult(success),
+                    ICreateClientErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
         }
-    }
 }
 

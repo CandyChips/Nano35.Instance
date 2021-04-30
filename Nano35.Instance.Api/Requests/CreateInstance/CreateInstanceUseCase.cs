@@ -23,8 +23,8 @@ namespace Nano35.Instance.Api.Requests.CreateInstance
         {
             input.UserId = _auth.CurrentUserId;
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
-
-            return await new CreateInstanceRequest(_bus, input).GetResponse();
+            return await new MasstransitRequest<ICreateInstanceRequestContract, ICreateInstanceResultContract, ICreateInstanceSuccessResultContract, ICreateInstanceErrorResultContract>(_bus, input)
+                .GetResponse();
         }
     }
 }

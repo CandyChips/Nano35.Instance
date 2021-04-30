@@ -10,21 +10,10 @@ namespace Nano35.Instance.Api.Requests.GetAllUnitsByType
             IGetAllUnitsByTypeResultContract>
     {
         private readonly IBus _bus;
+        public GetAllUnitsByTypeUseCase(IBus bus) => _bus = bus;
 
-        /// <summary>
-        /// The request is accepted by the bus processing the request
-        /// </summary>
-        public GetAllUnitsByTypeUseCase(IBus bus) { _bus = bus; }
-        
-        /// <summary>
-        /// Request sends to message bus when processor make magic with input
-        /// 1. Generate client from context of request
-        /// 2. Sends a request
-        /// 3. Check and returns response
-        /// 4? Throw exception if overtime
-        /// </summary>
-        public override async Task<IGetAllUnitsByTypeResultContract> Ask
-            (IGetAllUnitsByTypeRequestContract input) =>
-            (await (new GetAllUnitsByTypeRequest(_bus, input)).GetResponse());
+        public override async Task<IGetAllUnitsByTypeResultContract> Ask(IGetAllUnitsByTypeRequestContract input) =>
+            await new MasstransitRequest<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract, IGetAllUnitsByTypeSuccessResultContract, IGetAllUnitsByTypeErrorResultContract>(_bus, input)
+                .GetResponse();
     }
 }

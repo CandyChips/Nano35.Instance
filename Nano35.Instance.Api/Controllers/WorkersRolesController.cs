@@ -25,12 +25,17 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWorkerRolesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWorkerRolesErrorHttpResponse))] 
-        public Task<IActionResult> GetAllWorkerRoles() =>
-            new ConvertedGetAllWorkerRolesOnHttpContext(
-                new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
-                    new GetAllWorkerRolesUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(new GetAllWorkerRolesHttpQuery());
+        public IActionResult GetAllWorkerRoles() =>
+            new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
+                new GetAllWorkerRolesUseCase(
+                    _services.GetService(typeof(IBus)) as IBus))
+            .Ask(new GetAllWorkerRolesRequestContract())
+            .Result switch
+            {
+                IGetAllWorkerRolesSuccessResultContract success => new OkObjectResult(success),
+                IGetAllWorkerRolesErrorResultContract error => new BadRequestObjectResult(error),
+                _ => new BadRequestObjectResult("")
+            };
     }
 }

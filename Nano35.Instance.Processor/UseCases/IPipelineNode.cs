@@ -6,11 +6,6 @@ using Nano35.Contracts;
 
 namespace Nano35.Instance.Processor.UseCases
 {
-    public interface IPipelineNode<TIn, TOut>
-    {
-        Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
-    }
-    
     public interface IPipeNode<in TIn, TOut>
     {
         Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
@@ -23,8 +18,8 @@ namespace Nano35.Instance.Processor.UseCases
         where TOut : IResponse
     {
         private readonly IPipeNode<TIn, TOut> _next;
-        protected PipeNodeBase(IPipeNode<TIn, TOut> next) { _next = next; }
-        protected Task<TOut> DoNext(TIn input, CancellationToken cancellationToken) { return _next.Ask(input, cancellationToken); }
+        protected PipeNodeBase(IPipeNode<TIn, TOut> next) => _next = next;
+        protected Task<TOut> DoNext(TIn input, CancellationToken cancellationToken) => _next.Ask(input, cancellationToken);
         public abstract Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
 

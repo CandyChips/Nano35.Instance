@@ -11,9 +11,7 @@ namespace Nano35.Instance.Api.Requests.CreateClient
         private readonly IBus _bus;
         private readonly ICustomAuthStateProvider _auth;
 
-        public CreateClientUseCase(
-            IBus bus, 
-            ICustomAuthStateProvider auth)
+        public CreateClientUseCase(IBus bus, ICustomAuthStateProvider auth)
         {
             _bus = bus;
             _auth = auth;
@@ -25,7 +23,8 @@ namespace Nano35.Instance.Api.Requests.CreateClient
             input.UserId = _auth.CurrentUserId;
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
             
-            return (await (new CreateClientRequest(_bus, input)).GetResponse());
+            return await new MasstransitRequest<ICreateClientRequestContract, ICreateClientResultContract, ICreateClientSuccessResultContract, ICreateClientErrorResultContract>(_bus, input)
+                .GetResponse();
         }
     }
 }

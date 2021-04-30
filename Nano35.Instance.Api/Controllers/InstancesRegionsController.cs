@@ -25,12 +25,17 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
-        public Task<IActionResult> GetAllRegions() =>
-            new ConvertedGetAllRegionsOnHttpContext(
-                new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                    new GetAllRegionsUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(new GetAllRegionsHttpQuery());
+        public IActionResult GetAllRegions() =>
+            new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
+                new GetAllRegionsUseCase(
+                    _services.GetService(typeof(IBus)) as IBus))
+            .Ask(new GetAllRegionsRequestContract())
+            .Result switch
+            {
+                IGetAllRegionsSuccessResultContract success => new OkObjectResult(success),
+                IGetAllRegionsErrorResultContract error => new BadRequestObjectResult(error),
+                _ => new BadRequestObjectResult("")
+            };
     }
 }

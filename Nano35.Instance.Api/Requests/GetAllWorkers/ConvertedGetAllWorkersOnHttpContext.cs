@@ -14,23 +14,13 @@ namespace Nano35.Instance.Api.Requests.GetAllWorkers
         {
         public ConvertedGetAllWorkersOnHttpContext(IPipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract> next) : base(next) {}
 
-        public override async Task<IActionResult> Ask(GetAllWorkersHttpQuery input)
-        {
-            var converted = new GetAllWorkersRequestContract()
-            {
-                InstanceId = input.InstanceId,
-                WorkersRoleId = input.WorkersRoleId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
-            {
-                IGetAllWorkersSuccessResultContract success => new OkObjectResult(success),
-                IGetAllWorkersErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public override async Task<IActionResult> Ask(GetAllWorkersHttpQuery input) =>
+            await DoNext(new GetAllWorkersRequestContract() { InstanceId = input.InstanceId, WorkersRoleId = input.WorkersRoleId }) switch
+                {
+                    IGetAllWorkersSuccessResultContract success => new OkObjectResult(success),
+                    IGetAllWorkersErrorResultContract error => new BadRequestObjectResult(error),
+                    _ => new BadRequestObjectResult("")
+                };
         }
-    }
 }
 

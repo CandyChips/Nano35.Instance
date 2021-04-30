@@ -24,18 +24,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             _context = context;
         }
         
-        private class CreateWorkerSuccessResultContract : 
-            ICreateWorkerSuccessResultContract
-        {
-            
-        }
-
-        private class CreateWorkerErrorResultContract : 
-            ICreateWorkerErrorResultContract
-        {
-            public string Message { get; set; }
-        }
-        
         public override async Task<ICreateWorkerResultContract> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)

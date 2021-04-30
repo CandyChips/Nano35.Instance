@@ -20,12 +20,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             _context = context;
         }
         
-        private class CreateInstanceSuccessResultContract : 
-            ICreateInstanceSuccessResultContract
-        {
-            
-        }
-        
         public override async Task<ICreateInstanceResultContract> Ask(
             ICreateInstanceRequestContract input,
             CancellationToken cancellationToken)

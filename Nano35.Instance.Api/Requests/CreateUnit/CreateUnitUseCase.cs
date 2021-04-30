@@ -25,7 +25,8 @@ namespace Nano35.Instance.Api.Requests.CreateUnit
             input.CreatorId = _auth.CurrentUserId;
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
 
-            return (await (new CreateUnitRequest(_bus, input)).GetResponse());
+            return await new MasstransitRequest<ICreateUnitRequestContract, ICreateUnitResultContract, ICreateUnitSuccessResultContract, ICreateUnitErrorResultContract>(_bus, input)
+                .GetResponse();
         }
     }
 }

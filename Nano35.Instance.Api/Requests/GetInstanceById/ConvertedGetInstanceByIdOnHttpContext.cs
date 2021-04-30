@@ -14,22 +14,13 @@ namespace Nano35.Instance.Api.Requests.GetInstanceById
         {
         public ConvertedGetInstanceByIdOnHttpContext(IPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract> next) : base(next) {}
 
-        public override async Task<IActionResult> Ask(Guid id)
-        {
-            var converted = new GetInstanceByIdRequestContract()
-            {
-                InstanceId = id
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+        public override async Task<IActionResult> Ask(Guid id) =>
+            await DoNext(new GetInstanceByIdRequestContract { InstanceId = id }) switch
             {
                 IGetInstanceByIdSuccessResultContract success => new OkObjectResult(success),
                 IGetInstanceByIdErrorResultContract error => new BadRequestObjectResult(error),
                 _ => new BadRequestObjectResult("")
             };
         }
-    }
 }
 

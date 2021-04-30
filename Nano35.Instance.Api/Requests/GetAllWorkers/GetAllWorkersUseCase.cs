@@ -10,11 +10,9 @@ namespace Nano35.Instance.Api.Requests.GetAllWorkers
             IGetAllWorkersResultContract>
     {
         private readonly IBus _bus;
-
-        public GetAllWorkersUseCase(IBus bus) { _bus = bus; }
-        
-        public override async Task<IGetAllWorkersResultContract> Ask
-            (IGetAllWorkersRequestContract input) =>
-            (await (new GetAllWorkersRequest(_bus, input)).GetResponse());
+        public GetAllWorkersUseCase(IBus bus) => _bus = bus;
+        public override async Task<IGetAllWorkersResultContract> Ask(IGetAllWorkersRequestContract input) =>
+            await new MasstransitRequest<IGetAllWorkersRequestContract, IGetAllWorkersResultContract, IGetAllWorkersSuccessResultContract, IGetAllWorkersErrorResultContract>(_bus, input)
+                .GetResponse();
     }
 }
