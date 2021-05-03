@@ -11,29 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
         IConsumer<IGetInstanceByIdRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetInstanceByIdConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-
-
+        public GetInstanceByIdConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IGetInstanceByIdRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
-                _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
+            var result = 
+                await new LoggedUseCasePipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
                     new GetInstanceByIdUseCase(
                         _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetInstanceByIdSuccessResultContract:
-                    await context.RespondAsync<IGetInstanceByIdSuccessResultContract>(result);
-                    break;
-                case IGetInstanceByIdErrorResultContract:
-                    await context.RespondAsync<IGetInstanceByIdErrorResultContract>(result);
-                    break;
-            }
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

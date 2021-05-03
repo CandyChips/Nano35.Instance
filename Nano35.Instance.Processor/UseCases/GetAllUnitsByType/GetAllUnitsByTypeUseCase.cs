@@ -9,15 +9,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
 {
     public class GetAllUnitsByTypeUseCase :
-        EndPointNodeBase<
-            IGetAllUnitsByTypeRequestContract, 
-            IGetAllUnitsByTypeResultContract>
+        UseCaseEndPointNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeSuccessResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public GetAllUnitsByTypeUseCase(ApplicationContext context) { _context = context; }
-
-        public override async Task<IGetAllUnitsByTypeResultContract> Ask(
+        public GetAllUnitsByTypeUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>> Ask(
             IGetAllUnitsByTypeRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -25,16 +21,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
                 .Where(c => c.UnitTypeId == input.UnitTypeId)
                 .Select(a => 
                     new UnitViewModel()
-                    {
-                        Id = a.Id, 
-                        Address = a.Adress,
-                        Name = a.Name,
-                        Phone = a.Phone,
-                        UnitType = a.UnitType.Name,
-                        WorkingFormat = a.WorkingFormat
-                    })
+                        {Id = a.Id, 
+                         Address = a.Adress,
+                         Name = a.Name,
+                         Phone = a.Phone,
+                         UnitType = a.UnitType.Name,
+                         WorkingFormat = a.WorkingFormat})
                 .ToListAsync(cancellationToken: cancellationToken);
-            return new GetAllUnitsByTypeSuccessResultContract() {Data = result};
+            return 
+                new UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>(
+                    new GetAllUnitsByTypeSuccessResultContract() {Data = result});
         }
     }
 }

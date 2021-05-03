@@ -11,30 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
         IConsumer<IGetInstanceStringsByIdsRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetInstanceStringsByIdsConsumer(
-            IServiceProvider services)
+        public GetInstanceStringsByIdsConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<IGetInstanceStringsByIdsRequestContract> context)
         {
-            _services = services;
-        }
-
-        public async Task Consume(
-            ConsumeContext<IGetInstanceStringsByIdsRequestContract> context)
-        {
-            var result = await new LoggedPipeNode<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsResultContract>(
-                _services.GetService(typeof(ILogger<IGetInstanceStringsByIdsRequestContract>)) as ILogger<IGetInstanceStringsByIdsRequestContract>,
-                new GetInstanceStringsByIdsUseCase(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetInstanceStringsByIdsSuccessResultContract:
-                    await context.RespondAsync<IGetInstanceStringsByIdsSuccessResultContract>(result);
-                    break;
-                case IGetInstanceStringsByIdsErrorResultContract:
-                    await context.RespondAsync<IGetInstanceStringsByIdsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetInstanceStringsByIdsRequestContract>)) as ILogger<IGetInstanceStringsByIdsRequestContract>,
+                    new GetInstanceStringsByIdsUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

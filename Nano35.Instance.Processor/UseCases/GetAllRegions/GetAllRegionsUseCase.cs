@@ -9,18 +9,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllRegions
 {
     public class GetAllRegionsUseCase :
-        EndPointNodeBase<
-            IGetAllRegionsRequestContract,
-            IGetAllRegionsResultContract>
+        UseCaseEndPointNodeBase<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
+        public GetAllRegionsUseCase(ApplicationContext context) => _context = context;
 
-        public GetAllRegionsUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-
-        public override async Task<IGetAllRegionsResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllRegionsSuccessResultContract>> Ask(
             IGetAllRegionsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -32,7 +26,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
                         Name = a.Name
                     })
                 .ToListAsync(cancellationToken: cancellationToken);
-            return new GetAllRegionsSuccessResultContract() {Data = result};
+            return 
+                new UseCaseResponse<IGetAllRegionsSuccessResultContract>(
+                    new GetAllRegionsSuccessResultContract() {Data = result});
         }
     }
 }

@@ -11,28 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringById
         IConsumer<IGetInstanceStringByIdRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetInstanceStringByIdConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-
+        public GetInstanceStringByIdConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IGetInstanceStringByIdRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetInstanceStringByIdRequestContract, IGetInstanceStringByIdResultContract>(
-                _services.GetService(typeof(ILogger<IGetInstanceStringByIdRequestContract>)) as ILogger<IGetInstanceStringByIdRequestContract>,
-                    new GetInstanceStringByIdUseCase(
-                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetInstanceStringByIdSuccessResultContract:
-                    await context.RespondAsync<IGetInstanceStringByIdSuccessResultContract>(result);
-                    break;
-                case IGetInstanceStringByIdErrorResultContract:
-                    await context.RespondAsync<IGetInstanceStringByIdErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetInstanceStringByIdRequestContract, IGetInstanceStringByIdSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetInstanceStringByIdRequestContract>)) as ILogger<IGetInstanceStringByIdRequestContract>,
+                        new GetInstanceStringByIdUseCase(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

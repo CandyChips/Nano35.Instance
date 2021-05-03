@@ -36,18 +36,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult GetAllInstances([FromQuery] GetAllInstancesHttpQuery query) =>
-                new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
+        public IActionResult GetAllInstances([FromQuery] GetAllInstancesHttpQuery query)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetAllInstancesRequestContract, IGetAllInstancesSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as
+                        ILogger<IGetAllInstancesRequestContract>,
                     new GetAllInstancesUseCase(
                         _services.GetService(typeof(IBus)) as IBus))
-                .Ask(new GetAllInstancesRequestContract() { InstanceTypeId = query.InstanceTypeId, RegionId = query.RegionId, UserId = query.UserId })
-                .Result switch
-                {
-                    IGetAllInstancesSuccessResultContract success => new OkObjectResult(success),
-                    IGetAllInstancesErrorResultContract error => new BadRequestObjectResult(error),
-                    _ => new BadRequestObjectResult("")
-                };
+                .Ask(new GetAllInstancesRequestContract() {InstanceTypeId = query.InstanceTypeId, RegionId = query.RegionId, UserId = query.UserId})
+                .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [AllowAnonymous]
         [HttpGet("Current")]
@@ -55,19 +55,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetAllCurrentInstances() =>
-                new LoggedPipeNode<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
-                    new GetAllCurrentInstancesUseCase(
-                        _services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
-                .Ask(new GetAllInstancesRequestContract())
-                .Result switch
-                {
-                    IGetAllInstancesSuccessResultContract success => new OkObjectResult(success),
-                    IGetAllInstancesErrorResultContract error => new BadRequestObjectResult(error),
-                    _ => new BadRequestObjectResult("")
-                };
+        public IActionResult GetAllCurrentInstances()
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetAllInstancesRequestContract, IGetAllInstancesSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllInstancesRequestContract>)) as ILogger<IGetAllInstancesRequestContract>,
+                        new GetAllCurrentInstancesUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new GetAllInstancesRequestContract())
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [AllowAnonymous]
         [HttpGet("{id}")]
@@ -75,18 +74,17 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult GetInstanceById(Guid id) =>
-                new LoggedPipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
-                    _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
-                    new GetInstanceByIdUseCase(
-                        _services.GetService(typeof(IBus)) as IBus ))
-                .Ask(new GetInstanceByIdRequestContract { InstanceId = id })
-                .Result switch
-                {
-                    IGetInstanceByIdSuccessResultContract success => new OkObjectResult(success),
-                    IGetInstanceByIdErrorResultContract error => new BadRequestObjectResult(error),
-                    _ => new BadRequestObjectResult("")
-                };
+        public IActionResult GetInstanceById(Guid id)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
+                        new GetInstanceByIdUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new GetInstanceByIdRequestContract {InstanceId = id})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPost]
@@ -94,27 +92,28 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateInstanceErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult CreateInstance([FromBody] CreateInstanceHttpBody body) =>
-                new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
-                    new CreateInstanceUseCase(
-                        _services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
-                .Ask(new CreateInstanceRequestContract()
-                         {Email = body.Email,
-                          Info = body.Info,
-                          Name = body.Name,
-                          RealName = body.RealName,
-                          NewId = body.NewId,
-                          Phone = body.Phone,
-                          RegionId = body.RegionId,
-                          TypeId = body.TypeId})
-                .Result switch
-                {
-                    ICreateInstanceSuccessResultContract success => new OkObjectResult(success),
-                    ICreateInstanceErrorResultContract error => new BadRequestObjectResult(error),
-                    _ => new BadRequestObjectResult("")
-                };
+        public IActionResult CreateInstance([FromBody] CreateInstanceHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<ICreateInstanceRequestContract, ICreateInstanceSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
+                        new CreateInstanceUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new CreateInstanceRequestContract()
+                    {
+                        Email = body.Email,
+                        Info = body.Info,
+                        Name = body.Name,
+                        RealName = body.RealName,
+                        NewId = body.NewId,
+                        Phone = body.Phone,
+                        RegionId = body.RegionId,
+                        TypeId = body.TypeId
+                    })
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Email")]

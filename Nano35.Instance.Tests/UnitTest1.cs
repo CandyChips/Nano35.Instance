@@ -150,104 +150,104 @@ namespace Nano35.Instance.Tests
             _context = new ApplicationContextWrapper();
         }
         
-        [Fact]
-        public async void CreateClientTest1()
-        {            
-            // Arrange
-            var types = new List<Client>()
-            {   //expected values
-                new Client()
-                {
-                    Id = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
-                    Name = "Alex",
-                    Email = "Alex@g.c",
-                    Deleted = false,
-                    ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
-                    ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),
-                    InstanceId = Guid.Parse("86f7e707-3e34-09b7-a27d-d2016a8b8436"),
-                    WorkerId = Guid.Parse("3fa85f64-eeee-4562-b3fc-2c963f66afa6")
-                },
-            };
-            
-            var message = new CreateClientRequestContract()
-            {   //input values
-                NewId = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
-                Name = "Alex",
-                Email = "Alex@g.c",
-                Phone = "88005553535",
-                Selle = 0,
-                ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
-                ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),
-                InstanceId = Guid.Parse("86f7e707-3e34-09b7-a27d-d2016a8b8436"),
-                UserId = Guid.Parse("3fa85f64-eeee-4562-b3fc-2c963f66afa6")
-            };
-
-            var source = new CancellationTokenSource();
-            var cancellationToken = source.Token;
-            var context = Mock.Of<ConsumeContext<ICreateClientRequestContract>>(_ =>
-                _.CancellationToken == cancellationToken);
-            var logger = Mock.Of<ILogger<ICreateClientRequestContract>>();
-            
-            // Act
-            var result = 
-                await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
-                    new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(_context.Context,
-                        new CreateClientUseCase(_context.Context))).Ask(message, context.CancellationToken);
- 
-            // Assert
-            Assert.Equal(types, _context.Context.Clients.ToList());
-        }
-        [Fact]
-        public async void CreateInstanceTest1()
-        {            
-            // Arrange
-
-            var Id = Guid.NewGuid();
-            
-            var types = new List<Processor.Models.Instance>()
-            {
-                new Processor.Models.Instance()
-                {
-                    Id = Id,
-                    CompanyInfo = "123123",
-                    Deleted = false,
-                    InstanceTypeId = Guid.Parse("7a0ebdcd-b945-4d40-2f05-08d8d1d70d44"),
-                    InstanceType = new InstanceType(),
-                    OrgEmail = "crazy@killer-b.ru",
-                    OrgName = "Нано сервис",
-                    OrgRealName = "ООО Нано",
-                    RegionId = Guid.Parse("76135956-9436-46fc-e6eb-08d8d1d70d47"),
-                    Region = new Region(),
-                },
-            };
-            
-            var message = new CreateInstanceRequestContract()
-            {
-                NewId = Id,
-                Name = "Нано сервис",
-                RealName = "ООО Нано",
-                Email = "crazy@killer-b.ru",
-                Info = "123123",
-                Phone = "88005553535",
-                TypeId = Guid.Parse("7a0ebdcd-b945-4d40-2f05-08d8d1d70d44"),
-                RegionId = Guid.Parse("76135956-9436-46fc-e6eb-08d8d1d70d47")
-            };
-
-            var source = new CancellationTokenSource();
-            var cancellationToken = source.Token;
-            var context = Mock.Of<ConsumeContext<ICreateInstanceRequestContract>>(_ =>
-                _.CancellationToken == cancellationToken);
-            var logger = Mock.Of<ILogger<ICreateInstanceRequestContract>>();
-            
-            // Act
-            var result = 
-                await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(logger,
-                    new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(_context.Context,
-                        new CreateInstanceUseCase(_context.Context))).Ask(message, context.CancellationToken);
-
-            // Assert
-            Assert.Equal(types, _context.Context.Instances.ToList());
-        }
+        //[Fact]
+        //public async void CreateClientTest1()
+        //{            
+        //    // Arrange
+        //    var types = new List<Client>()
+        //    {   //expected values
+        //        new Client()
+        //        {
+        //            Id = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
+        //            Name = "Alex",
+        //            Email = "Alex@g.c",
+        //            Deleted = false,
+        //            ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
+        //            ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),
+        //            InstanceId = Guid.Parse("86f7e707-3e34-09b7-a27d-d2016a8b8436"),
+        //            WorkerId = Guid.Parse("3fa85f64-eeee-4562-b3fc-2c963f66afa6")
+        //        },
+        //    };
+        //    
+        //    var message = new CreateClientRequestContract()
+        //    {   //input values
+        //        NewId = Guid.Parse("bb5f6b47-86dc-4038-08b1-08d8d1d70d46"),
+        //        Name = "Alex",
+        //        Email = "Alex@g.c",
+        //        Phone = "88005553535",
+        //        Selle = 0,
+        //        ClientTypeId = Guid.Parse("5e9ffc4f-4a52-4c49-0cf2-08d8d1d70d30"),
+        //        ClientStateId = Guid.Parse("4bb66deb-8869-4c04-5045-08d8d1d70d42"),
+        //        InstanceId = Guid.Parse("86f7e707-3e34-09b7-a27d-d2016a8b8436"),
+        //        UserId = Guid.Parse("3fa85f64-eeee-4562-b3fc-2c963f66afa6")
+        //    };
+//
+        //    var source = new CancellationTokenSource();
+        //    var cancellationToken = source.Token;
+        //    var context = Mock.Of<ConsumeContext<ICreateClientRequestContract>>(_ =>
+        //        _.CancellationToken == cancellationToken);
+        //    var logger = Mock.Of<ILogger<ICreateClientRequestContract>>();
+        //    
+        //    // Act
+        //    var result = 
+        //        await new LoggedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(logger,
+        //            new TransactedPipeNode<ICreateClientRequestContract, ICreateClientResultContract>(_context.Context,
+        //                new CreateClientUseCase(_context.Context))).Ask(message, context.CancellationToken);
+ //
+        //    // Assert
+        //    Assert.Equal(types, _context.Context.Clients.ToList());
+        //}
+    //    [Fact]
+    //    public async void CreateInstanceTest1()
+    //    {            
+    //        // Arrange
+//
+    //        var Id = Guid.NewGuid();
+    //        
+    //        var types = new List<Processor.Models.Instance>()
+    //        {
+    //            new Processor.Models.Instance()
+    //            {
+    //                Id = Id,
+    //                CompanyInfo = "123123",
+    //                Deleted = false,
+    //                InstanceTypeId = Guid.Parse("7a0ebdcd-b945-4d40-2f05-08d8d1d70d44"),
+    //                InstanceType = new InstanceType(),
+    //                OrgEmail = "crazy@killer-b.ru",
+    //                OrgName = "Нано сервис",
+    //                OrgRealName = "ООО Нано",
+    //                RegionId = Guid.Parse("76135956-9436-46fc-e6eb-08d8d1d70d47"),
+    //                Region = new Region(),
+    //            },
+    //        };
+    //        
+    //        var message = new CreateInstanceRequestContract()
+    //        {
+    //            NewId = Id,
+    //            Name = "Нано сервис",
+    //            RealName = "ООО Нано",
+    //            Email = "crazy@killer-b.ru",
+    //            Info = "123123",
+    //            Phone = "88005553535",
+    //            TypeId = Guid.Parse("7a0ebdcd-b945-4d40-2f05-08d8d1d70d44"),
+    //            RegionId = Guid.Parse("76135956-9436-46fc-e6eb-08d8d1d70d47")
+    //        };
+//
+    //        var source = new CancellationTokenSource();
+    //        var cancellationToken = source.Token;
+    //        var context = Mock.Of<ConsumeContext<ICreateInstanceRequestContract>>(_ =>
+    //            _.CancellationToken == cancellationToken);
+    //        var logger = Mock.Of<ILogger<ICreateInstanceRequestContract>>();
+    //        
+    //        // Act
+    //        var result = 
+    //            await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(logger,
+    //                new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(_context.Context,
+    //                    new CreateInstanceUseCase(_context.Context))).Ask(message, context.CancellationToken);
+//
+    //        // Assert
+    //        Assert.Equal(types, _context.Context.Instances.ToList());
+    //    }
     }
 
     public class GetTests

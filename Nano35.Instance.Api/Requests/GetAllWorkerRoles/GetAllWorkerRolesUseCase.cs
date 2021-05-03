@@ -4,12 +4,12 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllWorkerRoles
 {
-    public class GetAllWorkerRolesUseCase : EndPointNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
+    public class GetAllWorkerRolesUseCase : UseCaseEndPointNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesSuccessResultContract>
     {
         private readonly IBus _bus;
         public GetAllWorkerRolesUseCase(IBus bus) => _bus = bus;
-        public override async Task<IGetAllWorkerRolesResultContract> Ask(IGetAllWorkerRolesRequestContract input) =>
-            await new MasstransitRequest<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract, IGetAllWorkerRolesSuccessResultContract, IGetAllWorkerRolesErrorResultContract>(_bus, input)
+        public override async Task<UseCaseResponse<IGetAllWorkerRolesSuccessResultContract>> Ask(IGetAllWorkerRolesRequestContract input) =>
+            await new MasstransitUseCaseRequest<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesSuccessResultContract>(_bus, input)
                 .GetResponse();
     }
 }

@@ -11,26 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.DeleteUnit
         IConsumer<IDeleteUnitRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public DeleteUnitConsumer(IServiceProvider services) { _services = services; }
-        
+        public DeleteUnitConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IDeleteUnitRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IDeleteUnitRequestContract, IDeleteUnitResultContract>(
-                _services.GetService(typeof(ILogger<IDeleteUnitRequestContract>)) as ILogger<IDeleteUnitRequestContract>,
-                new DeleteUnitUseCase(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            
-            switch (result)
-            {
-                case IDeleteUnitSuccessResultContract:
-                    await context.RespondAsync<IDeleteUnitSuccessResultContract>(result);
-                    break;
-                case IDeleteUnitErrorResultContract:
-                    await context.RespondAsync<IDeleteUnitErrorResultContract>(result);
-                    break;
-            }
+            var result = 
+                await new LoggedUseCasePipeNode<IDeleteUnitRequestContract, IDeleteUnitSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IDeleteUnitRequestContract>)) as ILogger<IDeleteUnitRequestContract>,
+                    new DeleteUnitUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

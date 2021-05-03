@@ -8,9 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetUnitById
 {
     public class GetUnitByIdUseCase :
-        EndPointNodeBase<
-            IGetUnitByIdRequestContract,
-            IGetUnitByIdResultContract>
+        UseCaseEndPointNodeBase<IGetUnitByIdRequestContract, IGetUnitByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,25 +18,34 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitById
             _context = context;
         }
         
-        public override async Task<IGetUnitByIdResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetUnitByIdSuccessResultContract>> Ask(
             IGetUnitByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Units
+            var result = (await _context
+                .Units
                 .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken));
-            return new GetUnitByIdSuccessResultContract()  
+            
+            if (result == null)
             {
-                Data =
-                    new UnitViewModel()
+                return new UseCaseResponse<IGetUnitByIdSuccessResultContract>("Подразделение не найдено.");
+            }
+            
+            return 
+                new UseCaseResponse<IGetUnitByIdSuccessResultContract>(
+                    new GetUnitByIdSuccessResultContract()  
                     {
-                        Id = result.Id,
-                        Address = result.Adress,
-                        Name = result.Name, 
-                        Phone = result.Phone, 
-                        UnitType = result.UnitType.Name,
-                        WorkingFormat = result.WorkingFormat
-                    }
-            };
+                        Data =
+                            new UnitViewModel()
+                            {
+                                Id = result.Id,
+                                Address = result.Adress,
+                                Name = result.Name, 
+                                Phone = result.Phone, 
+                                UnitType = result.UnitType.Name,
+                                WorkingFormat = result.WorkingFormat
+                            }
+                    });
         }
     }
 }

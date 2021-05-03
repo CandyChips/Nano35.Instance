@@ -16,21 +16,13 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRegions
 
         public async Task Consume(ConsumeContext<IGetAllRegionsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                new GetAllRegionsUseCase(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            
-            switch (result)
-            {
-                case IGetAllRegionsSuccessResultContract:
-                    await context.RespondAsync<IGetAllRegionsSuccessResultContract>(result);
-                    break;
-                case IGetAllRegionsErrorResultContract:
-                    await context.RespondAsync<IGetAllRegionsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
+                    new GetAllRegionsUseCase(
+                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

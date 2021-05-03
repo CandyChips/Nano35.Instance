@@ -9,26 +9,17 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.DeleteClient
 {
     public class DeleteClientUseCase :
-        EndPointNodeBase<
-            IDeleteClientRequestContract,
-            IDeleteClientResultContract>
+        UseCaseEndPointNodeBase<IDeleteClientRequestContract, IDeleteClientSuccessResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public DeleteClientUseCase(
-            ApplicationContext context)
-        {
-            _context = context;
-        }
-        
-        
-        public override async Task<IDeleteClientResultContract> Ask(
+        public DeleteClientUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IDeleteClientSuccessResultContract>> Ask(
             IDeleteClientRequestContract input, 
             CancellationToken cancellationToken)
         {
             var entity = await _context.Clients.FirstAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken);
             entity.Deleted = true;
-            return new DeleteClientSuccessResultContract();
+            return new UseCaseResponse<IDeleteClientSuccessResultContract>(new DeleteClientSuccessResultContract());
         }
     }   
 }

@@ -11,7 +11,6 @@ namespace Nano35.Instance.Processor.UseCases
         Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
 
-    
     public abstract class PipeNodeBase<TIn, TOut> : 
         IPipeNode<TIn, TOut>
         where TIn : IRequest
@@ -30,7 +29,7 @@ namespace Nano35.Instance.Processor.UseCases
     {
         public abstract Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
-    
+
     public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
         where TMessage : class, IRequest
         where TResponse : class, IResponse

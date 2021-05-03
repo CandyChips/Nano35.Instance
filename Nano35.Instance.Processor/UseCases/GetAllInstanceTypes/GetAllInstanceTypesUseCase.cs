@@ -9,9 +9,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
 {
     public class GetAllInstanceTypesUseCase :
-        EndPointNodeBase<
-            IGetAllInstanceTypesRequestContract,
-            IGetAllInstanceTypesResultContract>
+        UseCaseEndPointNodeBase<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesSuccessResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -21,19 +19,20 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstanceTypes
             _context = context;
         }
         
-        public override async Task<IGetAllInstanceTypesResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllInstanceTypesSuccessResultContract>> Ask(
             IGetAllInstanceTypesRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.InstanceTypes
+            var result = await _context
+                .InstanceTypes
                 .Select(a =>
                     new InstanceTypeViewModel()
-                    {
-                        Id = a.Id,
-                        Name = a.Name
-                    })
+                        {Id = a.Id,
+                         Name = a.Name})
                 .ToListAsync(cancellationToken: cancellationToken);
-            return new GetAllInstanceTypesSuccessResultContract() {Data = result};
+            return 
+                new UseCaseResponse<IGetAllInstanceTypesSuccessResultContract>(
+                    new GetAllInstanceTypesSuccessResultContract() {Data = result});
         }
     }
 }

@@ -12,25 +12,17 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
     {
         private readonly IServiceProvider  _services;
         public CreateInstanceConsumer(IServiceProvider services) => _services = services;
-
         public async Task Consume(ConsumeContext<ICreateInstanceRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(
+                await new LoggedUseCasePipeNode<ICreateInstanceRequestContract, ICreateInstanceSuccessResultContract>(
                         _services.GetService(typeof(ILogger<ICreateInstanceRequestContract>)) as ILogger<ICreateInstanceRequestContract>,
-                        new TransactedPipeNode<ICreateInstanceRequestContract, ICreateInstanceResultContract>(dbContext,
+                        new TransactedUseCasePipeNode<ICreateInstanceRequestContract, ICreateInstanceSuccessResultContract>(
+                            dbContext,
                             new CreateInstanceUseCase(dbContext)))
                     .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case ICreateInstanceSuccessResultContract:
-                    await context.RespondAsync<ICreateInstanceSuccessResultContract>(result);
-                    break;
-                case ICreateInstanceErrorResultContract:
-                    await context.RespondAsync<ICreateInstanceErrorResultContract>(result);
-                    break;
-            }
+            await context.RespondAsync(result);
         }
     }
 }

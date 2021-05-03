@@ -11,34 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.DeleteClient
         IConsumer<IDeleteClientRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public DeleteClientConsumer(
-            IServiceProvider services)
+        public DeleteClientConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<IDeleteClientRequestContract> context)
         {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<IDeleteClientRequestContract> context)
-        {
-            var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IDeleteClientRequestContract>) _services.GetService(typeof(ILogger<IDeleteClientRequestContract>));
-            
-            var message = context.Message;
-            
             var result =
-                await new LoggedPipeNode<IDeleteClientRequestContract, IDeleteClientResultContract>(logger,
-                        new DeleteClientUseCase(dbContext)).Ask(message, context.CancellationToken);
-            
-            switch (result)
-            {
-                case IDeleteClientSuccessResultContract:
-                    await context.RespondAsync<IDeleteClientSuccessResultContract>(result);
-                    break;
-                case IDeleteClientErrorResultContract:
-                    await context.RespondAsync<IDeleteClientErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IDeleteClientRequestContract, IDeleteClientSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<IDeleteClientRequestContract>)) as ILogger<IDeleteClientRequestContract>,
+                        new DeleteClientUseCase(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

@@ -8,31 +8,32 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetWorkerById
 {
     public class GetWorkerByIdUseCase :
-        EndPointNodeBase<
-            IGetWorkerByIdRequestContract, 
-            IGetWorkerByIdResultContract>
+        UseCaseEndPointNodeBase<IGetWorkerByIdRequestContract, IGetWorkerByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public GetWorkerByIdUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-        
-        public override async Task<IGetWorkerByIdResultContract> Ask(
+        public GetWorkerByIdUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IGetWorkerByIdSuccessResultContract>> Ask(
             IGetWorkerByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context.Workers
-                .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken);
-            return new GetWorkerByIdSuccessResultContract()
+                .FirstAsync(f => f.Id == input.WorkerId, cancellationToken: cancellationToken);
+            
+            if (result == null)
             {
-                Data = new WorkerViewModel()
-                {
-                    Id = result.Id,
-                    Comment = result.Comment
-                }
-            };
+                return new UseCaseResponse<IGetWorkerByIdSuccessResultContract>("Сотрудник не найден.");
+            }
+            
+            return 
+                new UseCaseResponse<IGetWorkerByIdSuccessResultContract>(
+                    new GetWorkerByIdSuccessResultContract()
+                    {
+                        Data = new WorkerViewModel()
+                        {
+                            Id = result.Id,
+                            Comment = result.Comment
+                        }
+                    });
         }
     }
 }

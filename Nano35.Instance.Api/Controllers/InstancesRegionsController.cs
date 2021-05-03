@@ -25,17 +25,16 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
-        public IActionResult GetAllRegions() =>
-            new LoggedPipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
-                new GetAllRegionsUseCase(
-                    _services.GetService(typeof(IBus)) as IBus))
-            .Ask(new GetAllRegionsRequestContract())
-            .Result switch
-            {
-                IGetAllRegionsSuccessResultContract success => new OkObjectResult(success),
-                IGetAllRegionsErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public IActionResult GetAllRegions()
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
+                    new GetAllRegionsUseCase(
+                        _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new GetAllRegionsRequestContract())
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

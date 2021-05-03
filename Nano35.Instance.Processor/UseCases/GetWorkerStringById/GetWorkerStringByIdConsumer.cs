@@ -11,28 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
         IConsumer<IGetWorkerStringByIdRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetWorkerStringByIdConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-
+        public GetWorkerStringByIdConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IGetWorkerStringByIdRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract>(
-                _services.GetService(typeof(ILogger<IGetWorkerStringByIdRequestContract>)) as ILogger<IGetWorkerStringByIdRequestContract>,
-                    new GetWorkerStringByIdUseCase(
-                        _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetWorkerStringByIdSuccessResultContract:
-                    await context.RespondAsync<IGetWorkerStringByIdSuccessResultContract>(result);
-                    break;
-                case IGetWorkerStringByIdErrorResultContract:
-                    await context.RespondAsync<IGetWorkerStringByIdErrorResultContract>(result);
-                    break;
-            }
+            var result = 
+                await new LoggedUseCasePipeNode<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdSuccessResultContract>(
+                    _services.GetService(typeof(ILogger<IGetWorkerStringByIdRequestContract>)) as ILogger<IGetWorkerStringByIdRequestContract>,
+                        new GetWorkerStringByIdUseCase(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

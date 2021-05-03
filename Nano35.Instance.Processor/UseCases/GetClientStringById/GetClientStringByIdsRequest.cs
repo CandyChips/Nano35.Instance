@@ -7,21 +7,25 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetClientStringById
 {
     public class GetClientStringByIdUseCase :
-        EndPointNodeBase<
-            IGetClientStringByIdRequestContract,
-            IGetClientStringByIdResultContract>
+        UseCaseEndPointNodeBase<IGetClientStringByIdRequestContract, IGetClientStringByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public GetClientStringByIdUseCase(ApplicationContext context) { _context = context; }
-        
-        public override async Task<IGetClientStringByIdResultContract> Ask(
+        public GetClientStringByIdUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IGetClientStringByIdSuccessResultContract>> Ask(
             IGetClientStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context.Clients
                 .FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken);
-            return new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.ClientProfile.Phone}"};
+            
+            if (result == null)
+            {
+                return new UseCaseResponse<IGetClientStringByIdSuccessResultContract>("Клиент не найден.");
+            }
+            
+            return 
+                new UseCaseResponse<IGetClientStringByIdSuccessResultContract>(
+                    new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.ClientProfile.Phone}"});
         }
     }
 }

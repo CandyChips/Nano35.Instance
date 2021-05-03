@@ -12,9 +12,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
     public class GetAllWorkersUseCase :
-        EndPointNodeBase<
-            IGetAllWorkersRequestContract, 
-            IGetAllWorkersResultContract>
+        UseCaseEndPointNodeBase<IGetAllWorkersRequestContract, IGetAllWorkersSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +23,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             _bus = bus;
         }
 
-        public override async Task<IGetAllWorkersResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllWorkersSuccessResultContract>> Ask(
             IGetAllWorkersRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -61,7 +59,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
                     throw new Exception();
                 }
             }
-            return new GetAllWorkersSuccessResultContract() {Data = result};
+            return 
+                new UseCaseResponse<IGetAllWorkersSuccessResultContract>(
+                    new GetAllWorkersSuccessResultContract() {Data = result});
         }
     }
 }

@@ -12,9 +12,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.GetAllUnits
 {
     public class GetAllUnitsUseCase :
-        EndPointNodeBase<
-            IGetAllUnitsRequestContract, 
-            IGetAllUnitsResultContract>
+        UseCaseEndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +23,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
             _bus = bus;
         }
         
-        public override async Task<IGetAllUnitsResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllUnitsSuccessResultContract>> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -53,7 +51,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
                 }
             });
             
-            return new GetAllUnitsSuccessResultContract() {Data = result};
+            return 
+                new UseCaseResponse<IGetAllUnitsSuccessResultContract>(
+                    new GetAllUnitsSuccessResultContract() {Data = result});
         }
     }
     

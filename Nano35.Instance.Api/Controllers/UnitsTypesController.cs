@@ -25,17 +25,16 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllUnitTypesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitTypesErrorHttpResponse))] 
-        public IActionResult GetAllUnitTypes() =>
-            new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
-                new GetAllUnitTypesUseCase(
-                    _services.GetService(typeof(IBus)) as IBus))
-            .Ask(new GetAllUnitTypesRequestContract())
-            .Result switch
-            {
-                IGetAllUnitTypesSuccessResultContract success => new OkObjectResult(success),
-                IGetAllUnitTypesErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public IActionResult GetAllUnitTypes()
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
+                        new GetAllUnitTypesUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new GetAllUnitTypesRequestContract())
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

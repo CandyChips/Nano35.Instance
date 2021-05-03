@@ -4,12 +4,12 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Instance.Api.Requests.GetAllRegions
 {
-    public class GetAllRegionsUseCase : EndPointNodeBase<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>
+    public class GetAllRegionsUseCase : UseCaseEndPointNodeBase<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>
     {
         private readonly IBus _bus;
         public GetAllRegionsUseCase(IBus bus) => _bus = bus;
-        public override async Task<IGetAllRegionsResultContract> Ask(IGetAllRegionsRequestContract input) =>
-            await new MasstransitRequest<IGetAllRegionsRequestContract, IGetAllRegionsResultContract, IGetAllRegionsSuccessResultContract, IGetAllRegionsErrorResultContract>(_bus, input)
+        public override async Task<UseCaseResponse<IGetAllRegionsSuccessResultContract>> Ask(IGetAllRegionsRequestContract input) =>
+            await new MasstransitUseCaseRequest<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>(_bus, input)
                 .GetResponse();
     }
 }

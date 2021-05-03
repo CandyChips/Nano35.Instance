@@ -11,27 +11,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
         IConsumer<IGetAllUnitTypesRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetAllUnitTypesConsumer(IServiceProvider services) { _services = services; }
-        
-        public async Task Consume(
-            ConsumeContext<IGetAllUnitTypesRequestContract> context)
+        public GetAllUnitTypesConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<IGetAllUnitTypesRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
+            var result = 
+                await new LoggedUseCasePipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesSuccessResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
                     new GetAllUnitTypesUseCase(
                         _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            
-            switch (result)
-            {
-                case IGetAllUnitTypesSuccessResultContract:
-                    await context.RespondAsync<IGetAllUnitTypesSuccessResultContract>(result);
-                    break;
-                case IGetAllUnitTypesErrorResultContract:
-                    await context.RespondAsync<IGetAllUnitTypesErrorResultContract>(result);
-                    break;
-            }
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

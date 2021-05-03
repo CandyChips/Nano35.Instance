@@ -34,18 +34,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllUnitsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitsErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult GetAllUnits([FromQuery] GetAllUnitsHttpQuery query) =>
-            new LoggedPipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>, 
-                new GetAllUnitsUseCase(
-                    _services.GetService(typeof(IBus)) as IBus))
-            .Ask(new GetAllUnitsRequestContract() { InstanceId = query.InstanceId, UnitTypeId = query.UnitTypeId })
-            .Result switch
-            {
-                IGetAllUnitsSuccessResultContract success => new OkObjectResult(success),
-                IGetAllUnitsErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public IActionResult GetAllUnits([FromQuery] GetAllUnitsHttpQuery query)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>,
+                        new GetAllUnitsUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new GetAllUnitsRequestContract()
+                        {InstanceId = query.InstanceId, UnitTypeId = query.UnitTypeId})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpGet("{id}")]
@@ -53,18 +53,17 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUnitByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetUnitByIdErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult GetUnitById(Guid id) =>
-                new LoggedPipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
+        public IActionResult GetUnitById(Guid id)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IGetUnitByIdRequestContract, IGetUnitByIdSuccessResultContract>(
                     _services.GetService(typeof(ILogger<IGetUnitByIdRequestContract>)) as ILogger<IGetUnitByIdRequestContract>,
                     new GetUnitByIdUseCase(
                         _services.GetService(typeof(IBus)) as IBus))
-                .Ask(new GetUnitByIdRequestContract { UnitId = id })
-                .Result switch
-                {
-                    IGetUnitByIdSuccessResultContract success => new OkObjectResult(success),
-                    IGetUnitByIdErrorResultContract error => new BadRequestObjectResult(error),
-                    _ => new BadRequestObjectResult("")
-                };
+                    .Ask(new GetUnitByIdRequestContract {UnitId = id})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
 
         [Authorize]
@@ -73,26 +72,27 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUnitSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateUnitErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public IActionResult CreateUnit([FromBody] CreateUnitHttpBody body) =>
-            new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
-                _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
-                new CreateUnitUseCase(
-                    _services.GetService(typeof(IBus)) as IBus,
-                    _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
-            .Ask(new CreateUnitRequestContract()
-                {Address = body.Address,
-                 Id = body.Id,
-                 InstanceId = body.InstanceId,
-                 Name = body.Name,
-                 Phone = body.Phone,
-                 UnitTypeId = body.UnitTypeId,
-                 WorkingFormat = body.WorkingFormat})
-            .Result switch
-            {
-                ICreateUnitSuccessResultContract success => new OkObjectResult(success),
-                ICreateUnitErrorResultContract error => new BadRequestObjectResult(error),
-                _ => new BadRequestObjectResult("")
-            };
+        public IActionResult CreateUnit([FromBody] CreateUnitHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
+                        new CreateUnitUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new CreateUnitRequestContract()
+                    {
+                        Address = body.Address,
+                        Id = body.Id,
+                        InstanceId = body.InstanceId,
+                        Name = body.Name,
+                        Phone = body.Phone,
+                        UnitTypeId = body.UnitTypeId,
+                        WorkingFormat = body.WorkingFormat
+                    })
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Name")]

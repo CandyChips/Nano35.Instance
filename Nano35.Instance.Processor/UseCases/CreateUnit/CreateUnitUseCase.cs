@@ -10,9 +10,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
     public class CreateUnitUseCase :
-        EndPointNodeBase<
-            ICreateUnitRequestContract,
-            ICreateUnitResultContract>
+        UseCaseEndPointNodeBase<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -23,43 +21,28 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             _bus = bus;
         }
         
-        public override async Task<ICreateUnitResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateUnitSuccessResultContract>> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
-            var unit = new Unit(){
-                Id = input.Id,
-                Name = input.Name,
-                WorkingFormat = input.WorkingFormat,
-                Adress = input.Address,
-                Phone = input.Phone,
-                Date = DateTime.Now,
-                Deleted = false,
-                CreatorId = input.CreatorId,
-                InstanceId = input.InstanceId,
-                UnitTypeId = input.UnitTypeId
-            };
+            var unit = 
+                new Unit()
+                    {Id = input.Id,
+                     Name = input.Name,
+                     WorkingFormat = input.WorkingFormat,
+                     Adress = input.Address,
+                     Phone = input.Phone,
+                     Date = DateTime.Now,
+                     Deleted = false,
+                     CreatorId = input.CreatorId,
+                     InstanceId = input.InstanceId,
+                     UnitTypeId = input.UnitTypeId};
 
-            var response = new RegisterCashbox(
-                        _bus, 
-                        new RegisterCashboxRequestContract() {UnitId = input.Id, Capital = 0}).GetResponse()
-                .Result switch
-                {
-                    IRegisterCashboxSuccessResultContract success => success,
-                    _ => throw new Exception()
-                };
             await _context.AddAsync(unit, cancellationToken);
-            return new CreateUnitSuccessResultContract();
+            
+            return 
+                new UseCaseResponse<ICreateUnitSuccessResultContract>(
+                    new CreateUnitSuccessResultContract());
         }
-    }
-    
-    public class RegisterCashbox : 
-        MasstransitRequest
-        <IRegisterCashboxRequestContract, 
-            IRegisterCashboxResultContract,
-            IRegisterCashboxSuccessResultContract, 
-            IRegisterCashboxErrorResultContract>
-    {
-        public RegisterCashbox(IBus bus, IRegisterCashboxRequestContract request) : base(bus, request) {}
     }
 }
