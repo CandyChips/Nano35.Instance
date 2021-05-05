@@ -8,15 +8,15 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllInstances
 {
-    public class GetAllInstancesUseCase : UseCaseEndPointNodeBase<IGetAllInstancesRequestContract, IGetAllInstancesSuccessResultContract>
+    public class GetAllInstancesUseCase : UseCaseEndPointNodeBase<IGetAllInstancesRequestContract, IGetAllInstancesResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllInstancesUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetAllInstancesSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllInstancesResultContract>> Ask(
             IGetAllInstancesRequestContract input, 
             CancellationToken cancellationToken) =>
             new(
-                new GetAllInstancesSuccessResultContract()
+                new GetAllInstancesResultContract()
                 {Data = await _context
                     .Workers
                     .Where(c => c.Id == input.UserId)

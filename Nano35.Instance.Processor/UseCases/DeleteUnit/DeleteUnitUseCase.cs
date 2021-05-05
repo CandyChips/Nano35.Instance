@@ -8,11 +8,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.DeleteUnit
 {
-    public class DeleteUnitUseCase : UseCaseEndPointNodeBase<IDeleteUnitRequestContract, IDeleteUnitSuccessResultContract>
+    public class DeleteUnitUseCase : UseCaseEndPointNodeBase<IDeleteUnitRequestContract, IDeleteUnitResultContract>
     {
         private readonly ApplicationContext _context;
         public DeleteUnitUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IDeleteUnitSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IDeleteUnitResultContract>> Ask(
             IDeleteUnitRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -20,7 +20,7 @@ namespace Nano35.Instance.Processor.UseCases.DeleteUnit
                 .Units
                 .FirstAsync(e => e.Id == input.UnitId, cancellationToken);
             entity.Deleted = true;
-            return new UseCaseResponse<IDeleteUnitSuccessResultContract>(new DeleteUnitSuccessResultContract());
+            return new UseCaseResponse<IDeleteUnitResultContract>(new DeleteUnitResultContract());
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllInstanceTypes()
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllInstanceTypesRequestContract, IGetAllInstanceTypesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllInstanceTypesRequestContract>)) as ILogger<IGetAllInstanceTypesRequestContract>,
                     new GetAllInstanceTypesUseCase(
                         _services.GetService(typeof(IBus)) as IBus))

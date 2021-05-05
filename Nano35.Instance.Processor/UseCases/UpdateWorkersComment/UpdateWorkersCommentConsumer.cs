@@ -7,34 +7,20 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateWorkersComment
 {
-    public class UpdateWorkersCommentConsumer : 
-        IConsumer<IUpdateWorkersCommentRequestContract>
+    public class UpdateWorkersCommentConsumer : IConsumer<IUpdateWorkersCommentRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public UpdateWorkersCommentConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
+        public UpdateWorkersCommentConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IUpdateWorkersCommentRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
+            var result = 
+                await new LoggedUseCasePipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
                     _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
-                    new TransactedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(dbContext, 
+                    new TransactedUseCasePipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(dbContext, 
                         new UpdateWorkersCommentUseCase(dbContext)))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateWorkersCommentSuccessResultContract:
-                    await context.RespondAsync<IUpdateWorkersCommentSuccessResultContract>(result);
-                    break;
-                case IUpdateWorkersCommentErrorResultContract:
-                    await context.RespondAsync<IUpdateWorkersCommentErrorResultContract>(result);
-                    break;
-            }
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

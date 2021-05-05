@@ -15,9 +15,9 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>(
+                await new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                     _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
-                        new TransactedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>(
+                        new TransactedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                             dbContext,
                             new CreateUnitUseCase(
                                 dbContext,

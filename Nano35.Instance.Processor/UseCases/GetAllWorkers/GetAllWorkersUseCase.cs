@@ -11,12 +11,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
-    public class GetAllWorkersUseCase : UseCaseEndPointNodeBase<IGetAllWorkersRequestContract, IGetAllWorkersSuccessResultContract>
+    public class GetAllWorkersUseCase : UseCaseEndPointNodeBase<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
         public GetAllWorkersUseCase(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
-        public override async Task<UseCaseResponse<IGetAllWorkersSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllWorkersResultContract>> Ask(
             IGetAllWorkersRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -32,23 +32,20 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             
             foreach (var item in result)
             {
-                var response = await new MasstransitUseCaseRequest<IGetUserByIdRequestContract, IGetUserByIdSuccessResultContract>(_bus, new GetUserByIdRequestContract(){UserId = item.Id}).GetResponse();
+                var response = await new MasstransitUseCaseRequest<IGetUserByIdRequestContract, IGetUserByIdResultContract>(_bus, new GetUserByIdRequestContract(){UserId = item.Id}).GetResponse();
                 if (response.IsSuccess())
                 {
                     var tmp = response.Success;
-                    if (tmp.Data != null)
-                    {
-                        item.Name = tmp.Data.Name;
-                        item.Email = tmp.Data.Email;
-                        item.Phone = tmp.Data.Phone;
-                    }
+                    item.Name = tmp.Data.Name;
+                    item.Email = tmp.Data.Email;
+                    item.Phone = tmp.Data.Phone;
                 }
                 else
                 {
-                    throw new Exception();
+                    return new UseCaseResponse<IGetAllWorkersResultContract>($@"Сотрудник №{item.Id} не найден в базе аутентификациии.");
                 }
             }
-            return new UseCaseResponse<IGetAllWorkersSuccessResultContract>(new GetAllWorkersSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllWorkersResultContract>(new GetAllWorkersResultContract() {Workers = result});
         }
     }
 }

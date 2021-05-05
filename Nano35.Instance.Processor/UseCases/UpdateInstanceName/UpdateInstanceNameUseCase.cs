@@ -6,20 +6,20 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceName
 {
-    public class UpdateInstanceNameUseCase :
-        EndPointNodeBase<
-            IUpdateInstanceNameRequestContract,
-            IUpdateInstanceNameResultContract>
+    public class UpdateInstanceNameUseCase : UseCaseEndPointNodeBase<IUpdateInstanceNameRequestContract, IUpdateInstanceNameResultContract>
     {
         private readonly ApplicationContext _context;
         public UpdateInstanceNameUseCase(ApplicationContext context) => _context = context;
-        public override async Task<IUpdateInstanceNameResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateInstanceNameResultContract>> Ask(
             IUpdateInstanceNameRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
-            result.OrgName = input.Name;
-            return new UpdateInstanceNameSuccessResultContract();
+            var entityOfInstance = await _context
+                .Instances
+                .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
+            if (entityOfInstance == null) return new UseCaseResponse<IUpdateInstanceNameResultContract>("Организация не найдена.");
+            entityOfInstance.OrgName = input.Name;
+            return new UseCaseResponse<IUpdateInstanceNameResultContract>(new UpdateInstanceNameResultContract());
         }
     }
 }

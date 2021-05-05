@@ -6,20 +6,20 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRegion
 {
-    public class UpdateInstanceRegionUseCase :
-        EndPointNodeBase<
-            IUpdateInstanceRegionRequestContract,
-            IUpdateInstanceRegionResultContract>
+    public class UpdateInstanceRegionUseCase : UseCaseEndPointNodeBase<IUpdateInstanceRegionRequestContract, IUpdateInstanceRegionResultContract>
     {
         private readonly ApplicationContext _context;
         public UpdateInstanceRegionUseCase(ApplicationContext context) => _context = context;
-        public override async Task<IUpdateInstanceRegionResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateInstanceRegionResultContract>> Ask(
             IUpdateInstanceRegionRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken));
-            result.RegionId = input.RegionId;
-            return new UpdateInstanceRegionSuccessResultContract();
+            var entityOfInstance = await _context
+                .Instances
+                .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
+            if (entityOfInstance == null) return new UseCaseResponse<IUpdateInstanceRegionResultContract>("Организация не найдена.");
+            entityOfInstance.RegionId = input.RegionId;
+            return new UseCaseResponse<IUpdateInstanceRegionResultContract>(new UpdateInstanceRegionResultContract());
         }
     }
 }

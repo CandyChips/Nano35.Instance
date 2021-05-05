@@ -9,12 +9,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
-    public class CreateUnitUseCase : UseCaseEndPointNodeBase<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>
+    public class CreateUnitUseCase : UseCaseEndPointNodeBase<ICreateUnitRequestContract, ICreateUnitResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
         public CreateUnitUseCase(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
-        public override async Task<UseCaseResponse<ICreateUnitSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<ICreateUnitResultContract>> Ask(
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -33,7 +33,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
 
             await _context.AddAsync(unit, cancellationToken);
             
-            return new UseCaseResponse<ICreateUnitSuccessResultContract>(new CreateUnitSuccessResultContract());
+            return new UseCaseResponse<ICreateUnitResultContract>(new CreateUnitResultContract());
         }
     }
 }

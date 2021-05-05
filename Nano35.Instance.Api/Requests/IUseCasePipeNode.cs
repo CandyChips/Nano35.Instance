@@ -6,7 +6,7 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Api.Requests
 {
     public interface IUseCasePipeNode<in TIn, TOut>
-        where TOut : class
+        where TOut : IResult
     {
         Task<UseCaseResponse<TOut>> Ask(TIn input);
     }
@@ -14,7 +14,7 @@ namespace Nano35.Instance.Api.Requests
     public abstract class UseCasePipeNodeBase<TIn, TOut> : 
         IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
-        where TOut : class
+        where TOut : IResult
     {
         private readonly IUseCasePipeNode<TIn, TOut> _next;
         protected UseCasePipeNodeBase(IUseCasePipeNode<TIn, TOut> next) => _next = next;
@@ -25,7 +25,7 @@ namespace Nano35.Instance.Api.Requests
     public abstract class UseCaseEndPointNodeBase<TIn, TOut> : 
         IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
-        where TOut : class
+        where TOut : IResult
     {
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input);
     }

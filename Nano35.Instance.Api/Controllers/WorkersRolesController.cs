@@ -28,7 +28,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllWorkerRoles()
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
                         new GetAllWorkerRolesUseCase(
                             _services.GetService(typeof(IBus)) as IBus))

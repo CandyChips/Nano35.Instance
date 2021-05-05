@@ -6,22 +6,20 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
 {
-    public class GetWorkerStringByIdUseCase : UseCaseEndPointNodeBase<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdSuccessResultContract>
+    public class GetWorkerStringByIdUseCase : UseCaseEndPointNodeBase<IGetWorkerStringByIdRequestContract, IGetWorkerStringByIdResultContract>
     {
         private readonly ApplicationContext _context;
         public GetWorkerStringByIdUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetWorkerStringByIdSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetWorkerStringByIdResultContract>> Ask(
             IGetWorkerStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = (await _context
                 .Workers
-                .FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken))
-                .ToString();
-            
+                .FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken));
             return result == null ? 
-                new UseCaseResponse<IGetWorkerStringByIdSuccessResultContract>("Сотрудник не найден.") : 
-                new UseCaseResponse<IGetWorkerStringByIdSuccessResultContract>(new GetWorkerStringByIdSuccessResultContract() {Data = result});
+                new UseCaseResponse<IGetWorkerStringByIdResultContract>("Сотрудник не найден.") : 
+                new UseCaseResponse<IGetWorkerStringByIdResultContract>(new GetWorkerStringByIdResultContract() {Data = result.ToString()});
         }
     }
 }

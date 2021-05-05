@@ -5,14 +5,14 @@ using Nano35.Instance.Api.Helpers;
 
 namespace Nano35.Instance.Api.Requests.CreateWorker
 {
-    public class CreateWorkerUseCase : UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>
+    public class CreateWorkerUseCase : UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerResultContract>
     {
         private readonly IBus _bus;
         public CreateWorkerUseCase(IBus bus) { _bus = bus; }
-        public override async Task<UseCaseResponse<ICreateWorkerSuccessResultContract>> Ask(ICreateWorkerRequestContract input)
+        public override async Task<UseCaseResponse<ICreateWorkerResultContract>> Ask(ICreateWorkerRequestContract input)
         {
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
-            return await new MasstransitUseCaseRequest<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(_bus, input)
+            return await new MasstransitUseCaseRequest<ICreateWorkerRequestContract, ICreateWorkerResultContract>(_bus, input)
                 .GetResponse();
         }
     }

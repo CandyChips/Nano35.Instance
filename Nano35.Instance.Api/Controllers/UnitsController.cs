@@ -37,7 +37,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllUnits([FromQuery] GetAllUnitsHttpQuery query)
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllUnitsRequestContract>)) as ILogger<IGetAllUnitsRequestContract>,
                         new GetAllUnitsUseCase(
                             _services.GetService(typeof(IBus)) as IBus))
@@ -56,7 +56,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetUnitById(Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IGetUnitByIdRequestContract, IGetUnitByIdSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetUnitByIdRequestContract, IGetUnitByIdResultContract>(
                     _services.GetService(typeof(ILogger<IGetUnitByIdRequestContract>)) as ILogger<IGetUnitByIdRequestContract>,
                     new GetUnitByIdUseCase(
                         _services.GetService(typeof(IBus)) as IBus))
@@ -75,7 +75,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult CreateUnit([FromBody] CreateUnitHttpBody body)
         {
             var result =
-                new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitSuccessResultContract>(
+                new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                         _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
                         new CreateUnitUseCase(
                             _services.GetService(typeof(IBus)) as IBus,
@@ -100,14 +100,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsNameErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateUnitsName([FromBody] UpdateUnitsNameHttpBody body) =>
-            new ConvertedUpdateUnitsNameOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateUnitsNameRequestContract>)) as ILogger<IUpdateUnitsNameRequestContract>,
-                    new UpdateUnitsNameUseCase(
-                        _services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateUnitsName([FromBody] UpdateUnitsNameHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateUnitsNameRequestContract>)) as ILogger<IUpdateUnitsNameRequestContract>,
+                        new UpdateUnitsNameUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                .Ask(new UpdateUnitsNameRequestContract() { UnitId = body.UnitId, Name = body.Name })
+                .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Phone")]
@@ -115,14 +119,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsPhoneErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateUnitsPhone([FromBody] UpdateUnitsPhoneHttpBody body) =>
-            new ConvertedUpdateUnitsPhoneOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateUnitsPhoneRequestContract>)) as ILogger<IUpdateUnitsPhoneRequestContract>,
-                    new UpdateUnitsPhoneUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateUnitsPhone([FromBody] UpdateUnitsPhoneHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateUnitsPhoneRequestContract>)) as ILogger<IUpdateUnitsPhoneRequestContract>,
+                        new UpdateUnitsPhoneUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateUnitsPhoneRequestContract() { Phone = body.Phone, UnitId = body.UnitId })
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Address")]
@@ -130,14 +138,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsAddressErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateUnitsAddress([FromBody] UpdateUnitsAddressHttpBody body) =>
-            new ConvertedUpdateUnitsAddressOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>)) as ILogger<IUpdateUnitsAddressRequestContract>,
-                    new UpdateUnitsAddressUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateUnitsAddress([FromBody] UpdateUnitsAddressHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>)) as ILogger<IUpdateUnitsAddressRequestContract>,
+                        new UpdateUnitsAddressUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateUnitsAddressRequestContract() { Address = body.Address, UnitId = body.UnitId})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Type")]
@@ -145,14 +157,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsTypeErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateUnitsType([FromBody] UpdateUnitsTypeHttpBody body) =>
-            new ConvertedUpdateUnitsTypeOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
+        public IActionResult UpdateUnitsType([FromBody] UpdateUnitsTypeHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateUnitsTypeRequestContract, IUpdateUnitsTypeResultContract>(
                     _services.GetService(typeof(ILogger<IUpdateUnitsTypeRequestContract>)) as ILogger<IUpdateUnitsTypeRequestContract>,
                     new UpdateUnitsTypeUseCase(
-                        _services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+                        _services.GetService(typeof(IBus)) as IBus,
+                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateUnitsTypeRequestContract() { TypeId = body.TypeId, UnitId = body.UnitId })
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/WorkingFormat")]
@@ -160,13 +176,18 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsWorkingFormatErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateUnitsWorkingFormat([FromBody] UpdateUnitsWorkingFormatHttpBody body) =>
-            new ConvertedUpdateUnitsWorkingFormatOnHttpContext(
-                new LoggedPipeNode<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateUnitsWorkingFormatRequestContract>)) as ILogger<IUpdateUnitsWorkingFormatRequestContract>,
-                    new UpdateUnitsWorkingFormatUseCase(
-                        _services.GetService(typeof(IBus)) as IBus, 
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateUnitsWorkingFormat([FromBody] UpdateUnitsWorkingFormatHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateUnitsWorkingFormatRequestContract,
+                        IUpdateUnitsWorkingFormatResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateUnitsWorkingFormatRequestContract>)) as ILogger<IUpdateUnitsWorkingFormatRequestContract>,
+                        new UpdateUnitsWorkingFormatUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateUnitsWorkingFormatRequestContract() { UnitId = body.UnitId, WorkingFormat = body.WorkingFormat })
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

@@ -8,7 +8,7 @@ using Nano35.Contracts.Instance.Artifacts;
 namespace Nano35.Instance.Processor.UseCases
 {
     public interface IUseCasePipeNode<in TIn, TOut>
-        where TOut : class
+        where TOut : IResult
     {
         Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
     }
@@ -16,7 +16,7 @@ namespace Nano35.Instance.Processor.UseCases
     public abstract class UseCasePipeNodeBase<TIn, TOut> : 
         IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
-        where TOut : class
+        where TOut : IResult
     {
         private readonly IUseCasePipeNode<TIn, TOut> _next;
         protected UseCasePipeNodeBase(IUseCasePipeNode<TIn, TOut> next) => _next = next;
@@ -27,14 +27,14 @@ namespace Nano35.Instance.Processor.UseCases
     public abstract class UseCaseEndPointNodeBase<TIn, TOut> : 
         IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
-        where TOut : class
+        where TOut : IResult
     {
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
     }
     
     public class MasstransitUseCaseRequest<TMessage, TResponse> 
         where TMessage : class, IRequest
-        where TResponse : class
+        where TResponse : class, IResult
     {
         private readonly IRequestClient<TMessage> _requestClient;
         private readonly TMessage _request;

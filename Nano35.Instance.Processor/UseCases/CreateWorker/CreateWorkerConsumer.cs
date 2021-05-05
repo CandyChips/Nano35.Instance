@@ -15,9 +15,9 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(
+                await new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                         _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,  
-                        new TransactedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(
+                        new TransactedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                             dbContext,
                             new CreateWorkerUseCase(
                                 _services.GetService(typeof(IBus)) as IBus, 

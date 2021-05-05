@@ -16,17 +16,42 @@ using Nano35.Instance.Processor.UseCases.GetAllClientsTypes;
 using Nano35.Instance.Processor.UseCases.GetAllInstances;
 using Nano35.Instance.Processor.UseCases.GetAllInstanceTypes;
 using Nano35.Instance.Processor.UseCases.GetAllRegions;
+using Nano35.Instance.Processor.UseCases.GetAllRoles;
 using Nano35.Instance.Processor.UseCases.GetAllUnits;
+using Nano35.Instance.Processor.UseCases.GetAllUnitsByType;
 using Nano35.Instance.Processor.UseCases.GetAllUnitTypes;
 using Nano35.Instance.Processor.UseCases.GetAllWorkerRoles;
 using Nano35.Instance.Processor.UseCases.GetAllWorkers;
 using Nano35.Instance.Processor.UseCases.GetClientById;
 using Nano35.Instance.Processor.UseCases.GetClientStringById;
+using Nano35.Instance.Processor.UseCases.GetClientStringsByIds;
 using Nano35.Instance.Processor.UseCases.GetInstanceById;
 using Nano35.Instance.Processor.UseCases.GetInstanceStringById;
+using Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds;
 using Nano35.Instance.Processor.UseCases.GetUnitById;
 using Nano35.Instance.Processor.UseCases.GetUnitStringById;
+using Nano35.Instance.Processor.UseCases.GetUnitStringsByIds;
+using Nano35.Instance.Processor.UseCases.GetWorkerById;
 using Nano35.Instance.Processor.UseCases.GetWorkerStringById;
+using Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds;
+using Nano35.Instance.Processor.UseCases.UpdateClientsEmail;
+using Nano35.Instance.Processor.UseCases.UpdateClientsName;
+using Nano35.Instance.Processor.UseCases.UpdateClientsState;
+using Nano35.Instance.Processor.UseCases.UpdateClientsType;
+using Nano35.Instance.Processor.UseCases.UpdateInstanceEmail;
+using Nano35.Instance.Processor.UseCases.UpdateInstanceInfo;
+using Nano35.Instance.Processor.UseCases.UpdateInstanceName;
+using Nano35.Instance.Processor.UseCases.UpdateInstancePhone;
+using Nano35.Instance.Processor.UseCases.UpdateInstanceRealName;
+using Nano35.Instance.Processor.UseCases.UpdateInstanceRegion;
+using Nano35.Instance.Processor.UseCases.UpdateUnitsAddress;
+using Nano35.Instance.Processor.UseCases.UpdateUnitsName;
+using Nano35.Instance.Processor.UseCases.UpdateUnitsPhone;
+using Nano35.Instance.Processor.UseCases.UpdateUnitsType;
+using Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat;
+using Nano35.Instance.Processor.UseCases.UpdateWorkersComment;
+using Nano35.Instance.Processor.UseCases.UpdateWorkersName;
+using Nano35.Instance.Processor.UseCases.UpdateWorkersRole;
 
 namespace Nano35.Instance.Processor.Configurations
 {
@@ -156,8 +181,132 @@ namespace Nano35.Instance.Processor.Configurations
                     {
                         e.Consumer<DeleteClientConsumer>(provider);
                     });
+                    cfg.ReceiveEndpoint("IGetAllRolesRequestContract", e =>
+                    {
+                        e.Consumer<GetAllRolesConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetAllUnitsByTypeRequestContract", e =>
+                    {
+                        e.Consumer<GetAllUnitsByTypeConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetClientStringsByIdsRequestContract", e =>
+                    {
+                        e.Consumer<GetClientStringsByIdsConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetInstanceStringsByIdsRequestContract", e =>
+                    {
+                        e.Consumer<GetInstanceStringsByIdsConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetUnitStringsByIdsRequestContract", e =>
+                    {
+                        e.Consumer<GetUnitStringsByIdsConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetWorkerByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetWorkerByIdConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IGetWorkerStringsByIdsRequestContract", e =>
+                    {
+                        e.Consumer<GetWorkerStringsByIdsConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateWorkersRoleRequestContract", e =>
+                    {
+                        e.Consumer<UpdateWorkersRoleConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateWorkersNameRequestContract", e =>
+                    {
+                        e.Consumer<UpdateWorkersNameConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateWorkersCommentRequestContract", e =>
+                    {
+                        e.Consumer<UpdateWorkersCommentConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateUnitsWorkingFormatRequestContract", e =>
+                    {
+                        e.Consumer<UpdateUnitsWorkingFormatConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateUnitsTypeRequestContract", e =>
+                    {
+                        e.Consumer<UpdateUnitsTypeConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateUnitsPhoneRequestContract", e =>
+                    {
+                        e.Consumer<UpdateUnitsPhoneConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateUnitsNameRequestContract", e =>
+                    {
+                        e.Consumer<UpdateUnitsNameConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateUnitsAddressRequestContract", e =>
+                    {
+                        e.Consumer<UpdateUnitsAddressConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstanceRegionRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstanceRegionConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstanceRealNameRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstanceRealNameConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstancePhoneRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstancePhoneConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstanceNameRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstanceNameConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstanceInfoRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstanceInfoConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateInstanceEmailRequestContract", e =>
+                    {
+                        e.Consumer<UpdateInstanceEmailConsumer>(provider);
+                    }); 
+                    cfg.ReceiveEndpoint("IUpdateClientsTypeRequestContract", e =>
+                    {
+                        e.Consumer<UpdateClientsTypeConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateClientsStateRequestContract", e =>
+                    {
+                        e.Consumer<UpdateClientsStateConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateClientsNameRequestContract", e =>
+                    {
+                        e.Consumer<UpdateClientsNameConsumer>(provider);
+                    });
+                    cfg.ReceiveEndpoint("IUpdateClientsEmailRequestContract", e =>
+                    {
+                        e.Consumer<UpdateClientsEmailConsumer>(provider);
+                    });
                 }));
+                x.AddConsumer<UpdateClientsEmailConsumer>();
+                x.AddConsumer<UpdateClientsNameConsumer>();
+                x.AddConsumer<UpdateClientsStateConsumer>();
+                x.AddConsumer<UpdateClientsTypeConsumer>();
+                x.AddConsumer<UpdateInstanceEmailConsumer>();
+                x.AddConsumer<UpdateInstanceInfoConsumer>();
+                x.AddConsumer<UpdateInstanceNameConsumer>();
+                x.AddConsumer<UpdateInstancePhoneConsumer>();
+                x.AddConsumer<UpdateInstanceRealNameConsumer>();
+                x.AddConsumer<UpdateInstanceRegionConsumer>();
+                x.AddConsumer<UpdateUnitsAddressConsumer>();
+                x.AddConsumer<UpdateUnitsNameConsumer>();
+                x.AddConsumer<UpdateUnitsPhoneConsumer>();
+                x.AddConsumer<UpdateUnitsTypeConsumer>();
+                x.AddConsumer<UpdateUnitsWorkingFormatConsumer>();
+                x.AddConsumer<UpdateWorkersCommentConsumer>();
+                x.AddConsumer<UpdateWorkersNameConsumer>();
+                x.AddConsumer<UpdateWorkersRoleConsumer>();
+                x.AddConsumer<GetWorkerStringsByIdsConsumer>();
+                x.AddConsumer<GetWorkerByIdConsumer>();
+                x.AddConsumer<GetUnitStringsByIdsConsumer>();
+                x.AddConsumer<GetInstanceStringsByIdsConsumer>();
+                x.AddConsumer<GetClientStringsByIdsConsumer>();
                 x.AddConsumer<DeleteUnitConsumer>();
+                x.AddConsumer<GetAllUnitsByTypeConsumer>();
                 x.AddConsumer<DeleteClientConsumer>();
                 x.AddConsumer<GetWorkerStringByIdConsumer>();
                 x.AddConsumer<GetClientStringByIdConsumer>();
@@ -169,6 +318,7 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<CreateInstanceConsumer>();
                 x.AddConsumer<GetAllUnitTypesConsumer>();
                 x.AddConsumer<GetAllInstanceTypesConsumer>();
+                x.AddConsumer<GetAllRolesConsumer>();
                 x.AddConsumer<GetAllRegionsConsumer>();
                 x.AddConsumer<GetInstanceByIdConsumer>();
                 x.AddConsumer<CreateWorkerConsumer>();

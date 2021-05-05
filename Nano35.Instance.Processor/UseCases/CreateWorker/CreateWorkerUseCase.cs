@@ -8,18 +8,18 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateWorker
 {
-    public class CreateWorkerUseCase : UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>
+    public class CreateWorkerUseCase : UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
         public CreateWorkerUseCase(IBus bus, ApplicationContext context) { _bus = bus; _context = context; }
-        public override async Task<UseCaseResponse<ICreateWorkerSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<ICreateWorkerResultContract>> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
             var client = _bus.CreateRequestClient<ICreateUserRequestContract>();
             
-            var response = await client.GetResponse<UseCaseResponse<ICreateUserSuccessResultContract>>(
+            var response = await client.GetResponse<UseCaseResponse<ICreateUserResultContract>>(
                 new CreateUserRequestContract()
                     {NewId = input.NewId,
                      Phone = input.Phone,
@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                      Name = input.Name}, 
                     cancellationToken);
 
-            if (!response.Message.IsSuccess()) return new UseCaseResponse<ICreateWorkerSuccessResultContract>(response.Message.Error);
+            if (!response.Message.IsSuccess()) return new UseCaseResponse<ICreateWorkerResultContract>(response.Message.Error);
 
             var worker = 
                 new Worker()
@@ -42,7 +42,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             
             await _context.AddAsync(worker, cancellationToken);
             
-            return new UseCaseResponse<ICreateWorkerSuccessResultContract>(new CreateWorkerSuccessResultContract());
+            return new UseCaseResponse<ICreateWorkerResultContract>(new CreateWorkerResultContract());
         }
     }
 }

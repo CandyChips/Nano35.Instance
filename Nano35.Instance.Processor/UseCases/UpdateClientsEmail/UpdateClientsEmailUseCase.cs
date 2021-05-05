@@ -6,18 +6,21 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
 {
-    public class UpdateClientsEmailUseCase : EndPointNodeBase<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>
+    public class UpdateClientsEmailUseCase : UseCaseEndPointNodeBase<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>
     {
         private readonly ApplicationContext _context;
         public UpdateClientsEmailUseCase(ApplicationContext context) => _context = context;
-        public override async Task<IUpdateClientsEmailResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateClientsEmailResultContract>> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
-            result.WorkerId = input.UpdaterId;
-            result.Email = input.Email;
-            return new UpdateClientsEmailSuccessResultContract();
+            var entityOfClient = await _context
+                .Clients
+                .FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken);
+            if (entityOfClient == null) return new UseCaseResponse<IUpdateClientsEmailResultContract>("Клиент не найден.");
+            entityOfClient.WorkerId = input.UpdaterId;
+            entityOfClient.Email = input.Email;
+            return new UseCaseResponse<IUpdateClientsEmailResultContract>(new UpdateClientsEmailResultContract());
         }
     }
 }

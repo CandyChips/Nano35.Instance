@@ -7,33 +7,20 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsType
 {
-    public class UpdateClientsTypeConsumer : 
-        IConsumer<IUpdateClientsTypeRequestContract>
+    public class UpdateClientsTypeConsumer : IConsumer<IUpdateClientsTypeRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public UpdateClientsTypeConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-
+        public UpdateClientsTypeConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IUpdateClientsTypeRequestContract> context)
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(
-                _services.GetService(typeof(ILogger<IUpdateClientsTypeRequestContract>)) as ILogger<IUpdateClientsTypeRequestContract>,
-                    new TransactedPipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(dbContext,
+            var result = 
+                await new LoggedUseCasePipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateClientsTypeRequestContract>)) as ILogger<IUpdateClientsTypeRequestContract>,
+                    new TransactedUseCasePipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(dbContext,
                         new UpdateClientsTypeUseCase(dbContext)))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateClientsTypeSuccessResultContract:
-                    await context.RespondAsync<IUpdateClientsTypeSuccessResultContract>(result);
-                    break;
-                case IUpdateClientsTypeErrorResultContract:
-                    await context.RespondAsync<IUpdateClientsTypeErrorResultContract>(result);
-                    break;
-            }
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

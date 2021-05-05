@@ -11,6 +11,7 @@ namespace Nano35.Instance.Processor.Models
         //Data
         public string OrgName { get; set; }
         public string OrgRealName { get; set; }
+        //public string Phone { get; set; }
         public string OrgEmail { get; set; }
         public string CompanyInfo { get; set; }
         public bool Deleted { get; set; }

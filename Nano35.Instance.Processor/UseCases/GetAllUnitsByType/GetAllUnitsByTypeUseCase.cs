@@ -8,11 +8,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
 {
-    public class GetAllUnitsByTypeUseCase : UseCaseEndPointNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeSuccessResultContract>
+    public class GetAllUnitsByTypeUseCase : UseCaseEndPointNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllUnitsByTypeUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllUnitsByTypeResultContract>> Ask(
             IGetAllUnitsByTypeRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -28,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
                          UnitType = a.UnitType.Name,
                          WorkingFormat = a.WorkingFormat})
                 .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>(new GetAllUnitsByTypeSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllUnitsByTypeResultContract>(new GetAllUnitsByTypeResultContract() {Units = result});
         }
     }
 }

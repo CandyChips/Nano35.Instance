@@ -8,11 +8,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
 {
-    public class GetAllWorkerRolesUseCase : UseCaseEndPointNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesSuccessResultContract>
+    public class GetAllWorkerRolesUseCase : UseCaseEndPointNodeBase<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllWorkerRolesUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetAllWorkerRolesSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllWorkerRolesResultContract>> Ask(
             IGetAllWorkerRolesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -23,7 +23,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
                         {Id = a.Id,
                          Name = a.Name})
                 .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllWorkerRolesSuccessResultContract>(new GetAllWorkerRolesSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllWorkerRolesResultContract>(new GetAllWorkerRolesResultContract() {Roles = result});
         }
     }
 }

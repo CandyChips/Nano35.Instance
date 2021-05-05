@@ -28,7 +28,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllRegions()
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllRegionsRequestContract, IGetAllRegionsSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllRegionsRequestContract, IGetAllRegionsResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllRegionsRequestContract>)) as ILogger<IGetAllRegionsRequestContract>,
                     new GetAllRegionsUseCase(
                         _services.GetService(typeof(IBus)) as IBus))

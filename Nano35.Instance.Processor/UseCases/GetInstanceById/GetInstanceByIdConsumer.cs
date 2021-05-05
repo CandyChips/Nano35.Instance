@@ -14,7 +14,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
         public async Task Consume(ConsumeContext<IGetInstanceByIdRequestContract> context)
         {
             var result = 
-                await new LoggedUseCasePipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>(
+                await new LoggedUseCasePipeNode<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>(
                     _services.GetService(typeof(ILogger<IGetInstanceByIdRequestContract>)) as ILogger<IGetInstanceByIdRequestContract>,
                     new GetInstanceByIdUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);

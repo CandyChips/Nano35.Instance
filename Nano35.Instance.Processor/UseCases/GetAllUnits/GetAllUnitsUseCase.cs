@@ -11,12 +11,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllUnits
 {
-    public class GetAllUnitsUseCase : UseCaseEndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>
+    public class GetAllUnitsUseCase : UseCaseEndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
         public GetAllUnitsUseCase(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
-        public override async Task<UseCaseResponse<IGetAllUnitsSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllUnitsResultContract>> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -34,7 +34,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
                 .ToListAsync(cancellationToken);
             result.ForEach(async e =>
             {
-                var response = await new MasstransitUseCaseRequest<IGetCashboxByUnitIdRequestContract, IGetCashboxByUnitIdSuccessResultContract>(
+                var response = await new MasstransitUseCaseRequest<IGetCashboxByUnitIdRequestContract, IGetCashboxByUnitIdResultContract>(
                     _bus, 
                     new GetCashboxByUnitIdRequestContract() {UnitId = e.Id})
                     .GetResponse();
@@ -45,17 +45,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
                     throw new Exception();
             });
             
-            return new UseCaseResponse<IGetAllUnitsSuccessResultContract>(new GetAllUnitsSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllUnitsResultContract>(new GetAllUnitsResultContract() {Units = result});
         }
-    }
-    
-    public class GetCashboxByUnitId : 
-        MasstransitRequest
-        <IGetCashboxByUnitIdRequestContract, 
-            IGetCashboxByUnitIdResultContract,
-            IGetCashboxByUnitIdSuccessResultContract, 
-            IGetCashboxByUnitIdErrorResultContract>
-    {
-        public GetCashboxByUnitId(IBus bus, IGetCashboxByUnitIdRequestContract request) : base(bus, request) {}
     }
 }

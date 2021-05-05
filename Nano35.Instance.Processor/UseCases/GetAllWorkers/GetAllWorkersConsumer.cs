@@ -14,7 +14,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         public async Task Consume(ConsumeContext<IGetAllWorkersRequestContract> context)
         {
             var result = 
-                await new LoggedUseCasePipeNode<IGetAllWorkersRequestContract, IGetAllWorkersSuccessResultContract>(
+                await new LoggedUseCasePipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
                         new GetAllWorkersUseCase(
                             _services.GetService(typeof(ApplicationContext)) as ApplicationContext, 

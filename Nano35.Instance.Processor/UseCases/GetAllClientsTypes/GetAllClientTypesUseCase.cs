@@ -8,11 +8,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
 {
-    public class GetAllClientTypesUseCase : UseCaseEndPointNodeBase<IGetAllClientTypesRequestContract, IGetAllClientTypesSuccessResultContract>
+    public class GetAllClientTypesUseCase : UseCaseEndPointNodeBase<IGetAllClientTypesRequestContract, IGetAllClientTypesResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllClientTypesUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetAllClientTypesSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetAllClientTypesResultContract>> Ask(
             IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -23,7 +23,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
                         {Id = a.Id,
                          Name = a.Name})
                 .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllClientTypesSuccessResultContract>(new GetAllClientTypesSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllClientTypesResultContract>(new GetAllClientTypesResultContract() {Data = result});
         }
     }
 }

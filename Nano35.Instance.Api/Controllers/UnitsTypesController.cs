@@ -28,7 +28,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllUnitTypes()
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllUnitTypesRequestContract, IGetAllUnitTypesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllUnitTypesRequestContract>)) as ILogger<IGetAllUnitTypesRequestContract>,
                         new GetAllUnitTypesUseCase(
                             _services.GetService(typeof(IBus)) as IBus))

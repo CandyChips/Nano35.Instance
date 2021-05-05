@@ -34,13 +34,12 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllWorkers([FromQuery] GetAllWorkersHttpQuery query)
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllWorkersRequestContract, IGetAllWorkersSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as
                             ILogger<IGetAllWorkersRequestContract>,
                         new GetAllWorkersUseCase(
                             _services.GetService(typeof(IBus)) as IBus))
-                    .Ask(new GetAllWorkersRequestContract()
-                        {InstanceId = query.InstanceId, WorkersRoleId = query.WorkersRoleId})
+                    .Ask(new GetAllWorkersRequestContract() {InstanceId = query.InstanceId, WorkersRoleId = query.WorkersRoleId})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
@@ -54,7 +53,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult CreateWorker([FromBody] CreateWorkerHttpBody body)
         {
             var result =
-                new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(
+                new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                         _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,
                         new CreateWorkerUseCase(
                             _services.GetService(typeof(IBus)) as IBus))
@@ -80,14 +79,19 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersRoleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersRoleErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateWorkersRole([FromBody] UpdateWorkersRoleHttpBody body) =>
-            new ConvertedUpdateWorkersRoleOnHttpContext(
-                new LoggedPipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as ILogger<IUpdateWorkersRoleRequestContract>,
-                    new UpdateWorkersRoleUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateWorkersRole([FromBody] UpdateWorkersRoleHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateWorkersRoleRequestContract>)) as
+                            ILogger<IUpdateWorkersRoleRequestContract>,
+                        new UpdateWorkersRoleUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                .Ask(new UpdateWorkersRoleRequestContract() { WorkersId = body.WorkersId, RoleId = body.RoleId })
+                .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Name")]
@@ -95,14 +99,19 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersNameErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateWorkersName([FromBody] UpdateWorkersNameHttpBody body) =>
-            new ConvertedUpdateWorkersNameOnHttpContext(
-                new LoggedPipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateWorkersNameRequestContract>)) as ILogger<IUpdateWorkersNameRequestContract>,
-                    new UpdateWorkersNameUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateWorkersName([FromBody] UpdateWorkersNameHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateWorkersNameRequestContract, IUpdateWorkersNameResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateWorkersNameRequestContract>)) as
+                            ILogger<IUpdateWorkersNameRequestContract>,
+                        new UpdateWorkersNameUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateWorkersNameRequestContract() { WorkersId = body.WorkersId, Name = body.Name})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [Authorize]
         [HttpPatch("{id}/Comment")]
@@ -110,13 +119,17 @@ namespace Nano35.Instance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateWorkersCommentSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateWorkersCommentErrorHttpResponse))] 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        public Task<IActionResult> UpdateWorkersComment([FromBody] UpdateWorkersCommentHttpBody body) =>
-            new ConvertedUpdateWorkersCommentOnHttpContext(
-                new LoggedPipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
-                    new UpdateWorkersCommentUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider)))
-                .Ask(body);
+        public IActionResult UpdateWorkersComment([FromBody] UpdateWorkersCommentHttpBody body)
+        {
+            var result =
+                new LoggedUseCasePipeNode<IUpdateWorkersCommentRequestContract, IUpdateWorkersCommentResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateWorkersCommentRequestContract>)) as ILogger<IUpdateWorkersCommentRequestContract>,
+                        new UpdateWorkersCommentUseCase(
+                            _services.GetService(typeof(IBus)) as IBus,
+                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                    .Ask(new UpdateWorkersCommentRequestContract() { WorkersId = body.WorkersId, Comment = body.Comment})
+                    .Result;
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

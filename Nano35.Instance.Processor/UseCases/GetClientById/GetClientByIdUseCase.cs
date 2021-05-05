@@ -7,35 +7,32 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientById
 {
-    public class GetClientByIdUseCase : UseCaseEndPointNodeBase<IGetClientByIdRequestContract,IGetClientByIdSuccessResultContract>
+    public class GetClientByIdUseCase : UseCaseEndPointNodeBase<IGetClientByIdRequestContract,IGetClientByIdResultContract>
     {
         private readonly ApplicationContext _context;
         public GetClientByIdUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetClientByIdSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetClientByIdResultContract>> Ask(
             IGetClientByIdRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context
                 .Clients
-                .FirstAsync(f => f.Id == input.UnitId, cancellationToken);
-
-            if (result == null)
-                return new UseCaseResponse<IGetClientByIdSuccessResultContract>("Клиент не найден.");
-
-            return new UseCaseResponse<IGetClientByIdSuccessResultContract>(
-                new GetClientByIdSuccessResultContract()
+                .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken);
+            
+            return result == null ? 
+                new UseCaseResponse<IGetClientByIdResultContract>("Клиент не найден.") :
+                new UseCaseResponse<IGetClientByIdResultContract>(
+                    new GetClientByIdResultContract()
                     {
-                        Data = new ClientViewModel()
-                        {
-                            Id = result.Id, 
-                            Email = result.Email,
-                            Name = result.Name, 
-                            Phone = result.ClientProfile.Phone,
-                            ClientState = result.ClientState.Name,
-                            ClientType = result.ClientType.Name,
-                            ClientStateId = result.ClientStateId,
-                            ClientTypeId = result.ClientTypeId
-                        }
+                        Client = new ClientViewModel()
+                            {Id = result.Id, 
+                             Email = result.Email,
+                             Name = result.Name, 
+                             Phone = result.ClientProfile.Phone,
+                             ClientState = result.ClientState.Name,
+                             ClientType = result.ClientType.Name,
+                             ClientStateId = result.ClientStateId,
+                             ClientTypeId = result.ClientTypeId}
                     });
         }
     }

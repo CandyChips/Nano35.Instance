@@ -6,27 +6,21 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsName
 {
-    public class UpdateClientsNameUseCase :
-        EndPointNodeBase<
-            IUpdateClientsNameRequestContract, 
-            IUpdateClientsNameResultContract>
+    public class UpdateClientsNameUseCase : UseCaseEndPointNodeBase<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateClientsNameUseCase(
-            ApplicationContext context)
-        {
-            _context = context;
-        }
-        
-        public override async Task<IUpdateClientsNameResultContract> Ask(
+        public UpdateClientsNameUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IUpdateClientsNameResultContract>> Ask(
             IUpdateClientsNameRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Clients.FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken));
-            result.WorkerId = input.UpdaterId;
-            result.Name = input.Name;
-            return new UpdateClientsNameSuccessResultContract();
+            var entityOfClient = await _context
+                .Clients
+                .FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken);
+            if (entityOfClient == null) return new UseCaseResponse<IUpdateClientsNameResultContract>("Клиент не найден.");
+            entityOfClient.WorkerId = input.UpdaterId;
+            entityOfClient.Name = input.Name;
+            return new UseCaseResponse<IUpdateClientsNameResultContract>(new UpdateClientsNameResultContract());
         }
     }
 }

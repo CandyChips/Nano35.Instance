@@ -7,11 +7,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetInstanceById
 {
-    public class GetInstanceByIdUseCase : UseCaseEndPointNodeBase<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>
+    public class GetInstanceByIdUseCase : UseCaseEndPointNodeBase<IGetInstanceByIdRequestContract, IGetInstanceByIdResultContract>
     {
         private readonly ApplicationContext _context;
         public GetInstanceByIdUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetInstanceByIdSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetInstanceByIdResultContract>> Ask(
             IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -19,18 +19,18 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
                 .Instances
                 .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken);
             
-            if (result == null) return new UseCaseResponse<IGetInstanceByIdSuccessResultContract>("Организация не найден.");
-
-            return new UseCaseResponse<IGetInstanceByIdSuccessResultContract>(
-                    new GetInstanceByIdSuccessResultContract()
-                        {Data = 
-                            new InstanceViewModel()
+            return result == null ? 
+                new UseCaseResponse<IGetInstanceByIdResultContract>("Организация не найден.") :
+                new UseCaseResponse<IGetInstanceByIdResultContract>(
+                    new GetInstanceByIdResultContract()
+                    {Data = 
+                        new InstanceViewModel()
                             {Id = result.Id,
-                             CompanyInfo = result.CompanyInfo,
-                             OrgEmail = result.OrgEmail,
-                             OrgName = result.OrgName,
-                             RegionId = result.RegionId,
-                             OrgRealName = result.OrgRealName}});
+                                CompanyInfo = result.CompanyInfo,
+                                OrgEmail = result.OrgEmail,
+                                OrgName = result.OrgName,
+                                RegionId = result.RegionId,
+                                OrgRealName = result.OrgRealName}});
         }
     }
 }

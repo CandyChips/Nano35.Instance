@@ -6,26 +6,21 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
 {
-    public class UpdateUnitsAddressUseCase :
-        EndPointNodeBase<
-            IUpdateUnitsAddressRequestContract,
-            IUpdateUnitsAddressResultContract>
+    public class UpdateUnitsAddressUseCase : UseCaseEndPointNodeBase<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateUnitsAddressUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-
-        public override async Task<IUpdateUnitsAddressResultContract> Ask(
+        public UpdateUnitsAddressUseCase(ApplicationContext context) => _context = context;
+        public override async Task<UseCaseResponse<IUpdateUnitsAddressResultContract>> Ask(
             IUpdateUnitsAddressRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Units.FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken));
-            result.Adress = input.Address;
-            result.CreatorId = input.UpdaterId;
-            return new UpdateUnitsAddressSuccessResultContract();
+            var entityOfUnit = await _context
+                .Units
+                .FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken);
+            if (entityOfUnit == null) return new UseCaseResponse<IUpdateUnitsAddressResultContract>("Подразделение не найдено.");
+            entityOfUnit.Adress = input.Address;
+            entityOfUnit.CreatorId = input.UpdaterId;
+            return new UseCaseResponse<IUpdateUnitsAddressResultContract>(new UpdateUnitsAddressResultContract());
         }
     }
 }

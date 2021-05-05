@@ -7,11 +7,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateClient
 {
-    public class CreateClientUseCase : UseCaseEndPointNodeBase<ICreateClientRequestContract, ICreateClientSuccessResultContract>
+    public class CreateClientUseCase : UseCaseEndPointNodeBase<ICreateClientRequestContract, ICreateClientResultContract>
     {
         private readonly ApplicationContext _context;
         public CreateClientUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<ICreateClientSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<ICreateClientResultContract>> Ask(
             ICreateClientRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -36,7 +36,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             
             await _context.AddAsync(client, cancellationToken);
             
-            return new UseCaseResponse<ICreateClientSuccessResultContract>(new CreateClientSuccessResultContract());
+            return new UseCaseResponse<ICreateClientResultContract>(new CreateClientResultContract());
         }
     }
 }

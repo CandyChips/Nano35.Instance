@@ -7,11 +7,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
 {
-    public class GetInstanceStringsByIdsUseCase : UseCaseEndPointNodeBase<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsSuccessResultContract>
+    public class GetInstanceStringsByIdsUseCase : UseCaseEndPointNodeBase<IGetInstanceStringsByIdsRequestContract, IGetInstanceStringsByIdsResultContract>
     {
         private readonly ApplicationContext _context;
         public GetInstanceStringsByIdsUseCase(ApplicationContext context) => _context = context;
-        public override async Task<UseCaseResponse<IGetInstanceStringsByIdsSuccessResultContract>> Ask(
+        public override async Task<UseCaseResponse<IGetInstanceStringsByIdsResultContract>> Ask(
             IGetInstanceStringsByIdsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -21,7 +21,7 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringsByIds
                 .Select(e => $"{e.OrgRealName}")
                 .ToListAsync(cancellationToken));
             
-            return new UseCaseResponse<IGetInstanceStringsByIdsSuccessResultContract>(new GetInstanceStringsByIdsSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetInstanceStringsByIdsResultContract>(new GetInstanceStringsByIdsResultContract() {Data = result});
         }
     }
 }

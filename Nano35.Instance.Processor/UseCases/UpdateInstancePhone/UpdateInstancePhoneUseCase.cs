@@ -6,19 +6,19 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateInstancePhone
 {
-    public class UpdateInstancePhoneUseCase :
-        EndPointNodeBase<
-            IUpdateInstancePhoneRequestContract, 
-            IUpdateInstancePhoneResultContract>
+    public class UpdateInstancePhoneUseCase : UseCaseEndPointNodeBase<IUpdateInstancePhoneRequestContract, IUpdateInstancePhoneResultContract>
     {
         private readonly ApplicationContext _context;
         public UpdateInstancePhoneUseCase(ApplicationContext context) => _context = context;
-        public override async Task<IUpdateInstancePhoneResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateInstancePhoneResultContract>> Ask(
             IUpdateInstancePhoneRequestContract input,
             CancellationToken cancellationToken)
         {
-            var entityOfInstance = await _context.Instances.FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
-            return new UpdateInstancePhoneSuccessResultContract() ;
+            var entityOfInstance = await _context
+                .Instances
+                .FirstOrDefaultAsync(a => a.Id == input.InstanceId, cancellationToken);
+            if (entityOfInstance == null) return new UseCaseResponse<IUpdateInstancePhoneResultContract>("Организация не найдена.");
+            return new UseCaseResponse<IUpdateInstancePhoneResultContract>(new UpdateInstancePhoneResultContract());
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Nano35.Instance.Api.Controllers
         public IActionResult GetAllClientStates()
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesSuccessResultContract>(
+                new LoggedUseCasePipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllClientStatesRequestContract>)) as ILogger<IGetAllClientStatesRequestContract>,
                         new GetAllClientStatesUseCase(
                             _services.GetService(typeof(IBus)) as IBus))

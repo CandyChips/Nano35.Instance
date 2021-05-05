@@ -55,7 +55,7 @@ namespace Nano35.Instance.Api.Requests
     }
     public class MasstransitUseCaseRequest<TMessage, TResponse> 
         where TMessage : class, IRequest
-        where TResponse : class
+        where TResponse : class, IResult
     {
         private readonly IRequestClient<TMessage> _requestClient;
         private readonly TMessage _request;
