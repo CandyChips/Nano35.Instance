@@ -7,16 +7,10 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
 {
-    public class GetClientStringsByIdsConsumer : 
-        IConsumer<IGetClientStringsByIdsRequestContract>
+    public class GetClientStringsByIdsConsumer : IConsumer<IGetClientStringsByIdsRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public GetClientStringsByIdsConsumer(IServiceProvider services)
-        {
-            _services = services;
-        }
-
+        public GetClientStringsByIdsConsumer(IServiceProvider services) => _services = services;
         public async Task Consume(ConsumeContext<IGetClientStringsByIdsRequestContract> context)
         {
             var result = 

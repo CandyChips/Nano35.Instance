@@ -6,8 +6,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
 {
-    public class GetUnitStringByIdUseCase :
-        UseCaseEndPointNodeBase<IGetUnitStringByIdRequestContract, IGetUnitStringByIdSuccessResultContract>
+    public class GetUnitStringByIdUseCase : UseCaseEndPointNodeBase<IGetUnitStringByIdRequestContract, IGetUnitStringByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetUnitStringByIdUseCase(ApplicationContext context) => _context = context;
@@ -15,16 +14,11 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringById
             IGetUnitStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Units.FirstOrDefaultAsync(e => e.Id == input.UnitId, cancellationToken: cancellationToken));
+            var result = (await _context.Units.FirstOrDefaultAsync(e => e.Id == input.UnitId, cancellationToken));
             
-            if (result == null)
-            {
-                return new UseCaseResponse<IGetUnitStringByIdSuccessResultContract>("Подразделение не найдено.");
-            }
-            
-            return 
-                new UseCaseResponse<IGetUnitStringByIdSuccessResultContract>(
-                    new GetUnitStringByIdSuccessResultContract() {Data = $"{result.Name} - {result.Adress}"});
+            return result == null ? 
+                new UseCaseResponse<IGetUnitStringByIdSuccessResultContract>("Подразделение не найдено.") :
+                new UseCaseResponse<IGetUnitStringByIdSuccessResultContract>(new GetUnitStringByIdSuccessResultContract() {Data = $"{result.Name} - {result.Adress}"});
         }
     }
 }

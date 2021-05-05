@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nano35-instance-api
+  namespace: nano35
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nano35-instance-api
+  template:
+    metadata:
+      labels:
+        app: nano35-instance-api
+    spec:
+      containers:
+        - image: bushemi2021/nano35.instance.api:latest
+          name: nano35-instance-api
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nano35
+  name: nano35-instance-api-svc
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      targetPort: 80
+      nodePort: 30002
+  selector:
+    app: nano35-instance-api
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nano35-instance-processor
+  namespace: nano35
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nano35-instance-processor
+  template:
+    metadata:
+      labels:
+        app: nano35-instance-processor
+    spec:
+      containers:
+        - image: bushemi2021/nano35.instance.processor:latest
+          name: nano35-instance-processor
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

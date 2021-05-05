@@ -7,19 +7,11 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateUnit
 {
-    public class CreateUnitConsumer : 
-        IConsumer<ICreateUnitRequestContract>
+    public class CreateUnitConsumer : IConsumer<ICreateUnitRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public CreateUnitConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<ICreateUnitRequestContract> context)
+        public CreateUnitConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<ICreateUnitRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 

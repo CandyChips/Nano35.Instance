@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetUnitStringsByIds
 {
-    public class GetUnitStringsByIdsUseCase :
-        UseCaseEndPointNodeBase<IGetUnitStringsByIdsRequestContract, IGetUnitStringsByIdsSuccessResultContract>
+    public class GetUnitStringsByIdsUseCase : UseCaseEndPointNodeBase<IGetUnitStringsByIdsRequestContract, IGetUnitStringsByIdsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetUnitStringsByIdsUseCase(ApplicationContext context) => _context = context;
@@ -16,13 +15,13 @@ namespace Nano35.Instance.Processor.UseCases.GetUnitStringsByIds
             IGetUnitStringsByIdsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Units.Where(c => input.UnitIds.Contains(c.Id))
+            var result = (await _context
+                .Units
+                .Where(c => input.UnitIds.Contains(c.Id))
                 .Select(e => $"{e.Name} - {e.Adress}")
                 .ToListAsync(cancellationToken));
             
-            return 
-                new UseCaseResponse<IGetUnitStringsByIdsSuccessResultContract>(
-                    new GetUnitStringsByIdsSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetUnitStringsByIdsSuccessResultContract>(new GetUnitStringsByIdsSuccessResultContract() {Data = result});
         }
     }
 }

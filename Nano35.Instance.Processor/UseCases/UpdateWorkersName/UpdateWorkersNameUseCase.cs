@@ -22,7 +22,7 @@ namespace Nano35.Instance.Processor.UseCases.UpdateWorkersName
             IUpdateWorkersNameRequestContract input,
             CancellationToken cancellationToken)
         {
-            var entityOfWorker = await _context.Workers.FirstAsync(f => f.Id == input.WorkersId, cancellationToken: cancellationToken);
+            var entityOfWorker = await _context.Workers.FirstAsync(f => f.Id == input.WorkersId, cancellationToken);
             entityOfWorker.Name = input.Name;
             return new UpdateWorkersNameSuccessResultContract();
         }

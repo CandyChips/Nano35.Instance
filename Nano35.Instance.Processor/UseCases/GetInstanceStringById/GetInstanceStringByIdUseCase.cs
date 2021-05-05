@@ -6,8 +6,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetInstanceStringById
 {
-    public class GetInstanceStringByIdUseCase :
-        UseCaseEndPointNodeBase<IGetInstanceStringByIdRequestContract, IGetInstanceStringByIdSuccessResultContract>
+    public class GetInstanceStringByIdUseCase : UseCaseEndPointNodeBase<IGetInstanceStringByIdRequestContract, IGetInstanceStringByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetInstanceStringByIdUseCase(ApplicationContext context) => _context = context;
@@ -15,16 +14,14 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceStringById
             IGetInstanceStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context.Instances.FirstOrDefaultAsync(e => e.Id == input.InstanceId, cancellationToken: cancellationToken)).ToString();
+            var result = (await _context
+                .Instances
+                .FirstOrDefaultAsync(e => e.Id == input.InstanceId, cancellationToken))
+                .ToString();
             
-            if (result == null)
-            {
-                return new UseCaseResponse<IGetInstanceStringByIdSuccessResultContract>("Организация не найден.");
-            }
-            
-            return 
-                new UseCaseResponse<IGetInstanceStringByIdSuccessResultContract>(
-                    new GetInstanceStringByIdSuccessResultContract() {Data = result});
+            return result == null ?
+                new UseCaseResponse<IGetInstanceStringByIdSuccessResultContract>("Организация не найден.") :
+                new UseCaseResponse<IGetInstanceStringByIdSuccessResultContract>(new GetInstanceStringByIdSuccessResultContract() {Data = result});
         }
     }
 }

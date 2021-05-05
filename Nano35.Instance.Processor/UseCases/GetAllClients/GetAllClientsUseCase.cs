@@ -8,8 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllClients
 {
-    public class GetAllClientsUseCase :
-        UseCaseEndPointNodeBase<IGetAllClientsRequestContract, IGetAllClientsSuccessResultContract>
+    public class GetAllClientsUseCase : UseCaseEndPointNodeBase<IGetAllClientsRequestContract, IGetAllClientsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllClientsUseCase(ApplicationContext context) => _context = context;
@@ -30,10 +29,8 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
                          Email = a.Email,
                          Name = a.Name,
                          Phone = a.ClientProfile.Phone})
-                .ToListAsync(cancellationToken: cancellationToken);
-            return 
-                new UseCaseResponse<IGetAllClientsSuccessResultContract>(
-                    new GetAllClientsSuccessResultContract() {Data = result});
+                .ToListAsync(cancellationToken);
+            return new UseCaseResponse<IGetAllClientsSuccessResultContract>(new GetAllClientsSuccessResultContract() {Data = result});
         }
     }   
 }

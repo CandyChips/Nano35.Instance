@@ -29,7 +29,6 @@ namespace Nano35.Instance.Api.Controllers
     {
         private readonly IServiceProvider  _services;
         public InstancesController(IServiceProvider services) => _services = services;
-
         [AllowAnonymous]
         [HttpGet]
         [Produces("application/json")]

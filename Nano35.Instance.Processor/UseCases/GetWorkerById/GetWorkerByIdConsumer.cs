@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetWorkerById
 {
-    public class GetWorkerByIdConsumer : 
-        IConsumer<IGetWorkerByIdRequestContract>
+    public class GetWorkerByIdConsumer : IConsumer<IGetWorkerByIdRequestContract>
     {
         private readonly IServiceProvider  _services;
         public GetWorkerByIdConsumer(IServiceProvider services) => _services = services;
@@ -17,8 +16,7 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
             var result = 
                 await new LoggedUseCasePipeNode<IGetWorkerByIdRequestContract, IGetWorkerByIdSuccessResultContract>(
                     _services.GetService(typeof(ILogger<IGetWorkerByIdRequestContract>)) as ILogger<IGetWorkerByIdRequestContract>,
-                        new GetWorkerByIdUseCase(
-                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                        new GetWorkerByIdUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

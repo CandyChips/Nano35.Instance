@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetInstanceById
 {
-    public class GetInstanceByIdUseCase :
-        UseCaseEndPointNodeBase<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>
+    public class GetInstanceByIdUseCase : UseCaseEndPointNodeBase<IGetInstanceByIdRequestContract, IGetInstanceByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetInstanceByIdUseCase(ApplicationContext context) => _context = context;
@@ -16,28 +15,22 @@ namespace Nano35.Instance.Processor.UseCases.GetInstanceById
             IGetInstanceByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Instances
-                .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken: cancellationToken);
+            var result = await _context
+                .Instances
+                .FirstOrDefaultAsync(f => f.Id == input.InstanceId, cancellationToken);
             
-            if (result == null)
-            {
-                return new UseCaseResponse<IGetInstanceByIdSuccessResultContract>("Организация не найден.");
-            }
-            
-            return 
-                new UseCaseResponse<IGetInstanceByIdSuccessResultContract>(
+            if (result == null) return new UseCaseResponse<IGetInstanceByIdSuccessResultContract>("Организация не найден.");
+
+            return new UseCaseResponse<IGetInstanceByIdSuccessResultContract>(
                     new GetInstanceByIdSuccessResultContract()
-                    {
-                        Data = new InstanceViewModel()
-                        {
-                            Id = result.Id,
-                            CompanyInfo = result.CompanyInfo,
-                            OrgEmail = result.OrgEmail,
-                            OrgName = result.OrgName,
-                            RegionId = result.RegionId,
-                            OrgRealName = result.OrgRealName
-                        }
-                    });
+                        {Data = 
+                            new InstanceViewModel()
+                            {Id = result.Id,
+                             CompanyInfo = result.CompanyInfo,
+                             OrgEmail = result.OrgEmail,
+                             OrgName = result.OrgName,
+                             RegionId = result.RegionId,
+                             OrgRealName = result.OrgRealName}});
         }
     }
 }

@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateInstance
 {
-    public class CreateInstanceConsumer : 
-        IConsumer<ICreateInstanceRequestContract>
+    public class CreateInstanceConsumer : IConsumer<ICreateInstanceRequestContract>
     {
         private readonly IServiceProvider  _services;
         public CreateInstanceConsumer(IServiceProvider services) => _services = services;

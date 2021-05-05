@@ -11,23 +11,17 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllUnits
 {
-    public class GetAllUnitsUseCase :
-        UseCaseEndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>
+    public class GetAllUnitsUseCase : UseCaseEndPointNodeBase<IGetAllUnitsRequestContract, IGetAllUnitsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
-
-        public GetAllUnitsUseCase(ApplicationContext context, IBus bus)
-        {
-            _context = context;
-            _bus = bus;
-        }
-        
+        public GetAllUnitsUseCase(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
         public override async Task<UseCaseResponse<IGetAllUnitsSuccessResultContract>> Ask(
             IGetAllUnitsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Units
+            var result = await _context
+                .Units
                 .Where(c => c.InstanceId == input.InstanceId && c.Deleted == false)
                 .Select(a =>
                     new UnitViewModel()
@@ -40,20 +34,18 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnits
                 .ToListAsync(cancellationToken);
             result.ForEach(async e =>
             {
-                var response = await new GetCashboxByUnitId(_bus, new GetCashboxByUnitIdRequestContract() {UnitId = e.Id}).GetResponse();
-                if (response is IGetCashboxByUnitIdSuccessResultContract s)
-                {
-                    e.Cashbox = s.Cash;
-                }
+                var response = await new MasstransitUseCaseRequest<IGetCashboxByUnitIdRequestContract, IGetCashboxByUnitIdSuccessResultContract>(
+                    _bus, 
+                    new GetCashboxByUnitIdRequestContract() {UnitId = e.Id})
+                    .GetResponse();
+
+                if (response.IsSuccess())
+                    e.Cashbox = response.Success.Cash;
                 else
-                {
                     throw new Exception();
-                }
             });
             
-            return 
-                new UseCaseResponse<IGetAllUnitsSuccessResultContract>(
-                    new GetAllUnitsSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetAllUnitsSuccessResultContract>(new GetAllUnitsSuccessResultContract() {Data = result});
         }
     }
     

@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllRoles
 {
-    public class GetAllRolesConsumer : 
-        IConsumer<IGetAllRolesRequestContract>
+    public class GetAllRolesConsumer : IConsumer<IGetAllRolesRequestContract>
     {
         private readonly IServiceProvider  _services;
         public GetAllRolesConsumer(IServiceProvider services) => _services = services;
@@ -16,8 +15,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
         {
             var result = await new LoggedUseCasePipeNode<IGetAllRolesRequestContract, IGetAllRolesSuccessResultContract>(
                 _services.GetService(typeof(ILogger<IGetAllRolesRequestContract>)) as ILogger<IGetAllRolesRequestContract>,
-                new GetAllRolesUseCase(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                new GetAllRolesUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                 .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

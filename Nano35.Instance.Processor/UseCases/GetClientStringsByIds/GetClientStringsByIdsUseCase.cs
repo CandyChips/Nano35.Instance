@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
 {
-    public class GetClientStringsByIdsUseCase :
-        UseCaseEndPointNodeBase<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsSuccessResultContract>
+    public class GetClientStringsByIdsUseCase : UseCaseEndPointNodeBase<IGetClientStringsByIdsRequestContract, IGetClientStringsByIdsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetClientStringsByIdsUseCase(ApplicationContext context) => _context = context;
@@ -16,12 +15,12 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
             IGetClientStringsByIdsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Clients.Where(c => input.ClientIds.Contains(c.Id))
+            var result = await _context
+                .Clients
+                .Where(c => input.ClientIds.Contains(c.Id))
                 .Select(e => $"{e.Name} - {e.ClientProfile.Phone}")
                 .ToListAsync(cancellationToken);
-            return
-                new UseCaseResponse<IGetClientStringsByIdsSuccessResultContract>(
-                    new GetClientStringsByIdsSuccessResultContract() {Data = result});
+            return new UseCaseResponse<IGetClientStringsByIdsSuccessResultContract>(new GetClientStringsByIdsSuccessResultContract() {Data = result});
         }
     }
 }

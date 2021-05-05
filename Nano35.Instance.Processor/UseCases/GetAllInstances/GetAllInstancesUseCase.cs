@@ -8,8 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllInstances
 {
-    public class GetAllInstancesUseCase :
-        UseCaseEndPointNodeBase<IGetAllInstancesRequestContract, IGetAllInstancesSuccessResultContract>
+    public class GetAllInstancesUseCase : UseCaseEndPointNodeBase<IGetAllInstancesRequestContract, IGetAllInstancesSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllInstancesUseCase(ApplicationContext context) => _context = context;
@@ -18,20 +17,18 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstances
             CancellationToken cancellationToken) =>
             new(
                 new GetAllInstancesSuccessResultContract()
-                {
-                    Data = 
-                        await _context.Workers
-                            .Where(c => c.Id == input.UserId)
-                            .Select(e => e.Instance)
-                            .Select(a => 
-                                new InstanceViewModel()
-                                {Id = a.Id,
-                                    CompanyInfo = a.CompanyInfo,
-                                    OrgEmail = a.OrgEmail,
-                                    OrgName = a.OrgName,
-                                    OrgRealName = a.OrgRealName,
-                                    RegionId = a.RegionId})
-                            .ToListAsync(cancellationToken: cancellationToken)
-                });
+                {Data = await _context
+                    .Workers
+                    .Where(c => c.Id == input.UserId)
+                    .Select(e => e.Instance)
+                    .Select(a => 
+                        new InstanceViewModel()
+                            {Id = a.Id,
+                             CompanyInfo = a.CompanyInfo,
+                             OrgEmail = a.OrgEmail,
+                             OrgName = a.OrgName,
+                             OrgRealName = a.OrgRealName,
+                             RegionId = a.RegionId})
+                    .ToListAsync(cancellationToken)});
     }
 }

@@ -8,8 +8,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
 {
-    public class GetAllUnitsByTypeUseCase :
-        UseCaseEndPointNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeSuccessResultContract>
+    public class GetAllUnitsByTypeUseCase : UseCaseEndPointNodeBase<IGetAllUnitsByTypeRequestContract, IGetAllUnitsByTypeSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetAllUnitsByTypeUseCase(ApplicationContext context) => _context = context;
@@ -17,7 +16,8 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
             IGetAllUnitsByTypeRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Units)
+            var result = await _context
+                .Units
                 .Where(c => c.UnitTypeId == input.UnitTypeId)
                 .Select(a => 
                     new UnitViewModel()
@@ -27,10 +27,8 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitsByType
                          Phone = a.Phone,
                          UnitType = a.UnitType.Name,
                          WorkingFormat = a.WorkingFormat})
-                .ToListAsync(cancellationToken: cancellationToken);
-            return 
-                new UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>(
-                    new GetAllUnitsByTypeSuccessResultContract() {Data = result});
+                .ToListAsync(cancellationToken);
+            return new UseCaseResponse<IGetAllUnitsByTypeSuccessResultContract>(new GetAllUnitsByTypeSuccessResultContract() {Data = result});
         }
     }
 }

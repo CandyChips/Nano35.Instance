@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllClients
 {
-    public class GetAllClientsConsumer : 
-        IConsumer<IGetAllClientsRequestContract>
+    public class GetAllClientsConsumer : IConsumer<IGetAllClientsRequestContract>
     {
         private readonly IServiceProvider  _services;
         public GetAllClientsConsumer(IServiceProvider services) => _services = services;
@@ -17,8 +16,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             var result =
                 await new LoggedUseCasePipeNode<IGetAllClientsRequestContract, IGetAllClientsSuccessResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllClientsRequestContract>)) as ILogger<IGetAllClientsRequestContract>,
-                        new GetAllClientsUseCase(
-                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                        new GetAllClientsUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

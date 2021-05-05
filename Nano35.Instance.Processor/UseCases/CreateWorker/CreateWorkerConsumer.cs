@@ -7,29 +7,22 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateWorker
 {
-    public class CreateWorkerConsumer : 
-        IConsumer<ICreateWorkerRequestContract>
+    public class CreateWorkerConsumer : IConsumer<ICreateWorkerRequestContract>
     {
         private readonly IServiceProvider  _services;
-        
-        public CreateWorkerConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<ICreateWorkerRequestContract> context)
+        public CreateWorkerConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<ICreateWorkerRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<ICreateWorkerRequestContract>) _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>));
-            var message = context.Message;
             var result = 
-                await new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(logger,  
-                        new TransactedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(dbContext,
-                            new CreateWorkerUseCase(bus, dbContext)))
-                    .Ask(message, context.CancellationToken);
+                await new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,  
+                        new TransactedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>(
+                            dbContext,
+                            new CreateWorkerUseCase(
+                                _services.GetService(typeof(IBus)) as IBus, 
+                                dbContext)))
+                    .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }
     }

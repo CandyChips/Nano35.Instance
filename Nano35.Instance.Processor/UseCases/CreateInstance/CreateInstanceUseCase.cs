@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateInstance
 {
-    public class CreateInstanceUseCase :
-        UseCaseEndPointNodeBase<ICreateInstanceRequestContract, ICreateInstanceSuccessResultContract>
+    public class CreateInstanceUseCase : UseCaseEndPointNodeBase<ICreateInstanceRequestContract, ICreateInstanceSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public CreateInstanceUseCase(ApplicationContext context) => _context = context;
@@ -40,9 +39,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             
             await _context.AddAsync(defaultUser, cancellationToken);
             
-            return 
-                new UseCaseResponse<ICreateInstanceSuccessResultContract>(
-                    new CreateInstanceSuccessResultContract());
+            return new UseCaseResponse<ICreateInstanceSuccessResultContract>(new CreateInstanceSuccessResultContract());
         }
     }
 }

@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
 {
-    public class GetAllWorkersConsumer : 
-        IConsumer<IGetAllWorkersRequestContract>
+    public class GetAllWorkersConsumer : IConsumer<IGetAllWorkersRequestContract>
     {
         private readonly IServiceProvider  _services;
         public GetAllWorkersConsumer(IServiceProvider services) => _services = services;

@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientById
 {
-    public class GetClientByIdUseCase :
-        UseCaseEndPointNodeBase<IGetClientByIdRequestContract,IGetClientByIdSuccessResultContract>
+    public class GetClientByIdUseCase : UseCaseEndPointNodeBase<IGetClientByIdRequestContract,IGetClientByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetClientByIdUseCase(ApplicationContext context) => _context = context;
@@ -16,17 +15,15 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
             IGetClientByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Clients
-                .FirstAsync(f => f.Id == input.UnitId, cancellationToken: cancellationToken);
+            var result = await _context
+                .Clients
+                .FirstAsync(f => f.Id == input.UnitId, cancellationToken);
 
             if (result == null)
-            {
                 return new UseCaseResponse<IGetClientByIdSuccessResultContract>("Клиент не найден.");
-            }
-            
-            return 
-                new UseCaseResponse<IGetClientByIdSuccessResultContract>(
-                    new GetClientByIdSuccessResultContract()
+
+            return new UseCaseResponse<IGetClientByIdSuccessResultContract>(
+                new GetClientByIdSuccessResultContract()
                     {
                         Data = new ClientViewModel()
                         {

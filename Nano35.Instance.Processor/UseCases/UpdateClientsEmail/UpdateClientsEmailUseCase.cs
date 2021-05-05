@@ -6,18 +6,10 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
 {
-    public class UpdateClientsEmailUseCase :
-        EndPointNodeBase<
-            IUpdateClientsEmailRequestContract,
-            IUpdateClientsEmailResultContract>
+    public class UpdateClientsEmailUseCase : EndPointNodeBase<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateClientsEmailUseCase(ApplicationContext context)
-        {
-            _context = context;
-        }
-        
+        public UpdateClientsEmailUseCase(ApplicationContext context) => _context = context;
         public override async Task<IUpdateClientsEmailResultContract> Ask(
             IUpdateClientsEmailRequestContract input,
             CancellationToken cancellationToken)

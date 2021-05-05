@@ -8,24 +8,19 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.CreateWorker
 {
-    public class CreateWorkerUseCase :
-        UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>
+    public class CreateWorkerUseCase : UseCaseEndPointNodeBase<ICreateWorkerRequestContract, ICreateWorkerSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
-        public CreateWorkerUseCase(IBus bus, ApplicationContext context) 
-        {
-            _bus = bus;
-            _context = context;
-        }
-        
+        public CreateWorkerUseCase(IBus bus, ApplicationContext context) { _bus = bus; _context = context; }
         public override async Task<UseCaseResponse<ICreateWorkerSuccessResultContract>> Ask(
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
             var client = _bus.CreateRequestClient<ICreateUserRequestContract>();
-            var response = await client
-                .GetResponse<UseCaseResponse<ICreateUserSuccessResultContract>>(new CreateUserRequestContract()
+            
+            var response = await client.GetResponse<UseCaseResponse<ICreateUserSuccessResultContract>>(
+                new CreateUserRequestContract()
                     {NewId = input.NewId,
                      Phone = input.Phone,
                      Email = input.Email,
@@ -35,10 +30,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                      Name = input.Name}, 
                     cancellationToken);
 
-            if (!response.Message.IsSuccess())
-            {
-                return new UseCaseResponse<ICreateWorkerSuccessResultContract>(response.Message.Error);
-            }
+            if (!response.Message.IsSuccess()) return new UseCaseResponse<ICreateWorkerSuccessResultContract>(response.Message.Error);
+
             var worker = 
                 new Worker()
                     {Id = input.NewId,
@@ -46,10 +39,10 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                      WorkersRoleId = input.RoleId,
                      Name = input.Name,
                      Comment = input.Comment};
+            
             await _context.AddAsync(worker, cancellationToken);
-            return 
-                new UseCaseResponse<ICreateWorkerSuccessResultContract>(
-                    new CreateWorkerSuccessResultContract());
+            
+            return new UseCaseResponse<ICreateWorkerSuccessResultContract>(new CreateWorkerSuccessResultContract());
         }
     }
 }

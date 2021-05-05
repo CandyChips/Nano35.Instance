@@ -6,8 +6,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetClientStringById
 {
-    public class GetClientStringByIdUseCase :
-        UseCaseEndPointNodeBase<IGetClientStringByIdRequestContract, IGetClientStringByIdSuccessResultContract>
+    public class GetClientStringByIdUseCase : UseCaseEndPointNodeBase<IGetClientStringByIdRequestContract, IGetClientStringByIdSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetClientStringByIdUseCase(ApplicationContext context) => _context = context;
@@ -15,17 +14,13 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
             IGetClientStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Clients
-                .FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken: cancellationToken);
+            var result = await _context
+                .Clients
+                .FirstOrDefaultAsync(e => e.Id == input.ClientId, cancellationToken);
             
-            if (result == null)
-            {
-                return new UseCaseResponse<IGetClientStringByIdSuccessResultContract>("Клиент не найден.");
-            }
-            
-            return 
-                new UseCaseResponse<IGetClientStringByIdSuccessResultContract>(
-                    new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.ClientProfile.Phone}"});
+            return result == null ? 
+                new UseCaseResponse<IGetClientStringByIdSuccessResultContract>("Клиент не найден.") : 
+                new UseCaseResponse<IGetClientStringByIdSuccessResultContract>(new GetClientStringByIdSuccessResultContract() {Data = $"{result.Name} - +7{result.ClientProfile.Phone}"});
         }
     }
 }

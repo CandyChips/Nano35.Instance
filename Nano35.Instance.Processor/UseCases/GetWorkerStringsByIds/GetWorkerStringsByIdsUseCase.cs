@@ -7,8 +7,7 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds
 {
-    public class GetWorkerStringsByIdsUseCase :
-        UseCaseEndPointNodeBase<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsSuccessResultContract>
+    public class GetWorkerStringsByIdsUseCase : UseCaseEndPointNodeBase<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsSuccessResultContract>
     {
         private readonly ApplicationContext _context;
         public GetWorkerStringsByIdsUseCase(ApplicationContext context) => _context = context;
@@ -16,13 +15,13 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds
             IGetWorkerStringsByIdsRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.Workers
+            var result = await _context
+                .Workers
                 .Where(c => input.WorkerIds.Contains(c.Id))
                 .Select(e => $"{e.Name}")
                 .ToListAsync(cancellationToken);            
-            return 
-                new UseCaseResponse<IGetWorkerStringsByIdsSuccessResultContract>(
-                    new GetWorkerStringsByIdsSuccessResultContract() {Data = result});
+            
+            return new UseCaseResponse<IGetWorkerStringsByIdsSuccessResultContract>(new GetWorkerStringsByIdsSuccessResultContract() {Data = result});
         }
     }
 }
