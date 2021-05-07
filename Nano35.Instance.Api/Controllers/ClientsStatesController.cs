@@ -21,7 +21,8 @@ namespace Nano35.Instance.Api.Controllers
         public ClientsStatesController(IServiceProvider services) => _services = services;
         
         [AllowAnonymous]
-        [HttpGet("application/json")]
+        [HttpGet]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientStatesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllClientStatesErrorHttpResponse))] 
         public IActionResult GetAllClientStates()
