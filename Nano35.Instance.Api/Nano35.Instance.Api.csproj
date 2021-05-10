@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
-    <PackageReference Include="Nano35.Contracts" Version="2.9.4" />
+    <PackageReference Include="Nano35.Contracts" Version="2.9.9" />
     <PackageReference Include="Nano35.HttpContext" Version="1.9.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
   </ItemGroup>

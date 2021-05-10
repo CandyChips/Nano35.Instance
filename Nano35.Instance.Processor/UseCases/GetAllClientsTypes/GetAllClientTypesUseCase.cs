@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +17,10 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
             IGetAllClientTypesRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context
-                .ClientTypes
-                .Select(a => 
-                    new ClientTypeViewModel()
-                        {Id = a.Id,
-                         Name = a.Name})
-                .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllClientTypesResultContract>(new GetAllClientTypesResultContract() {Data = result});
+            var result =
+                from item in _context.ClientTypes
+                select new ClientTypeViewModel {Id = item.Id, Name = item.Name};
+            return new UseCaseResponse<IGetAllClientTypesResultContract>(new GetAllClientTypesResultContract() { Data = result });
         }
     }
 }
