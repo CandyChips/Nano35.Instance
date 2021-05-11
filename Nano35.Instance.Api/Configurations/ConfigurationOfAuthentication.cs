@@ -1,24 +1,23 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Nano35.Contracts;
 
 namespace Nano35.Instance.Api.Configurations
 {
-    public class AuthOptions
-    {
-        const string KEY = "mysupersecret_secretkey!123";
-        public static SymmetricSecurityKey GetSymmetricSecurityKey()
-        {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
-        }
-    }
     public class AuthenticationConfiguration : 
         IConfigurationOfService
     {
-        public void AddToServices(
-            IServiceCollection services)
+        private string _key = "mysupersecret_secretkey!123";
+
+        public AuthenticationConfiguration(IConfiguration configuration)
+        {
+            _key = configuration["services:Authentication:Key"];
+        }
+        
+        public void AddToServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -26,13 +25,17 @@ namespace Nano35.Instance.Api.Configurations
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        IssuerSigningKey = GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = false
                     };
                 });
+        }
+        private SymmetricSecurityKey GetSymmetricSecurityKey()
+        {
+            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_key));
         }
     }
 }

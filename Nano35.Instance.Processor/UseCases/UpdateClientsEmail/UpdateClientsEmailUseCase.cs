@@ -18,7 +18,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateClientsEmail
                 .Clients
                 .FirstOrDefaultAsync(a => a.Id == input.ClientId, cancellationToken);
             if (entityOfClient == null) return new UseCaseResponse<IUpdateClientsEmailResultContract>("Клиент не найден.");
-            entityOfClient.WorkerId = input.UpdaterId;
             entityOfClient.Email = input.Email;
             return new UseCaseResponse<IUpdateClientsEmailResultContract>(new UpdateClientsEmailResultContract());
         }

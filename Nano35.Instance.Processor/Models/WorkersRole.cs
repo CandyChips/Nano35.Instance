@@ -8,19 +8,12 @@ namespace Nano35.Instance.Processor.Models
 {
     public class WorkersRole
     {
-        //Primary key
         public Guid Id { get; set; }
-        //Data
-        public string Name { get; set; }
+        public Guid RoleId { get; set; }
+        public Guid WorkerId { get; set; }
         
-        public ICollection<Worker> Workers { get; set; }
-
-        public override string ToString() => Name;
-        
-        public WorkersRole()
-        {
-            Workers = new List<Worker>();
-        }
+        public Role Role { get; set; }
+        public Worker Worker { get; set; }
         
         public class Configuration : IEntityTypeConfiguration<WorkersRole>
         {
@@ -28,8 +21,16 @@ namespace Nano35.Instance.Processor.Models
             {
                 builder.ToTable("WorkerRoles");
                 builder.HasKey(u => u.Id);
-                builder.Property(b => b.Name)    
-                    .HasColumnType("nvarchar(MAX)")
+                
+                builder.HasOne(p => p.Role)
+                    .WithMany(p => p.WorkersRoles)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new { p.RoleId });
+                
+                builder.HasOne(p => p.Worker)
+                    .WithMany(p => p.WorkersRoles)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new { p.WorkerId })
                     .IsRequired();
             }
         }

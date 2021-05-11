@@ -12,7 +12,6 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsPhone
         public UpdateUnitsPhoneUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
         public override async Task<UseCaseResponse<IUpdateUnitsPhoneResultContract>> Ask(IUpdateUnitsPhoneRequestContract input)
         {
-            input.UpdaterId = _auth.CurrentUserId;
             return await new MasstransitUseCaseRequest<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(_bus, input)
                 .GetResponse();
 

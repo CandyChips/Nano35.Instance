@@ -9,18 +9,15 @@ namespace Nano35.Instance.Processor.Models
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }
+        public Guid ClientTypeId { get; set; }
+        public Guid ClientStateId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public bool Deleted { get; set; }
-        public Guid ClientTypeId { get; set; }
-        public Guid ClientStateId { get; set; }
-        public Guid WorkerId { get; set; }
-        
         public Instance Instance { get; set; }
         public ClientType ClientType { get; set; }
         public ClientState ClientState { get; set; }
         public ClientProfile ClientProfile { get; set; }
-        public Worker Creator { get; set; }
         
         public class Configuration : IEntityTypeConfiguration<Client>
         {
@@ -34,7 +31,6 @@ namespace Nano35.Instance.Processor.Models
                 builder.Property(b => b.Deleted).IsRequired();
                 builder.Property(b => b.ClientTypeId).IsRequired();
                 builder.Property(b => b.ClientStateId).IsRequired();
-                builder.Property(b => b.WorkerId).IsRequired();
                 
                 builder.HasOne(p => p.ClientProfile)
                     .WithMany(p => p.Clients)
@@ -42,22 +38,17 @@ namespace Nano35.Instance.Processor.Models
                     .HasForeignKey(p => new { p.Id });
                 
                 builder.HasOne(p => p.ClientType)
-                    .WithMany()
+                    .WithMany(p => p.Clients)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new { p.ClientTypeId });
                 
                 builder.HasOne(p => p.ClientState)
-                    .WithMany()
+                    .WithMany(p => p.Clients)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new { p.ClientStateId });
                 
-                builder.HasOne(p => p.Creator)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .HasForeignKey(p => new { p.WorkerId });
-                
                 builder.HasOne(p => p.Instance)
-                    .WithMany()
+                    .WithMany(p => p.Clients)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new { p.InstanceId });
             }

@@ -19,7 +19,6 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsName
                 .FirstOrDefaultAsync(a => a.Id == input.UnitId, cancellationToken);
             if (entityOfUnit == null) return new UseCaseResponse<IUpdateUnitsNameResultContract>("Подразделение не найдено.");
             entityOfUnit.Name = input.Name;
-            entityOfUnit.CreatorId = input.UpdaterId;
             return new UseCaseResponse<IUpdateUnitsNameResultContract>(new UpdateUnitsNameResultContract());
         }
     }

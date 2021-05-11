@@ -1,0 +1,7 @@
+{
+    "services": {
+        "Authentication": {
+            "Key": "mysupersecret_secretkey!123"
+        }
+    }
+}

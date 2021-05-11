@@ -12,7 +12,6 @@ namespace Nano35.Instance.Api.Requests.UpdateWorkersRole
         public UpdateWorkersRoleUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
         public override async Task<UseCaseResponse<IUpdateWorkersRoleResultContract>> Ask(IUpdateWorkersRoleRequestContract input)
         {
-            input.UpdaterId = _auth.CurrentUserId;
             return await new MasstransitUseCaseRequest<IUpdateWorkersRoleRequestContract, IUpdateWorkersRoleResultContract>(_bus, input)
                 .GetResponse();
         }

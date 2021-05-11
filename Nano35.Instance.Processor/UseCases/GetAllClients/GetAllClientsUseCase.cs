@@ -30,7 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
                          Name = a.Name,
                          Phone = a.ClientProfile.Phone})
                 .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllClientsResultContract>(new GetAllClientsResultContract() {Data = result});
+            return Pass(new GetAllClientsResultContract {Data = result});
         }
     }   
 }

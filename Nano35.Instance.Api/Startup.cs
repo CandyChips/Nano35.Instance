@@ -10,12 +10,17 @@ namespace Nano35.Instance.Api
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration) => Configuration = configuration;
+        private IConfiguration Configuration { get; }
+        
+        public Startup()
+        {
+            var builder = new ConfigurationBuilder().AddJsonFile("ServicesConfig.json");
+            Configuration = builder.Build();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            new Configurator(services, new AuthenticationConfiguration()).Configure();
+            new Configurator(services, new AuthenticationConfiguration(Configuration)).Configure();
             new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();

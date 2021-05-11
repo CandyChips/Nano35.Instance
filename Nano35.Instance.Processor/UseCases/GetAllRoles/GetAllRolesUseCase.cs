@@ -16,7 +16,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllRoles
             IGetAllRolesRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context.WorkerRoles
+            var result = await _context.Roles
                 .Select(a =>
                     new RoleViewModel()
                         {Id = a.Id,

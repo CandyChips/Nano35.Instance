@@ -18,7 +18,6 @@ using Nano35.Instance.Processor.UseCases.GetAllInstanceTypes;
 using Nano35.Instance.Processor.UseCases.GetAllRegions;
 using Nano35.Instance.Processor.UseCases.GetAllRoles;
 using Nano35.Instance.Processor.UseCases.GetAllUnits;
-using Nano35.Instance.Processor.UseCases.GetAllUnitsByType;
 using Nano35.Instance.Processor.UseCases.GetAllUnitTypes;
 using Nano35.Instance.Processor.UseCases.GetAllWorkerRoles;
 using Nano35.Instance.Processor.UseCases.GetAllWorkers;
@@ -51,7 +50,6 @@ using Nano35.Instance.Processor.UseCases.UpdateUnitsType;
 using Nano35.Instance.Processor.UseCases.UpdateUnitsWorkingFormat;
 using Nano35.Instance.Processor.UseCases.UpdateWorkersComment;
 using Nano35.Instance.Processor.UseCases.UpdateWorkersName;
-using Nano35.Instance.Processor.UseCases.UpdateWorkersRole;
 
 namespace Nano35.Instance.Processor.Configurations
 {
@@ -72,215 +70,52 @@ namespace Nano35.Instance.Processor.Configurations
                         h.Password(ContractBase.RabbitMqPassword);
                     });
                     
-                    cfg.ReceiveEndpoint("IGetAllInstancesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllInstancesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllRegionsRequestContract", e =>
-                    {
-                        e.Consumer<GetAllRegionsConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllInstanceTypesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllInstanceTypesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetInstanceByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetInstanceByIdConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllWorkerRolesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllWorkerRolesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllWorkersRequestContract", e =>
-                    {
-                        e.Consumer<GetAllWorkersConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllUnitsResultContract", e =>
-                    {
-                        e.Consumer<GetAllUnitsConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllUnitTypesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllUnitTypesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("ICreateInstanceRequestContract", e =>
-                    {
-                        e.Consumer<CreateInstanceConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("ICreateWorkerRequestContract", e =>
-                    {
-                        e.Consumer<CreateWorkerConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("ICreateUnitRequestContract", e =>
-                    {
-                        e.Consumer<CreateUnitConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("ICreateClientRequestContract", e =>
-                    {
-                        e.Consumer<CreateClientConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllClientsRequestContract", e =>
-                    {
-                        e.Consumer<GetAllClientsConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllClientStatesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllClientStatesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetAllClientTypesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllClientTypesConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetClientByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetClientByIdConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetUnitByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetUnitByIdConsumer>(provider);
-                    });
-                    
-                    cfg.ReceiveEndpoint("IGetWorkerStringByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetWorkerStringByIdConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetClientStringByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetClientStringByIdConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetUnitStringByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetUnitStringByIdConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetInstanceStringByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetInstanceStringByIdConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IDeleteUnitRequestContract", e =>
-                    {
-                        e.Consumer<DeleteUnitConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IDeleteClientRequestContract", e =>
-                    {
-                        e.Consumer<DeleteClientConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetAllRolesRequestContract", e =>
-                    {
-                        e.Consumer<GetAllRolesConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetAllUnitsByTypeRequestContract", e =>
-                    {
-                        e.Consumer<GetAllUnitsByTypeConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetClientStringsByIdsRequestContract", e =>
-                    {
-                        e.Consumer<GetClientStringsByIdsConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetInstanceStringsByIdsRequestContract", e =>
-                    {
-                        e.Consumer<GetInstanceStringsByIdsConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetUnitStringsByIdsRequestContract", e =>
-                    {
-                        e.Consumer<GetUnitStringsByIdsConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetWorkerByIdRequestContract", e =>
-                    {
-                        e.Consumer<GetWorkerByIdConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IGetWorkerStringsByIdsRequestContract", e =>
-                    {
-                        e.Consumer<GetWorkerStringsByIdsConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateWorkersRoleRequestContract", e =>
-                    {
-                        e.Consumer<UpdateWorkersRoleConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateWorkersNameRequestContract", e =>
-                    {
-                        e.Consumer<UpdateWorkersNameConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateWorkersCommentRequestContract", e =>
-                    {
-                        e.Consumer<UpdateWorkersCommentConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateUnitsWorkingFormatRequestContract", e =>
-                    {
-                        e.Consumer<UpdateUnitsWorkingFormatConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateUnitsTypeRequestContract", e =>
-                    {
-                        e.Consumer<UpdateUnitsTypeConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateUnitsPhoneRequestContract", e =>
-                    {
-                        e.Consumer<UpdateUnitsPhoneConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateUnitsNameRequestContract", e =>
-                    {
-                        e.Consumer<UpdateUnitsNameConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateUnitsAddressRequestContract", e =>
-                    {
-                        e.Consumer<UpdateUnitsAddressConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstanceRegionRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstanceRegionConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstanceRealNameRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstanceRealNameConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstancePhoneRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstancePhoneConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstanceNameRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstanceNameConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstanceInfoRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstanceInfoConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateInstanceEmailRequestContract", e =>
-                    {
-                        e.Consumer<UpdateInstanceEmailConsumer>(provider);
-                    }); 
-                    cfg.ReceiveEndpoint("IUpdateClientsTypeRequestContract", e =>
-                    {
-                        e.Consumer<UpdateClientsTypeConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateClientsStateRequestContract", e =>
-                    {
-                        e.Consumer<UpdateClientsStateConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateClientsNameRequestContract", e =>
-                    {
-                        e.Consumer<UpdateClientsNameConsumer>(provider);
-                    });
-                    cfg.ReceiveEndpoint("IUpdateClientsEmailRequestContract", e =>
-                    {
-                        e.Consumer<UpdateClientsEmailConsumer>(provider);
-                    });
+                    cfg.ReceiveEndpoint("IGetAllInstancesRequestContract", e => { e.Consumer<GetAllInstancesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllRegionsRequestContract", e => { e.Consumer<GetAllRegionsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllInstanceTypesRequestContract", e => { e.Consumer<GetAllInstanceTypesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetInstanceByIdRequestContract", e => { e.Consumer<GetInstanceByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllWorkerRolesRequestContract", e => { e.Consumer<GetAllWorkerRolesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllWorkersRequestContract", e => { e.Consumer<GetAllWorkersConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllUnitsResultContract", e => { e.Consumer<GetAllUnitsConsumer>(provider);});
+                    cfg.ReceiveEndpoint("IGetAllUnitTypesRequestContract", e => { e.Consumer<GetAllUnitTypesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("ICreateInstanceRequestContract", e => { e.Consumer<CreateInstanceConsumer>(provider); });
+                    cfg.ReceiveEndpoint("ICreateWorkerRequestContract", e => { e.Consumer<CreateWorkerConsumer>(provider); });
+                    cfg.ReceiveEndpoint("ICreateUnitRequestContract", e =>{ e.Consumer<CreateUnitConsumer>(provider); });
+                    cfg.ReceiveEndpoint("ICreateClientRequestContract", e => { e.Consumer<CreateClientConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllClientsRequestContract", e => { e.Consumer<GetAllClientsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllClientStatesRequestContract", e => { e.Consumer<GetAllClientStatesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllClientTypesRequestContract", e => { e.Consumer<GetAllClientTypesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetClientByIdRequestContract", e => { e.Consumer<GetClientByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetUnitByIdRequestContract", e => { e.Consumer<GetUnitByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetWorkerStringByIdRequestContract", e => { e.Consumer<GetWorkerStringByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetClientStringByIdRequestContract", e => { e.Consumer<GetClientStringByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetUnitStringByIdRequestContract", e => { e.Consumer<GetUnitStringByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetInstanceStringByIdRequestContract", e => { e.Consumer<GetInstanceStringByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IDeleteUnitRequestContract", e => { e.Consumer<DeleteUnitConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IDeleteClientRequestContract", e => { e.Consumer<DeleteClientConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllRolesRequestContract", e => {e.Consumer<GetAllRolesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetClientStringsByIdsRequestContract", e => { e.Consumer<GetClientStringsByIdsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetInstanceStringsByIdsRequestContract", e => { e.Consumer<GetInstanceStringsByIdsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetUnitStringsByIdsRequestContract", e => { e.Consumer<GetUnitStringsByIdsConsumer>(provider); }); 
+                    cfg.ReceiveEndpoint("IGetWorkerByIdRequestContract", e => { e.Consumer<GetWorkerByIdConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetWorkerStringsByIdsRequestContract", e => { e.Consumer<GetWorkerStringsByIdsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateWorkersNameRequestContract", e => { e.Consumer<UpdateWorkersNameConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateWorkersCommentRequestContract", e => { e.Consumer<UpdateWorkersCommentConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateUnitsWorkingFormatRequestContract", e => { e.Consumer<UpdateUnitsWorkingFormatConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateUnitsTypeRequestContract", e => { e.Consumer<UpdateUnitsTypeConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateUnitsPhoneRequestContract", e => { e.Consumer<UpdateUnitsPhoneConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateUnitsNameRequestContract", e => { e.Consumer<UpdateUnitsNameConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateUnitsAddressRequestContract", e => { e.Consumer<UpdateUnitsAddressConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstanceRegionRequestContract", e => { e.Consumer<UpdateInstanceRegionConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstanceRealNameRequestContract", e => { e.Consumer<UpdateInstanceRealNameConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstancePhoneRequestContract", e => { e.Consumer<UpdateInstancePhoneConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstanceNameRequestContract", e => { e.Consumer<UpdateInstanceNameConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstanceInfoRequestContract", e => { e.Consumer<UpdateInstanceInfoConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateInstanceEmailRequestContract", e => { e.Consumer<UpdateInstanceEmailConsumer>(provider); }); 
+                    cfg.ReceiveEndpoint("IUpdateClientsTypeRequestContract", e => { e.Consumer<UpdateClientsTypeConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateClientsStateRequestContract", e => { e.Consumer<UpdateClientsStateConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateClientsNameRequestContract", e => { e.Consumer<UpdateClientsNameConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateClientsEmailRequestContract", e => { e.Consumer<UpdateClientsEmailConsumer>(provider); });
                 }));
                 x.AddConsumer<UpdateClientsEmailConsumer>();
                 x.AddConsumer<UpdateClientsNameConsumer>();
@@ -299,14 +134,12 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<UpdateUnitsWorkingFormatConsumer>();
                 x.AddConsumer<UpdateWorkersCommentConsumer>();
                 x.AddConsumer<UpdateWorkersNameConsumer>();
-                x.AddConsumer<UpdateWorkersRoleConsumer>();
                 x.AddConsumer<GetWorkerStringsByIdsConsumer>();
                 x.AddConsumer<GetWorkerByIdConsumer>();
                 x.AddConsumer<GetUnitStringsByIdsConsumer>();
                 x.AddConsumer<GetInstanceStringsByIdsConsumer>();
                 x.AddConsumer<GetClientStringsByIdsConsumer>();
                 x.AddConsumer<DeleteUnitConsumer>();
-                x.AddConsumer<GetAllUnitsByTypeConsumer>();
                 x.AddConsumer<DeleteClientConsumer>();
                 x.AddConsumer<GetWorkerStringByIdConsumer>();
                 x.AddConsumer<GetClientStringByIdConsumer>();
@@ -330,12 +163,10 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<GetAllClientTypesConsumer>();
                 x.AddConsumer<GetClientByIdConsumer>();
                 x.AddConsumer<GetUnitByIdConsumer>();
-                
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
                 x.AddRequestClient<IRegisterRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IRegisterRequestContract"));
                 x.AddRequestClient<ICreateUserRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/ICreateUserRequestContract"));
                 x.AddRequestClient<IRegisterCashboxRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IRegisterCashboxRequestContract"));
-
             });
             services.AddMassTransitHostedService();
         }

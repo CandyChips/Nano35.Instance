@@ -12,7 +12,6 @@ using Nano35.Instance.Api.Requests.GetAllInstanceTypes;
 
 namespace Nano35.Instance.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class InstancesTypesController : ControllerBase
@@ -20,7 +19,6 @@ namespace Nano35.Instance.Api.Controllers
         private readonly IServiceProvider _services;
         public InstancesTypesController(IServiceProvider services) => _services = services;
 
-        [AllowAnonymous]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesSuccessHttpResponse))]

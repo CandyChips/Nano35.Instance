@@ -7,24 +7,14 @@ namespace Nano35.Instance.Processor.Models
 {
     public class Worker
     {
-        //Primary key
         public Guid Id {get;set;}
         public Guid InstanceId { get; set; }
         public Instance Instance { get; set; }
-        
-        //Data
         public string Name { get; set; }
         public string Comment { get; set; }
-
-        //Forein keys
-        public Guid WorkersRoleId { get; set; }
-        public WorkersRole WorkersRole { get; set; }
-        public ICollection<Messenger> Messengers { get; set; }
+        public bool? Deleted { get; set; }
+        public ICollection<WorkersRole> WorkersRoles { get; set; }
         public override string ToString() => Name;
-        public Worker()
-        {
-            Messengers = new List<Messenger>();
-        }
 
         public class Configuration : IEntityTypeConfiguration<Worker>
         {
@@ -41,14 +31,9 @@ namespace Nano35.Instance.Processor.Models
                    .HasColumnType("nvarchar(MAX)")
                    .IsRequired();
                 builder.HasOne(p => p.Instance)
-                    .WithMany()
+                    .WithMany(p => p.Workers)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new { p.InstanceId });
-                builder.HasOne(p => p.WorkersRole)
-                   .WithMany(p => p.Workers)
-                   .OnDelete(DeleteBehavior.NoAction)
-                   .HasForeignKey(p => new { p.WorkersRoleId })
-                   .IsRequired();
             }
         }
     }

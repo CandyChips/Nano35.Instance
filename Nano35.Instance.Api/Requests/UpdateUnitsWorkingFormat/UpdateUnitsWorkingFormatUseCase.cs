@@ -12,7 +12,6 @@ namespace Nano35.Instance.Api.Requests.UpdateUnitsWorkingFormat
         public UpdateUnitsWorkingFormatUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
         public override async Task<UseCaseResponse<IUpdateUnitsWorkingFormatResultContract>> Ask(IUpdateUnitsWorkingFormatRequestContract input)
         {
-            input.UpdaterId = _auth.CurrentUserId;
             return await new MasstransitUseCaseRequest<IUpdateUnitsWorkingFormatRequestContract, IUpdateUnitsWorkingFormatResultContract>(_bus, input)
                 .GetResponse();
         }

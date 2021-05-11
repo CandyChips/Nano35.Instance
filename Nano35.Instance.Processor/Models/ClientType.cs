@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +11,12 @@ namespace Nano35.Instance.Processor.Models
         public Guid Id { get; set; }
         //Data
         public string Name { get; set; }
+        public ICollection<Client> Clients { get; set; }
+
+        public ClientType()
+        {
+            Clients = new List<Client>();
+        }
         
         public class Configuration : IEntityTypeConfiguration<ClientType>
         {

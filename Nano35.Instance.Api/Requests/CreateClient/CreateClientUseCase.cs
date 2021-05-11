@@ -12,7 +12,6 @@ namespace Nano35.Instance.Api.Requests.CreateClient
         public CreateClientUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
         public override async Task<UseCaseResponse<ICreateClientResultContract>> Ask(ICreateClientRequestContract input)
         {
-            input.UserId = _auth.CurrentUserId;
             input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
             return await new MasstransitUseCaseRequest<ICreateClientRequestContract, ICreateClientResultContract>(_bus, input)
                 .GetResponse();

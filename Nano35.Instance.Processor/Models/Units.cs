@@ -13,11 +13,8 @@ namespace Nano35.Instance.Processor.Models
         public string Phone { get; set; }
         public DateTime Date {get;set;}
         public bool Deleted { get; set; }
-        public Guid CreatorId { get; set; }
         public Guid InstanceId { get; set; }
         public Guid UnitTypeId { get; set; }
-        
-        public Worker Creator { get; set; }
         public Instance Instance { get; set; }
         public UnitType UnitType { get; set; }
 
@@ -45,19 +42,14 @@ namespace Nano35.Instance.Processor.Models
                     .HasColumnType("date")
                     .IsRequired();
                 builder.HasOne(p => p.Instance)
-                    .WithMany()
+                    .WithMany(p => p.Units)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => p.InstanceId)
                     .IsRequired();
                 builder.HasOne(p => p.UnitType)
-                    .WithMany()
+                    .WithMany(p => p.Units)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => p.UnitTypeId)
-                    .IsRequired();
-                builder.HasOne(p => p.Creator)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .HasForeignKey(p => new { p.CreatorId })
                     .IsRequired();
             }
         }

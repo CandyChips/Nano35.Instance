@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
@@ -17,9 +18,11 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
         {
             var role = _context.WorkerRoles.FirstOrDefault();
             if (!_context.Regions.Any(e => e.Id == input.RegionId))
-                return Pass("");
+                return Pass("Неверный регион.");
             if (!_context.InstanceTypes.Any(e => e.Id == input.TypeId))
-                return Pass("");
+                return Pass("Неверный тип организации.");
+            if (_context.ClientProfiles.Any(e => e.Id == input.NewId))
+                return Pass("Повторите попытку позже.");
             
             var instance = 
                 new Models.Instance()
@@ -37,11 +40,19 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
                 new Worker()
                     {Id = input.UserId,
                      Instance = instance,
-                     WorkersRole = role,
                      Name = "Администратор системы",
                      Comment = ""};
             
             await _context.AddAsync(defaultUser, cancellationToken);
+
+            var setsAdminRole = new WorkersRole()
+            {
+                Id = Guid.NewGuid(),
+                RoleId = Guid.Empty,// Admin
+                WorkerId = input.NewId
+            };
+            
+            await _context.AddAsync(setsAdminRole, cancellationToken);
             
             return new UseCaseResponse<ICreateInstanceResultContract>(new CreateInstanceResultContract());
         }

@@ -19,12 +19,12 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (!_context.Workers.Any(e => e.Id == input.CreatorId))
-                return Pass("");
             if (!_context.Instances.Any(e => e.Id == input.InstanceId))
-                return Pass("");
+                return Pass("Повторите попытку позже.");
             if (!_context.Units.Any(e => e.Id == input.UnitTypeId))
-                return Pass("");
+                return Pass("Неверный тип подразделения.");
+            if (_context.ClientProfiles.Any(e => e.Id == input.Id))
+                return Pass("Повторите попытку позже.");
             var unit = 
                 new Unit()
                     {Id = input.Id,
@@ -34,7 +34,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
                      Phone = input.Phone,
                      Date = DateTime.Now,
                      Deleted = false,
-                     CreatorId = input.CreatorId,
                      InstanceId = input.InstanceId,
                      UnitTypeId = input.UnitTypeId};
 

@@ -20,7 +20,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsTypes
             var result =
                 from item in _context.ClientTypes
                 select new ClientTypeViewModel {Id = item.Id, Name = item.Name};
-            return new UseCaseResponse<IGetAllClientTypesResultContract>(new GetAllClientTypesResultContract() { Data = result });
+            return new UseCaseResponse<IGetAllClientTypesResultContract>(new GetAllClientTypesResultContract() { Data = await result.ToListAsync(cancellationToken: cancellationToken) });
         }
     }
 }

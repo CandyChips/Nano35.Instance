@@ -15,6 +15,15 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             ICreateClientRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (_context.ClientProfiles.Any(e => e.Id == input.NewId))
+                return Pass("Повторите попытку позже.");
+            if (_context.ClientProfiles.Any(e => e.Id == input.InstanceId))
+                return Pass("Повторите попытку позже.");
+            if (_context.ClientProfiles.Any(e => e.Id == input.ClientStateId))
+                return Pass("Повторите попытку позже.");
+            if (_context.ClientProfiles.Any(e => e.Id == input.ClientTypeId))
+                return Pass("Повторите попытку позже.");
+            
             var profile = _context.ClientProfiles.FirstOrDefault(p => p.Phone == input.Phone);
             
             if (profile == null)
@@ -30,7 +39,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                      Name = input.Name,
                      Email = input.Email,
                      Deleted = false,
-                     WorkerId = input.UserId,
                      ClientStateId = input.ClientStateId,
                      ClientTypeId =  input.ClientTypeId};
             

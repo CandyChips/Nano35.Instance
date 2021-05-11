@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
@@ -19,11 +20,11 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             CancellationToken cancellationToken)
         {
             if (!_context.Instances.Any(e => e.Id == input.InstanceId))
-                return Pass("");
+                return Pass("Повторите попытку позже.");
             if (!_context.WorkerRoles.Any(e => e.Id == input.RoleId))
-                return Pass("");
+                return Pass("Неверная роль сотрудника.");
             if (_context.ClientProfiles.Any(e => e.Id == input.NewId))
-                return Pass("");
+                return Pass("Повторите попытку позже.");
             
             var client = _bus.CreateRequestClient<ICreateUserRequestContract>();
             
@@ -44,11 +45,19 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                 new Worker()
                     {Id = input.NewId,
                      InstanceId = input.InstanceId,
-                     WorkersRoleId = input.RoleId,
                      Name = input.Name,
                      Comment = input.Comment};
             
             await _context.AddAsync(worker, cancellationToken);
+
+            var setsRole = new WorkersRole()
+            {
+                Id = Guid.NewGuid(),
+                RoleId = input.RoleId,
+                WorkerId = input.NewId
+            };
+            
+            await _context.AddAsync(setsRole, cancellationToken);
             
             return new UseCaseResponse<ICreateWorkerResultContract>(new CreateWorkerResultContract());
         }

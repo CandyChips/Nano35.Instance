@@ -8,12 +8,9 @@ namespace Nano35.Instance.Api.Requests.UpdateClientsType
     public class UpdateClientsTypeUseCase : UseCaseEndPointNodeBase<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>
     {
         private readonly IBus _bus;
-
-        private readonly ICustomAuthStateProvider _auth;
-        public UpdateClientsTypeUseCase(IBus bus, ICustomAuthStateProvider auth) { _bus = bus; _auth = auth; }
+        public UpdateClientsTypeUseCase(IBus bus) { _bus = bus; }
         public override async Task<UseCaseResponse<IUpdateClientsTypeResultContract>> Ask(IUpdateClientsTypeRequestContract input)
         {
-            input.UpdaterId = _auth.CurrentUserId;
             return await new MasstransitUseCaseRequest<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(_bus, input)
                 .GetResponse();
         }

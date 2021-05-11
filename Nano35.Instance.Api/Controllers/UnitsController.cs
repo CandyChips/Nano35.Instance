@@ -20,7 +20,6 @@ using Nano35.Instance.Api.Requests.GetUnitById;
 
 namespace Nano35.Instance.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UnitsController : ControllerBase
@@ -28,12 +27,10 @@ namespace Nano35.Instance.Api.Controllers
         private readonly IServiceProvider  _services;
         public UnitsController(IServiceProvider services) => _services = services;
 
-        [Authorize]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllUnitsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitsErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult GetAllUnits([FromQuery] GetAllUnitsHttpQuery query)
         {
             var result =
@@ -47,12 +44,10 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUnitByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetUnitByIdErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult GetUnitById(Guid id)
         {
             var result =
@@ -65,21 +60,17 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-
-        [Authorize]
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUnitSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateUnitErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult CreateUnit([FromBody] CreateUnitHttpBody body)
         {
             var result =
                 new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                         _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
                         new CreateUnitUseCase(
-                            _services.GetService(typeof(IBus)) as IBus,
-                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                            _services.GetService(typeof(IBus)) as IBus))
                     .Ask(new CreateUnitRequestContract()
                     {
                         Address = body.Address,
@@ -94,31 +85,26 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpPatch("{id}/Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsNameErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateUnitsName([FromBody] UpdateUnitsNameHttpBody body)
         {
             var result =
                 new LoggedUseCasePipeNode<IUpdateUnitsNameRequestContract, IUpdateUnitsNameResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateUnitsNameRequestContract>)) as ILogger<IUpdateUnitsNameRequestContract>,
                         new UpdateUnitsNameUseCase(
-                            _services.GetService(typeof(IBus)) as IBus,
-                            _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                            _services.GetService(typeof(IBus)) as IBus))
                 .Ask(new UpdateUnitsNameRequestContract() { UnitId = body.UnitId, Name = body.Name })
                 .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpPatch("{id}/Phone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsPhoneErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateUnitsPhone([FromBody] UpdateUnitsPhoneHttpBody body)
         {
             var result =
@@ -132,12 +118,10 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpPatch("{id}/Address")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsAddressErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateUnitsAddress([FromBody] UpdateUnitsAddressHttpBody body)
         {
             var result =
@@ -151,12 +135,10 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpPatch("{id}/Type")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsTypeErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateUnitsType([FromBody] UpdateUnitsTypeHttpBody body)
         {
             var result =
@@ -170,12 +152,10 @@ namespace Nano35.Instance.Api.Controllers
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
-        [Authorize]
         [HttpPatch("{id}/WorkingFormat")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsWorkingFormatErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateUnitsWorkingFormat([FromBody] UpdateUnitsWorkingFormatHttpBody body)
         {
             var result =

@@ -34,7 +34,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult GetAllInstances([FromQuery] GetAllInstancesHttpQuery query)
         {
             var result =
@@ -53,7 +52,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetAllCurrentInstances()
         {
             var result =
@@ -72,7 +70,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult GetInstanceById(Guid id)
         {
             var result =
@@ -90,7 +87,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateInstanceErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult CreateInstance([FromBody] CreateInstanceHttpBody body)
         {
             var result =
@@ -119,7 +115,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceEmailErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateInstanceEmail([FromBody] UpdateInstanceEmailHttpBody body)
         {
             var result =
@@ -138,7 +133,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceInfoErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateInstanceInfo([FromBody] UpdateInstanceInfoHttpBody body)
         {
             var result =
@@ -157,7 +151,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceNameErrorHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult UpdateInstanceName([FromBody] UpdateInstanceNameHttpBody body)
         {
             var result =
@@ -176,7 +169,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstancePhoneErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateInstancePhone([FromBody] UpdateInstancePhoneHttpBody body)
         {
             var result =
@@ -195,7 +187,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRealNameErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateInstanceRealName([FromBody] UpdateInstanceRealNameHttpBody body)
         {
             var result =
@@ -215,7 +206,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRegionErrorHttpResponse))] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
         public IActionResult UpdateInstanceRegion([FromBody] UpdateInstanceRegionHttpBody body)
         {
             var result =
@@ -223,8 +213,7 @@ namespace Nano35.Instance.Api.Controllers
                     _services.GetService(typeof(ILogger<IUpdateInstanceRegionRequestContract>)) as
                         ILogger<IUpdateInstanceRegionRequestContract>,
                     new UpdateInstanceRegionUseCase(
-                        _services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                        _services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateInstanceRegionRequestContract() { InstanceId = body.InstanceId, RegionId = body.RegionId})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -235,7 +224,6 @@ namespace Nano35.Instance.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult DeleteInstance(Guid id) => Ok(id);
     }
 }

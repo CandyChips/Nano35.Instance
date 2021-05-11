@@ -22,12 +22,12 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
         {
             var result = await _context
                 .Workers
-                .Where(c => c.InstanceId == input.InstanceId)
+                .Where(c => c.InstanceId == input.InstanceId && c.Deleted == false)
                 .Select(a =>
                     new WorkerViewModel()
                         {Id = a.Id,
                          Comment = a.Comment,
-                         Role = a.WorkersRole.Name})
+                         Roles = a.WorkersRoles.Select(role => role.Role.Id).ToList()})
                 .ToListAsync(cancellationToken);
             
             foreach (var item in result)

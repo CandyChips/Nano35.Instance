@@ -11,6 +11,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<WorkersRole> WorkerRoles { get; set; }
         public DbSet<InstanceType> InstanceTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -36,6 +37,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
             modelBuilder.ApplyConfiguration(new UnitType.Configuration());
             modelBuilder.ApplyConfiguration(new Worker.Configuration());
             modelBuilder.ApplyConfiguration(new WorkersRole.Configuration());
+            modelBuilder.ApplyConfiguration(new Role.Configuration());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -52,6 +54,7 @@ namespace Nano35.Instance.Processor.Services.Contexts
             Clients.Load();
             ClientStates.Load();
             ClientTypes.Load();
+            Roles.Load();
         }
     }
 }
