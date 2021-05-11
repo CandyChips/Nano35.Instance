@@ -44,7 +44,7 @@ metadata:
   name: nano35-instance-processor
   namespace: nano35
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: nano35-instance-processor

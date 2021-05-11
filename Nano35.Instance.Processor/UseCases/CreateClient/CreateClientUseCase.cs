@@ -25,7 +25,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             
             var client = 
                 new Client()
-                    {Id = profile.Id,
+                    {Id = input.NewId,
                      InstanceId = input.InstanceId,
                      Name = input.Name,
                      Email = input.Email,

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts;
@@ -27,7 +28,7 @@ namespace Nano35.Instance.Processor.UseCases
                 await transaction.CommitAsync(cancellationToken);
                 return response;
             }
-            catch
+            catch(Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
                 return new UseCaseResponse<TOut>($"{typeof(TIn)} transaction refused.");

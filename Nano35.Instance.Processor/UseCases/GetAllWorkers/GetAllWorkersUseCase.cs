@@ -32,7 +32,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
             
             foreach (var item in result)
             {
-                var response = await new MasstransitUseCaseRequest<IGetUserByIdRequestContract, IGetUserByIdResultContract>(_bus, new GetUserByIdRequestContract(){UserId = item.Id}).GetResponse();
+                var response = await new MasstransitUseCaseRequest<IGetUserByIdRequestContract, IGetUserByIdResultContract>(_bus, new GetUserByIdRequestContract { UserId = item.Id }).GetResponse();
                 if (response.IsSuccess())
                 {
                     var tmp = response.Success;
@@ -41,10 +41,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkers
                     item.Phone = tmp.Data.Phone;
                 }
                 else
-                {
                     return new UseCaseResponse<IGetAllWorkersResultContract>($@"Сотрудник №{item.Id} не найден в базе аутентификациии.");
-                }
             }
+            
             return new UseCaseResponse<IGetAllWorkersResultContract>(new GetAllWorkersResultContract() {Workers = result});
         }
     }

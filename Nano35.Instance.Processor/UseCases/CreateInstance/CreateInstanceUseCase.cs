@@ -16,6 +16,10 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             CancellationToken cancellationToken)
         {
             var role = _context.WorkerRoles.FirstOrDefault();
+            if (!_context.Regions.Any(e => e.Id == input.RegionId))
+                return Pass("");
+            if (!_context.InstanceTypes.Any(e => e.Id == input.TypeId))
+                return Pass("");
             
             var instance = 
                 new Models.Instance()
