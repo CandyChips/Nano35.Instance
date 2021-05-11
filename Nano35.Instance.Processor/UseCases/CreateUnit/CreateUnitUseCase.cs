@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
@@ -18,6 +19,12 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
             ICreateUnitRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (!_context.Workers.Any(e => e.Id == input.CreatorId))
+                return Pass("");
+            if (!_context.Instances.Any(e => e.Id == input.InstanceId))
+                return Pass("");
+            if (!_context.Units.Any(e => e.Id == input.UnitTypeId))
+                return Pass("");
             var unit = 
                 new Unit()
                     {Id = input.Id,

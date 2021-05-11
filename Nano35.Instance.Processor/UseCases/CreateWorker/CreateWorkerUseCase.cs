@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Identity.Artifacts;
@@ -17,6 +18,13 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             ICreateWorkerRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (!_context.Instances.Any(e => e.Id == input.InstanceId))
+                return Pass("");
+            if (!_context.WorkerRoles.Any(e => e.Id == input.RoleId))
+                return Pass("");
+            if (_context.ClientProfiles.Any(e => e.Id == input.NewId))
+                return Pass("");
+            
             var client = _bus.CreateRequestClient<ICreateUserRequestContract>();
             
             var response = await client.GetResponse<UseCaseResponse<ICreateUserResultContract>>(

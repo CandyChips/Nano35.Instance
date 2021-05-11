@@ -13,8 +13,7 @@ namespace Nano35.Instance.Processor.UseCases
         Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
     }
     
-    public abstract class UseCasePipeNodeBase<TIn, TOut> : 
-        IUseCasePipeNode<TIn, TOut>
+    public abstract class UseCasePipeNodeBase<TIn, TOut> : IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
         where TOut : IResult
     {
@@ -22,14 +21,17 @@ namespace Nano35.Instance.Processor.UseCases
         protected UseCasePipeNodeBase(IUseCasePipeNode<TIn, TOut> next) => _next = next;
         protected Task<UseCaseResponse<TOut>> DoNext(TIn input, CancellationToken cancellationToken) => _next.Ask(input, cancellationToken);
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
+        public UseCaseResponse<TOut> Pass(string error) => new UseCaseResponse<TOut>(error);
+        public UseCaseResponse<TOut> Pass(TOut success) => new UseCaseResponse<TOut>(success);
     }
 
-    public abstract class UseCaseEndPointNodeBase<TIn, TOut> : 
-        IUseCasePipeNode<TIn, TOut>
+    public abstract class UseCaseEndPointNodeBase<TIn, TOut> : IUseCasePipeNode<TIn, TOut>
         where TIn : IRequest
         where TOut : IResult
     {
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
+        public UseCaseResponse<TOut> Pass(string error) => new UseCaseResponse<TOut>(error);
+        public UseCaseResponse<TOut> Pass(TOut success) => new UseCaseResponse<TOut>(success);
     }
     
     public class MasstransitUseCaseRequest<TMessage, TResponse> 
