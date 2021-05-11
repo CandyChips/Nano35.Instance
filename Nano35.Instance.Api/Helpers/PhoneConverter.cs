@@ -10,10 +10,7 @@ namespace Nano35.Instance.Api.Helpers
                 .AsEnumerable()
                 .Select(f => f.ToString())
                 .Where(f => int.TryParse(f, out _)));
-            
-            if (tmp.Length < 11 || tmp.Length > 11)
-                return null;
-            
+            tmp = tmp.Length < 11 || tmp.Length > 11 ? "" : tmp.Substring(1, 10);
             return tmp;
         }
         

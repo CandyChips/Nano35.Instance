@@ -15,7 +15,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             ICreateClientRequestContract input,
             CancellationToken cancellationToken)
         {
-            var profile = _context.ClientProfiles.First(p => p.Phone == input.Phone);
+            var profile = _context.ClientProfiles.FirstOrDefault(p => p.Phone == input.Phone);
             
             if (profile == null)
             {
