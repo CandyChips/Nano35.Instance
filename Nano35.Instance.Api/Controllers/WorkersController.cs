@@ -32,10 +32,8 @@ namespace Nano35.Instance.Api.Controllers
         {
             var result =
                 new LoggedUseCasePipeNode<IGetAllWorkersRequestContract, IGetAllWorkersResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as
-                            ILogger<IGetAllWorkersRequestContract>,
-                        new GetAllWorkersUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                        _services.GetService(typeof(ILogger<IGetAllWorkersRequestContract>)) as ILogger<IGetAllWorkersRequestContract>,
+                        new GetAllWorkersUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new GetAllWorkersRequestContract() {InstanceId = query.InstanceId, WorkersRoleId = query.WorkersRoleId})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);

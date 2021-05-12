@@ -35,7 +35,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                      Email = input.Email,
                      Password = input.Password,
                      InstanceId = input.InstanceId,
-                     Comment = input.Comment,
+                     Comment = input.Comment ?? "",
                      Name = input.Name}, 
                     cancellationToken);
 
