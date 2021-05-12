@@ -21,8 +21,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
         {
             if (!_context.Instances.Any(e => e.Id == input.InstanceId))
                 return Pass("Повторите попытку позже.");
-            if (!_context.WorkerRoles.Any(e => e.Id == input.RoleId))
-                return Pass("Неверная роль сотрудника.");
             if (_context.ClientProfiles.Any(e => e.Id == input.NewId))
                 return Pass("Повторите попытку позже.");
             
@@ -46,7 +44,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                     {Id = input.NewId,
                      InstanceId = input.InstanceId,
                      Name = input.Name,
-                     Comment = input.Comment};
+                     Comment = input.Comment,
+                     Deleted = false};
             
             await _context.AddAsync(worker, cancellationToken);
 

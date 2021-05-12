@@ -44,7 +44,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateWorkerSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateWorkerErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult CreateWorker([FromBody] CreateWorkerHttpBody body)
         {
             var result =
@@ -62,7 +62,7 @@ namespace Nano35.Instance.Api.Controllers
                         Password = body.Password,
                         PasswordConfirm = body.PasswordConfirm,
                         Phone = body.Phone,
-                        RoleId = body.RoleId
+                        Roles = body.Roles
                     })
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
