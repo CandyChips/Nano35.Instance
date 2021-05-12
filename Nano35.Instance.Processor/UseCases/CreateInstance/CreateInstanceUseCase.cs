@@ -48,13 +48,13 @@ namespace Nano35.Instance.Processor.UseCases.CreateInstance
             var setsAdminRole = new WorkersRole()
             {
                 Id = Guid.NewGuid(),
-                RoleId = Guid.Empty,// Admin
+                RoleId = Roles.Admin,
                 WorkerId = input.NewId
             };
             
             await _context.AddAsync(setsAdminRole, cancellationToken);
             
-            return new UseCaseResponse<ICreateInstanceResultContract>(new CreateInstanceResultContract());
+            return Pass(new CreateInstanceResultContract());
         }
     }
 }

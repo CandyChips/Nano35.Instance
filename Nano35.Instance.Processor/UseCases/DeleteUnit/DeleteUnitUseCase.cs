@@ -20,7 +20,7 @@ namespace Nano35.Instance.Processor.UseCases.DeleteUnit
                 .Units
                 .FirstAsync(e => e.Id == input.UnitId, cancellationToken);
             entity.Deleted = true;
-            return new UseCaseResponse<IDeleteUnitResultContract>(new DeleteUnitResultContract());
+            return Pass(new DeleteUnitResultContract());
         }
     }
 }

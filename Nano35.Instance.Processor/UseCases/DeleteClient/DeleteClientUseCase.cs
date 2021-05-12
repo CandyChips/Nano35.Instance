@@ -20,7 +20,7 @@ namespace Nano35.Instance.Processor.UseCases.DeleteClient
                 .Clients
                 .FirstAsync(e => e.Id == input.ClientId, cancellationToken);
             entity.Deleted = true;
-            return new UseCaseResponse<IDeleteClientResultContract>(new DeleteClientResultContract());
+            return Pass(new DeleteClientResultContract());
         }
     }   
 }

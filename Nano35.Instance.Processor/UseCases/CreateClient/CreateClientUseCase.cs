@@ -44,7 +44,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
             
             await _context.AddAsync(client, cancellationToken);
             
-            return new UseCaseResponse<ICreateClientResultContract>(new CreateClientResultContract());
+            return Pass(new CreateClientResultContract());
         }
     }
 }

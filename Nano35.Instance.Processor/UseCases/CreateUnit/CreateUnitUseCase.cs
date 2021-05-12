@@ -39,7 +39,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
 
             await _context.AddAsync(unit, cancellationToken);
             
-            return new UseCaseResponse<ICreateUnitResultContract>(new CreateUnitResultContract());
+            return Pass(new CreateUnitResultContract());
         }
     }
 }

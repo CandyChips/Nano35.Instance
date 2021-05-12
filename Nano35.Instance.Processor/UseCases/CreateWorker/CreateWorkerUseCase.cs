@@ -39,7 +39,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                      Name = input.Name}, 
                     cancellationToken);
 
-            if (!response.Message.IsSuccess()) return new UseCaseResponse<ICreateWorkerResultContract>(response.Message.Error);
+            if (!response.Message.IsSuccess()) return Pass(response.Message.Error);
 
             var worker = 
                 new Worker()
@@ -50,16 +50,18 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
             
             await _context.AddAsync(worker, cancellationToken);
 
-            var setsRole = new WorkersRole()
+            foreach (var item in input.Roles)
             {
-                Id = Guid.NewGuid(),
-                RoleId = input.RoleId,
-                WorkerId = input.NewId
-            };
+                await _context.AddAsync(
+                    new WorkersRole()
+                        {Id = Guid.NewGuid(),
+                         RoleId = item,
+                         WorkerId = input.NewId}, 
+                    cancellationToken);
+            }
             
-            await _context.AddAsync(setsRole, cancellationToken);
             
-            return new UseCaseResponse<ICreateWorkerResultContract>(new CreateWorkerResultContract());
+            return Pass(new CreateWorkerResultContract());
         }
     }
 }
