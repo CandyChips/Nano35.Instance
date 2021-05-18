@@ -44,7 +44,8 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
                     {Id = input.NewId,
                      InstanceId = input.InstanceId,
                      Name = input.Name,
-                     Comment = input.Comment};
+                     Comment = input.Comment,
+                     Deleted = false};
             
             await _context.AddAsync(worker, cancellationToken);
 

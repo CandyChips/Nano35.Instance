@@ -68,7 +68,7 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateClientSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateClientErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreateClient([FromBody] CreateClientHttpBody body)
         {
             var result = 
