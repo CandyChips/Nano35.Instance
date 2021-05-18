@@ -14,12 +14,12 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringById
             IGetWorkerStringByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = (await _context
+            var result = await _context
                 .Workers
-                .FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken));
+                .FirstOrDefaultAsync(e => e.Id == input.WorkerId, cancellationToken);
             return result == null ? 
-                new UseCaseResponse<IGetWorkerStringByIdResultContract>("Сотрудник не найден.") : 
-                new UseCaseResponse<IGetWorkerStringByIdResultContract>(new GetWorkerStringByIdResultContract() {Data = result.ToString()});
+                Pass("Сотрудник не найден.") : 
+                Pass(new GetWorkerStringByIdResultContract() { Data = result.ToString() });
         }
     }
 }

@@ -16,11 +16,10 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringById
         {
             var result = await _context
                 .Clients
-                .FirstOrDefaultAsync(e => e.Id == input.ClientId & e.InstanceId == input.InstanceId, cancellationToken);
+                .FirstOrDefaultAsync(e => e.Id == input.ClientId && e.InstanceId == input.InstanceId, cancellationToken);
             return result == null ? 
-                new UseCaseResponse<IGetClientStringByIdResultContract>("Клиент не найден.") : 
-                new UseCaseResponse<IGetClientStringByIdResultContract>(new GetClientStringByIdResultContract()
-                    { Data = $"{result.Name} - +7{result.ClientProfile.Phone}" });
+                Pass("Клиент не найден.") : 
+                Pass(new GetClientStringByIdResultContract() { Data = $"{result.Name} - +7{result.ClientProfile.Phone}" });
         }
     }
 }

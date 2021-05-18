@@ -5,6 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nano35.Instance.Processor.Models
 {
+    public class ClientStates
+    {
+        public static Guid Organisation => Guid.Parse("0a0e079d-dd41-4009-eb9c-08d90bcf6667");    
+        public static Guid Person => Guid.Parse("9f76e798-aab2-44cf-eb9b-08d90bcf6667");    
+    }
+
     public class ClientState
     {
         public Guid Id { get; set; }

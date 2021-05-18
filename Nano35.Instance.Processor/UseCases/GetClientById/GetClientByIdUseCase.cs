@@ -20,8 +20,8 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
                 .FirstOrDefaultAsync(f => f.Id == input.UnitId, cancellationToken);
             
             return result == null ? 
-                new UseCaseResponse<IGetClientByIdResultContract>("Клиент не найден.") :
-                new UseCaseResponse<IGetClientByIdResultContract>(
+                Pass("Клиент не найден.") :
+                Pass(
                     new GetClientByIdResultContract()
                     {
                         Client = new ClientViewModel()

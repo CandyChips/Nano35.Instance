@@ -16,7 +16,7 @@ using Nano35.Instance.Processor.UseCases.GetAllClientsTypes;
 using Nano35.Instance.Processor.UseCases.GetAllInstances;
 using Nano35.Instance.Processor.UseCases.GetAllInstanceTypes;
 using Nano35.Instance.Processor.UseCases.GetAllRegions;
-using Nano35.Instance.Processor.UseCases.GetAllRoles;
+using Nano35.Instance.Processor.UseCases.GetAllRolesByUser;
 using Nano35.Instance.Processor.UseCases.GetAllUnits;
 using Nano35.Instance.Processor.UseCases.GetAllUnitTypes;
 using Nano35.Instance.Processor.UseCases.GetAllWorkerRoles;
@@ -93,7 +93,7 @@ namespace Nano35.Instance.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetInstanceStringByIdRequestContract", e => { e.Consumer<GetInstanceStringByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IDeleteUnitRequestContract", e => { e.Consumer<DeleteUnitConsumer>(provider); });
                     cfg.ReceiveEndpoint("IDeleteClientRequestContract", e => { e.Consumer<DeleteClientConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllRolesRequestContract", e => {e.Consumer<GetAllRolesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllRolesByUserRequestContract", e => {e.Consumer<GetAllRolesByUserConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetClientStringsByIdsRequestContract", e => { e.Consumer<GetClientStringsByIdsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetInstanceStringsByIdsRequestContract", e => { e.Consumer<GetInstanceStringsByIdsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetUnitStringsByIdsRequestContract", e => { e.Consumer<GetUnitStringsByIdsConsumer>(provider); }); 
@@ -151,7 +151,7 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<CreateInstanceConsumer>();
                 x.AddConsumer<GetAllUnitTypesConsumer>();
                 x.AddConsumer<GetAllInstanceTypesConsumer>();
-                x.AddConsumer<GetAllRolesConsumer>();
+                x.AddConsumer<GetAllRolesByUserConsumer>();
                 x.AddConsumer<GetAllRegionsConsumer>();
                 x.AddConsumer<GetInstanceByIdConsumer>();
                 x.AddConsumer<CreateWorkerConsumer>();

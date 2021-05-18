@@ -19,16 +19,15 @@ namespace Nano35.Instance.Processor.UseCases.GetAllInstances
                 new GetAllInstancesResultContract()
                 {Data = await _context
                     .Workers
-                    .Where(c => c.Id == input.UserId)
-                    .Select(e => e.Instance)
+                    .Where(c => c.Id == input.UserId) 
                     .Select(a => 
                         new InstanceViewModel()
-                            {Id = a.Id,
-                             CompanyInfo = a.CompanyInfo,
-                             OrgEmail = a.OrgEmail,
-                             OrgName = a.OrgName,
-                             OrgRealName = a.OrgRealName,
-                             RegionId = a.RegionId})
+                            {Id = a.Instance.Id,
+                             CompanyInfo = a.Instance.CompanyInfo,
+                             OrgEmail = a.Instance.OrgEmail,
+                             OrgName = a.Instance.OrgName,
+                             OrgRealName = a.Instance.OrgRealName,
+                             RegionId = a.Instance.RegionId})
                     .ToListAsync(cancellationToken)});
     }
 }

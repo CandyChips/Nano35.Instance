@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Instance.Processor.Services.Contexts;
@@ -10,24 +13,31 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerById
     public class GetWorkerByIdUseCase : UseCaseEndPointNodeBase<IGetWorkerByIdRequestContract, IGetWorkerByIdResultContract>
     {
         private readonly ApplicationContext _context;
-        public GetWorkerByIdUseCase(ApplicationContext context) => _context = context;
+        private readonly IBus _bus;
+        public GetWorkerByIdUseCase(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
         public override async Task<UseCaseResponse<IGetWorkerByIdResultContract>> Ask(
             IGetWorkerByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await _context
+            var worker = await _context
                 .Workers
                 .FirstOrDefaultAsync(f => f.Id == input.WorkerId, cancellationToken);
-            return result == null ? 
-                new UseCaseResponse<IGetWorkerByIdResultContract>("Сотрудник не найден.") : 
-                new UseCaseResponse<IGetWorkerByIdResultContract>(
-                    new GetWorkerByIdResultContract()
-                    {
-                        Data =
-                            new WorkerViewModel()
-                                {Id = result.Id,
-                                 Comment = result.Comment}
-                    });
+            var tmp = new WorkerViewModel()
+            {
+                Id = worker.Id, 
+                Comment = worker.Comment,
+                Roles = worker.WorkersRoles.Select(role => role.Role.Id).ToList()
+            };
+            var response = await new MasstransitUseCaseRequest<IGetUserByIdRequestContract, IGetUserByIdResultContract>(_bus, new GetUserByIdRequestContract { UserId = worker.Id }).GetResponse();
+            if (response.IsSuccess())
+            {
+                var result = response.Success.Data;
+                tmp.Name = result.Name;
+                tmp.Email = result.Email;
+                tmp.Phone = result.Phone;
+            }
+            else return Pass("");
+            return Pass(new GetWorkerByIdResultContract() { Data = tmp });
         }
     }
 }
