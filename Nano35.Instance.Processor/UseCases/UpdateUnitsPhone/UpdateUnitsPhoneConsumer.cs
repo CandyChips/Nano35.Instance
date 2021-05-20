@@ -15,10 +15,10 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsPhone
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var result =
-                await new LoggedUseCasePipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
+                await new LoggedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(
                     _services.GetService(typeof(ILogger<IUpdateUnitsPhoneRequestContract>)) as ILogger<IUpdateUnitsPhoneRequestContract>,
-                    new TransactedUseCasePipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(dbContext,
-                        new UpdateUnitsPhoneUseCase(dbContext)))
+                    new TransactedPipeNode<IUpdateUnitsPhoneRequestContract, IUpdateUnitsPhoneResultContract>(dbContext,
+                        new UpdateUnitsPhone(dbContext)))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

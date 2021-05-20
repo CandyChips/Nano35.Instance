@@ -15,11 +15,11 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
+                await new LoggedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                     _services.GetService(typeof(ILogger<ICreateUnitRequestContract>)) as ILogger<ICreateUnitRequestContract>,
-                        new TransactedUseCasePipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
+                        new TransactedPipeNode<ICreateUnitRequestContract, ICreateUnitResultContract>(
                             dbContext,
-                            new CreateUnitUseCase(
+                            new CreateUnit(
                                 dbContext,
                                 _services.GetService(typeof(IBus)) as IBus)))
                     .Ask(context.Message, context.CancellationToken);

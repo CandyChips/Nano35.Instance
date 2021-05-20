@@ -14,9 +14,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllWorkerRoles
         public async Task Consume(ConsumeContext<IGetAllWorkerRolesRequestContract> context)
         {
             var result = 
-                await new LoggedUseCasePipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
+                await new LoggedPipeNode<IGetAllWorkerRolesRequestContract, IGetAllWorkerRolesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllWorkerRolesRequestContract>)) as ILogger<IGetAllWorkerRolesRequestContract>,
-                    new GetAllWorkerRolesUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    new GetAllWorkerRoles(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

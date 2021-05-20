@@ -7,12 +7,12 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases
 {
-    public class TransactedUseCasePipeNode<TIn, TOut> : UseCasePipeNodeBase<TIn, TOut>
+    public class TransactedPipeNode<TIn, TOut> : PipeNodeBase<TIn, TOut>
         where TIn : IRequest
         where TOut : IResult
     {
         private readonly ApplicationContext _context;
-        public TransactedUseCasePipeNode(ApplicationContext context, IUseCasePipeNode<TIn, TOut> next) : base(next) => _context = context;
+        public TransactedPipeNode(ApplicationContext context, IPipeNode<TIn, TOut> next) : base(next) => _context = context;
         public override async Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -31,7 +31,7 @@ namespace Nano35.Instance.Processor.UseCases
             catch(Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new UseCaseResponse<TOut>($"{typeof(TIn)} transaction refused.");
+                return new UseCaseResponse<TOut>($"{typeof(TIn)} transaction refused: {ex.Message}.");
             }
         }
     }

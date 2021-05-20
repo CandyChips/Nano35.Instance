@@ -15,9 +15,9 @@ namespace Nano35.Instance.Processor.UseCases.GetWorkerStringsByIds
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsResultContract>(
+                await new LoggedPipeNode<IGetWorkerStringsByIdsRequestContract, IGetWorkerStringsByIdsResultContract>(
                     _services.GetService(typeof(ILogger<IGetWorkerStringsByIdsRequestContract>)) as ILogger<IGetWorkerStringsByIdsRequestContract>,
-                        new GetWorkerStringsByIdsUseCase(dbContext))
+                        new GetWorkerStringsByIds(dbContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

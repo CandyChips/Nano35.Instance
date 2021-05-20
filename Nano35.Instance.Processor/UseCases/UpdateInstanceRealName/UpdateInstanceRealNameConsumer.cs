@@ -15,10 +15,10 @@ namespace Nano35.Instance.Processor.UseCases.UpdateInstanceRealName
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
+                await new LoggedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(
                     _services.GetService(typeof(ILogger<IUpdateInstanceRealNameRequestContract>)) as ILogger<IUpdateInstanceRealNameRequestContract>,
-                    new TransactedUseCasePipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
-                        new UpdateInstanceRealNameUseCase(dbContext)))
+                    new TransactedPipeNode<IUpdateInstanceRealNameRequestContract, IUpdateInstanceRealNameResultContract>(dbContext,
+                        new UpdateInstanceRealName(dbContext)))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

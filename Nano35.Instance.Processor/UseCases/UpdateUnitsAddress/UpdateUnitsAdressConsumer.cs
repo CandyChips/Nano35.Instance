@@ -15,10 +15,10 @@ namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
         {
             var dbContext = (ApplicationContext)_services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
+                await new LoggedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(
                     _services.GetService(typeof(ILogger<IUpdateUnitsAddressRequestContract>)) as ILogger<IUpdateUnitsAddressRequestContract>,
-                        new TransactedUseCasePipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(dbContext,
-                            new UpdateUnitsAddressUseCase(dbContext)))
+                        new TransactedPipeNode<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>(dbContext,
+                            new UpdateUnitsAddress(dbContext)))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

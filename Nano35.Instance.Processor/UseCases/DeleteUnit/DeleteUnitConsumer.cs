@@ -14,9 +14,9 @@ namespace Nano35.Instance.Processor.UseCases.DeleteUnit
         public async Task Consume(ConsumeContext<IDeleteUnitRequestContract> context)
         {
             var result = 
-                await new LoggedUseCasePipeNode<IDeleteUnitRequestContract, IDeleteUnitResultContract>(
+                await new LoggedPipeNode<IDeleteUnitRequestContract, IDeleteUnitResultContract>(
                     _services.GetService(typeof(ILogger<IDeleteUnitRequestContract>)) as ILogger<IDeleteUnitRequestContract>,
-                    new DeleteUnitUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    new DeleteUnit(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

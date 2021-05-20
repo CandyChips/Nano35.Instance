@@ -83,16 +83,14 @@ namespace Nano35.Instance.Api.Controllers
                 new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(_services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,
                         new CreateWorkerUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new CreateWorkerRequestContract()
-                    {
-                        Comment = body.Comment,
+                        {Comment = body.Comment,
                         Email = body.Email,
                         InstanceId = body.InstanceId,
                         Name = body.Name,
                         NewId = body.NewId,
                         Password = body.Password,
                         PasswordConfirm = body.PasswordConfirm,
-                        Phone = body.Phone
-                    })
+                        Phone = body.Phone})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }

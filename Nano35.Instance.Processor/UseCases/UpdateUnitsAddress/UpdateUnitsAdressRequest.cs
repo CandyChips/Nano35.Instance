@@ -6,10 +6,10 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.UpdateUnitsAddress
 {
-    public class UpdateUnitsAddressUseCase : UseCaseEndPointNodeBase<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>
+    public class UpdateUnitsAddress : EndPointNodeBase<IUpdateUnitsAddressRequestContract, IUpdateUnitsAddressResultContract>
     {
         private readonly ApplicationContext _context;
-        public UpdateUnitsAddressUseCase(ApplicationContext context) => _context = context;
+        public UpdateUnitsAddress(ApplicationContext context) => _context = context;
         public override async Task<UseCaseResponse<IUpdateUnitsAddressResultContract>> Ask(
             IUpdateUnitsAddressRequestContract input,
             CancellationToken cancellationToken)

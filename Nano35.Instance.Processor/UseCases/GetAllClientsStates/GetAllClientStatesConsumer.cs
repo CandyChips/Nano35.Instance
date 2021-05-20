@@ -14,9 +14,9 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClientsStates
         public async Task Consume(ConsumeContext<IGetAllClientStatesRequestContract> context)
         {
             var result = 
-                await new LoggedUseCasePipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>(
+                await new LoggedPipeNode<IGetAllClientStatesRequestContract, IGetAllClientStatesResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllClientStatesRequestContract>)) as ILogger<IGetAllClientStatesRequestContract>,
-                    new GetAllClientStatesUseCase(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    new GetAllClientStates(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                 .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

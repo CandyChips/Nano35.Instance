@@ -8,10 +8,10 @@ using Nano35.Instance.Processor.Services.Contexts;
 
 namespace Nano35.Instance.Processor.UseCases.GetAllRolesByUser
 {
-    public class GetAllRolesByUserUseCase : UseCaseEndPointNodeBase<IGetAllRolesByUserRequestContract, IGetAllRolesByUserResultContract>
+    public class GetAllRolesByUser : EndPointNodeBase<IGetAllRolesByUserRequestContract, IGetAllRolesByUserResultContract>
     {
         private readonly ApplicationContext _context;
-        public GetAllRolesByUserUseCase(ApplicationContext context) => _context = context;
+        public GetAllRolesByUser(ApplicationContext context) => _context = context;
         public override async Task<UseCaseResponse<IGetAllRolesByUserResultContract>> Ask(
             IGetAllRolesByUserRequestContract input,
             CancellationToken cancellationToken)

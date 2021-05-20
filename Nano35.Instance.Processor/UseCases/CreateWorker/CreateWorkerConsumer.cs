@@ -15,11 +15,11 @@ namespace Nano35.Instance.Processor.UseCases.CreateWorker
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var result = 
-                await new LoggedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
+                await new LoggedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                         _services.GetService(typeof(ILogger<ICreateWorkerRequestContract>)) as ILogger<ICreateWorkerRequestContract>,  
-                        new TransactedUseCasePipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
+                        new TransactedPipeNode<ICreateWorkerRequestContract, ICreateWorkerResultContract>(
                             dbContext,
-                            new CreateWorkerUseCase(
+                            new CreateWorker(
                                 _services.GetService(typeof(IBus)) as IBus, 
                                 dbContext)))
                     .Ask(context.Message, context.CancellationToken);

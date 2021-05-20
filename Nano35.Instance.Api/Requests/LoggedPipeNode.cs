@@ -27,8 +27,8 @@ namespace Nano35.Instance.Api.Requests
             }
             catch (Exception e)
             {
-                _logger.LogInformation($"ends by: {DateTime.Now} with exception!!!");
-                return new UseCaseResponse<TOut>($"ends by: {DateTime.Now} with exception!!!");
+                _logger.LogInformation($"ends by: {DateTime.Now} with exception: {e.Message}!!!");
+                return new UseCaseResponse<TOut>($"ends by: {DateTime.Now} with exception: {e.Message}!!!");
             }
         }
     }
