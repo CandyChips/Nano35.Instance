@@ -29,8 +29,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllUnitsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllUnitsErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllUnitsHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetAllUnits([FromQuery] GetAllUnitsHttpQuery query)
         {
             var result =
@@ -46,8 +46,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUnitByIdSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetUnitByIdErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUnitByIdHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetUnitById(Guid id)
         {
             var result =
@@ -62,7 +62,7 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUnitSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateUnitHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult CreateUnit([FromBody] CreateUnitHttpBody body)
         {
@@ -87,8 +87,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch("{id}/Name")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsNameSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsNameErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsNameHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateUnitsName([FromBody] UpdateUnitsNameHttpBody body)
         {
             var result =
@@ -103,8 +103,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch("{id}/Phone")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsPhoneSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsPhoneErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsPhoneHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateUnitsPhone([FromBody] UpdateUnitsPhoneHttpBody body)
         {
             var result =
@@ -120,8 +120,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch("{id}/Address")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsAddressSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsAddressErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsAddressHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateUnitsAddress([FromBody] UpdateUnitsAddressHttpBody body)
         {
             var result =
@@ -137,8 +137,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch("{id}/Type")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsTypeSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsTypeErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsTypeHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateUnitsType([FromBody] UpdateUnitsTypeHttpBody body)
         {
             var result =
@@ -154,8 +154,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpPatch("{id}/WorkingFormat")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsWorkingFormatSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateUnitsWorkingFormatErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUnitsWorkingFormatHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateUnitsWorkingFormat([FromBody] UpdateUnitsWorkingFormatHttpBody body)
         {
             var result =

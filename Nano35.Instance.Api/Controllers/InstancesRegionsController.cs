@@ -21,8 +21,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllRegionsErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllRegionsHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetAllRegions()
         {
             var result =

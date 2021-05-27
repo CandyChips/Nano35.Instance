@@ -90,7 +90,9 @@ namespace Nano35.Instance.Api.Controllers
                         NewId = body.NewId,
                         Password = body.Password,
                         PasswordConfirm = body.PasswordConfirm,
-                        Phone = body.Phone})
+                        Phone = body.Phone,
+                        Roles = body.Roles
+                        })
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }

@@ -21,8 +21,8 @@ namespace Nano35.Instance.Api.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstanceTypesErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstanceTypesHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetAllInstanceTypes()
         {
             var result =
