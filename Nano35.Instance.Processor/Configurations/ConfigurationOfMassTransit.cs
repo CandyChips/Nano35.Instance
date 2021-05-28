@@ -99,21 +99,27 @@ namespace Nano35.Instance.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetUnitStringsByIdsRequestContract", e => { e.Consumer<GetUnitStringsByIdsConsumer>(provider); }); 
                     cfg.ReceiveEndpoint("IGetWorkerByIdRequestContract", e => { e.Consumer<GetWorkerByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetWorkerStringsByIdsRequestContract", e => { e.Consumer<GetWorkerStringsByIdsConsumer>(provider); });
+                    
                     cfg.ReceiveEndpoint("IUpdateWorkersNameRequestContract", e => { e.Consumer<UpdateWorkersNameConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateWorkersCommentRequestContract", e => { e.Consumer<UpdateWorkersCommentConsumer>(provider); });
+                    
                     cfg.ReceiveEndpoint("IUpdateUnitsWorkingFormatRequestContract", e => { e.Consumer<UpdateUnitsWorkingFormatConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateUnitsTypeRequestContract", e => { e.Consumer<UpdateUnitsTypeConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateUnitsPhoneRequestContract", e => { e.Consumer<UpdateUnitsPhoneConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateUnitsNameRequestContract", e => { e.Consumer<UpdateUnitsNameConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateUnitsAddressRequestContract", e => { e.Consumer<UpdateUnitsAddressConsumer>(provider); });
+                    
                     cfg.ReceiveEndpoint("IUpdateInstanceRegionRequestContract", e => { e.Consumer<UpdateInstanceRegionConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstanceRealNameRequestContract", e => { e.Consumer<UpdateInstanceRealNameConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstancePhoneRequestContract", e => { e.Consumer<UpdateInstancePhoneConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstanceNameRequestContract", e => { e.Consumer<UpdateInstanceNameConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstanceInfoRequestContract", e => { e.Consumer<UpdateInstanceInfoConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstanceEmailRequestContract", e => { e.Consumer<UpdateInstanceEmailConsumer>(provider); }); 
+                    
                     cfg.ReceiveEndpoint("IUpdateClientsTypeRequestContract", e => { e.Consumer<UpdateClientsTypeConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsStateRequestContract", e => { e.Consumer<UpdateClientsStateConsumer>(provider); });
+                    //cfg.ReceiveEndpoint("IUpdateClientsSelleRequestContract", e => { e.Consumer<UpdateClientsSelleConsumer>(provider); });
+                    //cfg.ReceiveEndpoint("IUpdateClientsPhoneRequestContract", e => { e.Consumer<UpdateClientsPhoneConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsNameRequestContract", e => { e.Consumer<UpdateClientsNameConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsEmailRequestContract", e => { e.Consumer<UpdateClientsEmailConsumer>(provider); });
                 }));
