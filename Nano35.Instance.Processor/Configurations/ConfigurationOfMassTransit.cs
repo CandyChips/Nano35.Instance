@@ -1,5 +1,6 @@
 using System;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Contracts.Cashbox.Artifacts;
@@ -53,21 +54,30 @@ using Nano35.Instance.Processor.UseCases.UpdateWorkersName;
 
 namespace Nano35.Instance.Processor.Configurations
 {
-    public class MassTransitConfiguration : 
-        IConfigurationOfService
+    public class MassTransitConfiguration : IConfigurationOfService
     {
-        public void AddToServices(
-            IServiceCollection services)
+        private readonly string _uri;
+        private readonly string _login;
+        private readonly string _password;
+        
+        public MassTransitConfiguration(IConfiguration configuration)
+        {
+            _uri = configuration["services:MassTransit:Uri"];
+            _login = configuration["services:MassTransit:Login"];
+            _password = configuration["services:MassTransit:Password"];
+        }
+        
+        public void AddToServices(IServiceCollection services)
         {
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(provider);
-                    cfg.Host(new Uri($"{ContractBase.RabbitMqLocation}/"), h =>
+                    cfg.Host(new Uri($"{_uri}/"), h =>
                     {
-                        h.Username(ContractBase.RabbitMqUsername);
-                        h.Password(ContractBase.RabbitMqPassword);
+                        h.Username(_login);
+                        h.Password(_password);
                     });
                     
                     cfg.ReceiveEndpoint("IGetAllInstancesRequestContract", e => { e.Consumer<GetAllInstancesConsumer>(provider); });

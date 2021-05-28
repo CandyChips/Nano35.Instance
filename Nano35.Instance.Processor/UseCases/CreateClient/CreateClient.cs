@@ -32,15 +32,14 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                 await _context.AddAsync(profile, cancellationToken);
             }
             
-            var client = 
-                new Client()
-                    {Id = input.NewId,
-                     InstanceId = input.InstanceId,
-                     Name = input.Name,
-                     Email = input.Email,
-                     Deleted = false,
-                     ClientStateId = input.ClientStateId,
-                     ClientTypeId =  input.ClientTypeId};
+            var client = new Client()
+                {Id = input.NewId,
+                 InstanceId = input.InstanceId,
+                 Name = input.Name,
+                 Email = input.Email,
+                 Deleted = false,
+                 ClientStateId = input.ClientStateId,
+                 ClientTypeId =  input.ClientTypeId};
             
             await _context.AddAsync(client, cancellationToken);
             

@@ -18,17 +18,16 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             IGetAllClientsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var clients = _context.Clients;
+            var clients = await _context.Clients.Where(c => c.InstanceId == input.InstanceId && c.Deleted == false).ToListAsync(cancellationToken: cancellationToken);
             if (input.ClientStateId != Guid.Empty)
             {
-                clients = clients.Where(e => e.ClientStateId == input.ClientStateId) as DbSet<Client>;
+                clients = clients.Where(e => e.ClientStateId == input.ClientStateId).ToList();
             }
             if (input.ClientTypeId != Guid.Empty)
             {
-                clients = clients!.Where(e => e.ClientTypeId == input.ClientTypeId) as DbSet<Client>;
+                clients = clients.Where(e => e.ClientTypeId == input.ClientTypeId).ToList();
             }
-            var result = await clients!
-                .Where(c => c.InstanceId == input.InstanceId && c.Deleted == false)
+            var result = clients!
                 .Select(a => 
                     new ClientViewModel()
                         {Id = a.Id,
@@ -39,7 +38,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
                          Email = a.Email,
                          Name = a.Name,
                          Phone = a.ClientProfile.Phone})
-                .ToListAsync(cancellationToken);
+                .ToList();
             return Pass(new GetAllClientsResultContract {Data = result});
         }
     }   
