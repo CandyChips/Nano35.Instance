@@ -32,8 +32,8 @@ namespace Nano35.Instance.Api.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllInstancesErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllInstancesHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetAllInstances([FromQuery] GetAllInstancesHttpQuery query)
         {
             var result =
@@ -50,8 +50,8 @@ namespace Nano35.Instance.Api.Controllers
         [AllowAnonymous]
         [HttpGet("Current")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAllCurrentInstances()
         {
             var result =
@@ -68,8 +68,8 @@ namespace Nano35.Instance.Api.Controllers
         [AllowAnonymous]
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetInstanceByIdErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetInstanceByIdHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult GetInstanceById(Guid id)
         {
             var result =
@@ -85,7 +85,7 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateInstanceHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult CreateInstance([FromBody] CreateInstanceHttpBody body)
         {
@@ -113,8 +113,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Email")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceEmailErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceEmailHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateInstanceEmail([FromBody] UpdateInstanceEmailHttpBody body)
         {
             var result =
@@ -131,8 +131,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Info")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceInfoErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceInfoHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateInstanceInfo([FromBody] UpdateInstanceInfoHttpBody body)
         {
             var result =
@@ -149,8 +149,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Name")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceNameErrorHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceNameHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateInstanceName([FromBody] UpdateInstanceNameHttpBody body)
         {
             var result =
@@ -167,8 +167,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Phone")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstancePhoneErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstancePhoneHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateInstancePhone([FromBody] UpdateInstancePhoneHttpBody body)
         {
             var result =
@@ -185,8 +185,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/RealName")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRealNameErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRealNameHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateInstanceRealName([FromBody] UpdateInstanceRealNameHttpBody body)
         {
             var result =
@@ -204,8 +204,8 @@ namespace Nano35.Instance.Api.Controllers
         [Authorize]
         [HttpPatch("{id}/Region")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateInstanceRegionErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateInstanceRegionHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult UpdateInstanceRegion([FromBody] UpdateInstanceRegionHttpBody body)
         {
             var result =

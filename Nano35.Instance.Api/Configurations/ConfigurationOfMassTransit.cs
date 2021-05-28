@@ -40,6 +40,26 @@ namespace Nano35.Instance.Api.Configurations
                 x.AddRequestClient<IGetAllRegionsRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetAllRegionsRequestContract"));
                 x.AddRequestClient<IGetAllInstanceTypesRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstanceTypesRequestContract")); 
                 x.AddRequestClient<IGetAllWorkerRolesRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkerRolesRequestContract"));
+                
+                x.AddRequestClient<IUpdateClientsEmailRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsEmailRequestContract"));
+                x.AddRequestClient<IUpdateClientsNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsNameRequestContract"));
+                x.AddRequestClient<IUpdateClientsPhoneRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsPhoneRequestContract"));
+                x.AddRequestClient<IUpdateClientsSelleRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsSelleRequestContract"));
+                x.AddRequestClient<IUpdateClientsStateRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsStateRequestContract"));
+                x.AddRequestClient<IUpdateClientsTypeRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsTypeRequestContract"));
+                x.AddRequestClient<IUpdateInstanceEmailRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceEmailRequestContract"));
+                x.AddRequestClient<IUpdateInstanceInfoRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceInfoRequestContract"));
+                x.AddRequestClient<IUpdateInstanceNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceNameRequestContract"));
+                x.AddRequestClient<IUpdateInstancePhoneRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstancePhoneRequestContract"));
+                x.AddRequestClient<IUpdateInstanceRegionRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceRegionRequestContract"));
+                x.AddRequestClient<IUpdateInstanceRealNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceRealNameRequestContract"));
+                x.AddRequestClient<IUpdateUnitsAddressRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateUnitsAddressRequestContract"));
+                x.AddRequestClient<IUpdateUnitsNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateUnitsNameRequestContract"));
+                x.AddRequestClient<IUpdateUnitsPhoneRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateUnitsPhoneRequestContract"));
+                x.AddRequestClient<IUpdateUnitsTypeRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateUnitsTypeRequestContract"));
+                x.AddRequestClient<IUpdateUnitsWorkingFormatRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateUnitsWorkingFormatRequestContract"));
+                x.AddRequestClient<IUpdateWorkersCommentRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateWorkersCommentRequestContract"));
+                x.AddRequestClient<IUpdateWorkersNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateWorkersNameRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

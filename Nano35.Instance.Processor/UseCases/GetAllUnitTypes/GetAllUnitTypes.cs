@@ -23,7 +23,7 @@ namespace Nano35.Instance.Processor.UseCases.GetAllUnitTypes
                         {Id = a.Id,
                          Name = a.Name})
                 .ToListAsync(cancellationToken);
-            return new UseCaseResponse<IGetAllUnitTypesResultContract>(new GetAllUnitTypesResultContract() {UnitTypes = result});
+            return Pass(new GetAllUnitTypesResultContract() {UnitTypes = result});
         }
     }
 }
