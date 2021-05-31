@@ -72,15 +72,13 @@ namespace Nano35.Instance.Api.Controllers
                         new CreateUnitUseCase(
                             _services.GetService(typeof(IBus)) as IBus))
                     .Ask(new CreateUnitRequestContract()
-                    {
-                        Address = body.Address,
-                        Id = body.Id,
-                        InstanceId = body.InstanceId,
-                        Name = body.Name,
-                        Phone = body.Phone,
-                        UnitTypeId = body.UnitTypeId,
-                        WorkingFormat = body.WorkingFormat
-                    })
+                        {Address = body.Address ?? "",
+                         Id = body.Id,
+                         InstanceId = body.InstanceId,
+                         Name = body.Name,
+                         Phone = body.Phone,
+                         UnitTypeId = body.UnitTypeId,
+                         WorkingFormat = body.WorkingFormat ?? ""})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }

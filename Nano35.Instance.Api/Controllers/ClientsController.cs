@@ -79,16 +79,14 @@ namespace Nano35.Instance.Api.Controllers
                         _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
                 .Ask(
                     new CreateClientRequestContract()
-                    {
-                        Name = body.Name,
-                        Email = body.Email,
-                        Phone = body.Phone,
-                        Selle = body.Selle,
-                        InstanceId = body.InstanceId,
-                        ClientStateId = body.ClientStateId,
-                        ClientTypeId = body.ClientTypeId,
-                        NewId = body.NewId
-                    })
+                        {Name = body.Name,
+                         Email = body.Email ?? "",
+                         Phone = body.Phone,
+                         Selle = body.Selle ?? 0.0,
+                         InstanceId = body.InstanceId,
+                         ClientStateId = body.ClientStateId,
+                         ClientTypeId = body.ClientTypeId,
+                         NewId = body.NewId})
                 .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
