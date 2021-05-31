@@ -21,9 +21,9 @@ namespace Nano35.Instance.Processor.UseCases.CreateUnit
         {
             if (!_context.Instances.Any(e => e.Id == input.InstanceId))
                 return Pass("Повторите попытку позже.");
-            if (!_context.Units.Any(e => e.Id == input.UnitTypeId))
+            if (!_context.UnitTypes.Any(e => e.Id == input.UnitTypeId))
                 return Pass("Неверный тип подразделения.");
-            if (_context.ClientProfiles.Any(e => e.Id == input.Id))
+            if (_context.Units.Any(e => e.Id == input.Id))
                 return Pass("Повторите попытку позже.");
             var unit = 
                 new Unit()

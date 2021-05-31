@@ -11,7 +11,6 @@ namespace Nano35.Instance.Api.Requests.CreateWorker
         public CreateWorkerUseCase(IBus bus) { _bus = bus; }
         public override async Task<UseCaseResponse<ICreateWorkerResultContract>> Ask(ICreateWorkerRequestContract input)
         {
-            input.Phone = PhoneConverter.RuPhoneConverter(input.Phone);
             return await new MasstransitUseCaseRequest<ICreateWorkerRequestContract, ICreateWorkerResultContract>(_bus, input)
                 .GetResponse();
         }
