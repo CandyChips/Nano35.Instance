@@ -23,18 +23,12 @@ namespace Nano35.Instance.Processor.UseCases.GetAllClients
             {
                 clients = clients.Where(e => e.ClientStateId == input.ClientStateId).ToList();
             }
-            if (input.ClientTypeId != Guid.Empty)
-            {
-                clients = clients.Where(e => e.ClientTypeId == input.ClientTypeId).ToList();
-            }
             var result = clients!
                 .Select(a => 
                     new ClientViewModel()
                         {Id = a.Id,
                          ClientState = a.ClientState.Name,
                          ClientStateId = a.ClientStateId,
-                         ClientType = a.ClientType.Name,
-                         ClientTypeId = a.ClientTypeId,
                          Email = a.Email,
                          Name = a.Name,
                          Phone = a.ClientProfile.Phone})

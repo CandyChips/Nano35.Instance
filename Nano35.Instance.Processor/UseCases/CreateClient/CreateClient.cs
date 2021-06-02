@@ -38,8 +38,7 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                  Name = input.Name,
                  Email = input.Email,
                  Deleted = false,
-                 ClientStateId = input.ClientStateId,
-                 ClientTypeId =  input.ClientTypeId};
+                 ClientStateId = input.ClientStateId};
             
             await _context.AddAsync(client, cancellationToken);
             

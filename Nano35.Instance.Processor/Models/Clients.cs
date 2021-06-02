@@ -9,13 +9,11 @@ namespace Nano35.Instance.Processor.Models
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }
-        public Guid ClientTypeId { get; set; }
         public Guid ClientStateId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public bool Deleted { get; set; }
         public Instance Instance { get; set; }
-        public ClientType ClientType { get; set; }
         public ClientState ClientState { get; set; }
         public ClientProfile ClientProfile { get; set; }
         
@@ -29,18 +27,12 @@ namespace Nano35.Instance.Processor.Models
                 builder.Property(b => b.Name).HasColumnType("nvarchar(MAX)").IsRequired();
                 builder.Property(b => b.Email).HasColumnType("nvarchar(MAX)").IsRequired();
                 builder.Property(b => b.Deleted).IsRequired();
-                builder.Property(b => b.ClientTypeId).IsRequired();
                 builder.Property(b => b.ClientStateId).IsRequired();
                 
                 builder.HasOne(p => p.ClientProfile)
                     .WithMany(p => p.Clients)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new { p.Id });
-                
-                builder.HasOne(p => p.ClientType)
-                    .WithMany(p => p.Clients)
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .HasForeignKey(p => new { p.ClientTypeId });
                 
                 builder.HasOne(p => p.ClientState)
                     .WithMany(p => p.Clients)

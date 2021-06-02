@@ -16,7 +16,6 @@ namespace Nano35.Instance.Processor.Services.Contexts
         public DbSet<InstanceType> InstanceTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientState> ClientStates { get; set; }
-        public DbSet<ClientType> ClientTypes { get; set; }
         public DbSet<ClientProfile> ClientProfiles { get; set; }
         
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
@@ -30,7 +29,6 @@ namespace Nano35.Instance.Processor.Services.Contexts
             modelBuilder.ApplyConfiguration(new ClientProfile.Configuration());
             modelBuilder.ApplyConfiguration(new Client.Configuration());
             modelBuilder.ApplyConfiguration(new ClientState.Configuration());
-            modelBuilder.ApplyConfiguration(new ClientType.Configuration());
             modelBuilder.ApplyConfiguration(new Models.Instance.Configuration());
             modelBuilder.ApplyConfiguration(new InstanceType.Configuration());
             modelBuilder.ApplyConfiguration(new Unit.Configuration());
@@ -53,7 +51,6 @@ namespace Nano35.Instance.Processor.Services.Contexts
             ClientProfiles.Load();
             Clients.Load();
             ClientStates.Load();
-            ClientTypes.Load();
             Roles.Load();
         }
     }

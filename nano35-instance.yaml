@@ -12,10 +12,36 @@ spec:
     metadata:
       labels:
         app: nano35-instance-api
+        tier: api
     spec:
       containers:
         - image: bushemi2021/nano35.instance.api:latest
           name: nano35-instance-api
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nano35-instance-processor
+  namespace: nano35
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nano35-instance-processor
+  template:
+    metadata:
+      labels:
+        app: nano35-instance-processor
+        tier: processor
+    spec:
+      containers:
+        - image: bushemi2021/nano35.instance.processor:latest
+          name: nano35-instance-processor
           ports:
             - containerPort: 80
       restartPolicy: Always
@@ -35,27 +61,3 @@ spec:
       nodePort: 30002
   selector:
     app: nano35-instance-api
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nano35-instance-processor
-  namespace: nano35
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nano35-instance-processor
-  template:
-    metadata:
-      labels:
-        app: nano35-instance-processor
-    spec:
-      containers:
-        - image: bushemi2021/nano35.instance.processor:latest
-          name: nano35-instance-processor
-          ports:
-            - containerPort: 80
-      restartPolicy: Always

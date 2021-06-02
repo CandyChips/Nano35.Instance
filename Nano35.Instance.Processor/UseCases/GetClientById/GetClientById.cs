@@ -30,9 +30,7 @@ namespace Nano35.Instance.Processor.UseCases.GetClientById
                              Name = result.Name, 
                              Phone = result.ClientProfile.Phone,
                              ClientState = result.ClientState.Name,
-                             ClientType = result.ClientType.Name,
-                             ClientStateId = result.ClientStateId,
-                             ClientTypeId = result.ClientTypeId}
+                             ClientStateId = result.ClientStateId}
                     });
         }
     }

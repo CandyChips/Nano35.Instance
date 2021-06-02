@@ -2,7 +2,7 @@
     "services": {
         "EntityFramework": {
             "Host": "192.168.100.120",
-            "Database": "Nano35.Instance.DB",
+            "Database": "Nano35.Instance.DB.test",
             "Login": "sa",
             "Password": "Cerber666"
         },
