@@ -30,35 +30,31 @@ namespace Nano35.Instance.Api.Controllers
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllClientsHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAllClients([FromQuery] GetAllClientsHttpQuery query)
         {
             var result =
-                new LoggedUseCasePipeNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllClientsRequestContract>)) as ILogger<IGetAllClientsRequestContract>,
-                    new GetAllClientsUseCase(
-                        _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IGetAllClientsRequestContract, IGetAllClientsResultContract>(_services.GetService(typeof(ILogger<IGetAllClientsRequestContract>)) as ILogger<IGetAllClientsRequestContract>,
+                    new GetAllClientsUseCase(_services.GetService(typeof(IBus)) as IBus))
                 .Ask(new GetAllClientsRequestContract()
                 {
                     InstanceId = query.InstanceId,
                     ClientStateId = query.ClientStateId
                 })
                 .Result;
-            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+            return result.IsSuccess() ? (IActionResult) 
+                Ok(result.Success) : 
+                BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetClientByIdHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetClientById(Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(
-                    _services.GetService(typeof(ILogger<IGetClientByIdRequestContract>)) as
-                        ILogger<IGetClientByIdRequestContract>,
+                new LoggedUseCasePipeNode<IGetClientByIdRequestContract, IGetClientByIdResultContract>(_services.GetService(typeof(ILogger<IGetClientByIdRequestContract>)) as ILogger<IGetClientByIdRequestContract>,
                     new GetClientByIdUseCase(_services.GetService(typeof(IBus)) as IBus))
-                .Ask(new GetClientByIdRequestContract() {UnitId = id})
+                    .Ask(new GetClientByIdRequestContract() {UnitId = id})
                 .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
@@ -87,15 +83,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch("{id}/Email")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsEmailHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateClientsEmail([FromBody] UpdateClientsEmailHttpBody body, Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsEmailRequestContract>)) as
-                            ILogger<IUpdateClientsEmailRequestContract>,
-                        new UpdateClientsEmailUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IUpdateClientsEmailRequestContract, IUpdateClientsEmailResultContract>(_services.GetService(typeof(ILogger<IUpdateClientsEmailRequestContract>)) as ILogger<IUpdateClientsEmailRequestContract>,
+                        new UpdateClientsEmailUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsEmailRequestContract() {ClientId = id, Email = body.Email})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -104,15 +96,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch("{id}/Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsNameHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateClientsName([FromBody] UpdateClientsNameHttpBody body, Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsNameRequestContract>)) as
-                            ILogger<IUpdateClientsNameRequestContract>,
-                        new UpdateClientsNameUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IUpdateClientsNameRequestContract, IUpdateClientsNameResultContract>(_services.GetService(typeof(ILogger<IUpdateClientsNameRequestContract>)) as ILogger<IUpdateClientsNameRequestContract>,
+                        new UpdateClientsNameUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsNameRequestContract() {ClientId = id, Name = body.Name})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -121,15 +109,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch("{id}/Phone")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsPhoneHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateClientsPhone([FromBody] UpdateClientsPhoneHttpBody body, Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsPhoneRequestContract>)) as
-                            ILogger<IUpdateClientsPhoneRequestContract>,
-                        new UpdateClientsPhoneUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IUpdateClientsPhoneRequestContract, IUpdateClientsPhoneResultContract>(_services.GetService(typeof(ILogger<IUpdateClientsPhoneRequestContract>)) as ILogger<IUpdateClientsPhoneRequestContract>,
+                        new UpdateClientsPhoneUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsPhoneRequestContract() {ClientId = id, Phone = body.Phone})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -138,15 +122,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch("{id}/Selle")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsSelleHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateClientsSelle([FromBody] UpdateClientsSelleHttpBody body, Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsSelleRequestContract>)) as
-                            ILogger<IUpdateClientsSelleRequestContract>,
-                        new UpdateClientsSelleUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IUpdateClientsSelleRequestContract, IUpdateClientsSelleResultContract>(_services.GetService(typeof(ILogger<IUpdateClientsSelleRequestContract>)) as ILogger<IUpdateClientsSelleRequestContract>,
+                        new UpdateClientsSelleUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsSelleRequestContract() {ClientId = id, Selle = body.Selle})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -155,15 +135,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPatch("{id}/State")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsStateHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateClientsState([FromBody] UpdateClientsStateHttpBody body, Guid id)
         {
             var result =
-                new LoggedUseCasePipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsStateRequestContract>)) as
-                            ILogger<IUpdateClientsStateRequestContract>,
-                        new UpdateClientsStateUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
+                new LoggedUseCasePipeNode<IUpdateClientsStateRequestContract, IUpdateClientsStateResultContract>(_services.GetService(typeof(ILogger<IUpdateClientsStateRequestContract>)) as ILogger<IUpdateClientsStateRequestContract>,
+                        new UpdateClientsStateUseCase(_services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsStateRequestContract() {ClientId = id, StateId = body.StateId})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -173,7 +149,6 @@ namespace Nano35.Instance.Api.Controllers
         [Route("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteClient(Guid id) => Ok(id);
     }
 }
