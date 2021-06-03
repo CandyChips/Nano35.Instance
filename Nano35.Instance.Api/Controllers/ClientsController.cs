@@ -17,7 +17,6 @@ using Nano35.Instance.Api.Requests.UpdateClientsName;
 using Nano35.Instance.Api.Requests.UpdateClientsPhone;
 using Nano35.Instance.Api.Requests.UpdateClientsSelle;
 using Nano35.Instance.Api.Requests.UpdateClientsState;
-using Nano35.Instance.Api.Requests.UpdateClientsType;
 
 namespace Nano35.Instance.Api.Controllers
 {
@@ -42,8 +41,7 @@ namespace Nano35.Instance.Api.Controllers
                 .Ask(new GetAllClientsRequestContract()
                 {
                     InstanceId = query.InstanceId,
-                    ClientStateId = query.ClientStateId,
-                    ClientTypeId = query.ClientTypeId
+                    ClientStateId = query.ClientStateId
                 })
                 .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -68,15 +66,11 @@ namespace Nano35.Instance.Api.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateClientHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreateClient([FromBody] CreateClientHttpBody body)
         {
             var result = 
-                new LoggedUseCasePipeNode<ICreateClientRequestContract, ICreateClientResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateClientRequestContract>)) as
-                        ILogger<ICreateClientRequestContract>,
-                    new CreateClientUseCase(_services.GetService(typeof(IBus)) as IBus,
-                        _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
+                new LoggedUseCasePipeNode<ICreateClientRequestContract, ICreateClientResultContract>(_services.GetService(typeof(ILogger<ICreateClientRequestContract>)) as ILogger<ICreateClientRequestContract>,
+                    new CreateClientUseCase(_services.GetService(typeof(IBus)) as IBus, _services.GetService(typeof(ICustomAuthStateProvider)) as ICustomAuthStateProvider))
                 .Ask(
                     new CreateClientRequestContract()
                         {Name = body.Name,
@@ -85,7 +79,6 @@ namespace Nano35.Instance.Api.Controllers
                          Selle = body.Selle ?? 0.0,
                          InstanceId = body.InstanceId,
                          ClientStateId = body.ClientStateId,
-                         ClientTypeId = body.ClientTypeId,
                          NewId = body.NewId})
                 .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
@@ -172,23 +165,6 @@ namespace Nano35.Instance.Api.Controllers
                         new UpdateClientsStateUseCase(
                             _services.GetService(typeof(IBus)) as IBus))
                     .Ask(new UpdateClientsStateRequestContract() {ClientId = id, StateId = body.StateId})
-                    .Result;
-            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
-        }
-
-        [HttpPatch("{id}/Type")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateClientsTypeHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateClientsType([FromBody] UpdateClientsTypeHttpBody body, Guid id)
-        {
-            var result =
-                new LoggedUseCasePipeNode<IUpdateClientsTypeRequestContract, IUpdateClientsTypeResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateClientsTypeRequestContract>)) as
-                            ILogger<IUpdateClientsTypeRequestContract>,
-                        new UpdateClientsTypeUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))
-                    .Ask(new UpdateClientsTypeRequestContract() {ClientId = id, TypeId = body.TypeId})
                     .Result;
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }

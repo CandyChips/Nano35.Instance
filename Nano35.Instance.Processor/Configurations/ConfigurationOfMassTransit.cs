@@ -13,7 +13,6 @@ using Nano35.Instance.Processor.UseCases.DeleteClient;
 using Nano35.Instance.Processor.UseCases.DeleteUnit;
 using Nano35.Instance.Processor.UseCases.GetAllClients;
 using Nano35.Instance.Processor.UseCases.GetAllClientsStates;
-using Nano35.Instance.Processor.UseCases.GetAllClientsTypes;
 using Nano35.Instance.Processor.UseCases.GetAllInstances;
 using Nano35.Instance.Processor.UseCases.GetAllInstanceTypes;
 using Nano35.Instance.Processor.UseCases.GetAllRegions;
@@ -39,7 +38,6 @@ using Nano35.Instance.Processor.UseCases.UpdateClientsName;
 using Nano35.Instance.Processor.UseCases.UpdateClientsPhone;
 using Nano35.Instance.Processor.UseCases.UpdateClientsSelle;
 using Nano35.Instance.Processor.UseCases.UpdateClientsState;
-using Nano35.Instance.Processor.UseCases.UpdateClientsType;
 using Nano35.Instance.Processor.UseCases.UpdateInstanceEmail;
 using Nano35.Instance.Processor.UseCases.UpdateInstanceInfo;
 using Nano35.Instance.Processor.UseCases.UpdateInstanceName;
@@ -96,7 +94,6 @@ namespace Nano35.Instance.Processor.Configurations
                     cfg.ReceiveEndpoint("ICreateClientRequestContract", e => { e.Consumer<CreateClientConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllClientsRequestContract", e => { e.Consumer<GetAllClientsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllClientStatesRequestContract", e => { e.Consumer<GetAllClientStatesConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllClientTypesRequestContract", e => { e.Consumer<GetAllClientTypesConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetClientByIdRequestContract", e => { e.Consumer<GetClientByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetUnitByIdRequestContract", e => { e.Consumer<GetUnitByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetWorkerStringByIdRequestContract", e => { e.Consumer<GetWorkerStringByIdConsumer>(provider); });
@@ -128,7 +125,6 @@ namespace Nano35.Instance.Processor.Configurations
                     cfg.ReceiveEndpoint("IUpdateInstanceInfoRequestContract", e => { e.Consumer<UpdateInstanceInfoConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateInstanceEmailRequestContract", e => { e.Consumer<UpdateInstanceEmailConsumer>(provider); }); 
                     
-                    cfg.ReceiveEndpoint("IUpdateClientsTypeRequestContract", e => { e.Consumer<UpdateClientsTypeConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsStateRequestContract", e => { e.Consumer<UpdateClientsStateConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsSelleRequestContract", e => { e.Consumer<UpdateClientsSelleConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateClientsPhoneRequestContract", e => { e.Consumer<UpdateClientsPhoneConsumer>(provider); });
@@ -138,7 +134,6 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<UpdateClientsEmailConsumer>();
                 x.AddConsumer<UpdateClientsNameConsumer>();
                 x.AddConsumer<UpdateClientsStateConsumer>();
-                x.AddConsumer<UpdateClientsTypeConsumer>();
                 x.AddConsumer<UpdateClientsSelleConsumer>();
                 x.AddConsumer<UpdateClientsPhoneConsumer>();
                 
@@ -184,7 +179,6 @@ namespace Nano35.Instance.Processor.Configurations
                 x.AddConsumer<GetAllUnitsConsumer>();
                 x.AddConsumer<GetAllClientsConsumer>();
                 x.AddConsumer<GetAllClientStatesConsumer>();
-                x.AddConsumer<GetAllClientTypesConsumer>();
                 x.AddConsumer<GetClientByIdConsumer>();
                 x.AddConsumer<GetUnitByIdConsumer>();
                 

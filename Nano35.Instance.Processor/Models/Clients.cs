@@ -16,7 +16,12 @@ namespace Nano35.Instance.Processor.Models
         public Instance Instance { get; set; }
         public ClientState ClientState { get; set; }
         public ClientProfile ClientProfile { get; set; }
-        
+
+        public override string ToString()
+        {
+            return $"{Name} - {ClientProfile.Phone}";
+        }
+
         public class Configuration : IEntityTypeConfiguration<Client>
         {
             public void Configure(EntityTypeBuilder<Client> builder)

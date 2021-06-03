@@ -21,8 +21,6 @@ namespace Nano35.Instance.Processor.UseCases.CreateClient
                 return Pass("Повторите попытку позже.");
             if (_context.ClientProfiles.Any(e => e.Id == input.ClientStateId))
                 return Pass("Повторите попытку позже.");
-            if (_context.ClientProfiles.Any(e => e.Id == input.ClientTypeId))
-                return Pass("Повторите попытку позже.");
             
             var profile = _context.ClientProfiles.FirstOrDefault(p => p.Phone == input.Phone);
             

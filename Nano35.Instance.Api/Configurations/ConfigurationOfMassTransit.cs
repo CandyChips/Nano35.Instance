@@ -46,7 +46,6 @@ namespace Nano35.Instance.Api.Configurations
                 x.AddRequestClient<IUpdateClientsPhoneRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsPhoneRequestContract"));
                 x.AddRequestClient<IUpdateClientsSelleRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsSelleRequestContract"));
                 x.AddRequestClient<IUpdateClientsStateRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsStateRequestContract"));
-                x.AddRequestClient<IUpdateClientsTypeRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateClientsTypeRequestContract"));
                 x.AddRequestClient<IUpdateInstanceEmailRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceEmailRequestContract"));
                 x.AddRequestClient<IUpdateInstanceInfoRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceInfoRequestContract"));
                 x.AddRequestClient<IUpdateInstanceNameRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IUpdateInstanceNameRequestContract"));

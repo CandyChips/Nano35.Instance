@@ -14,13 +14,15 @@ namespace Nano35.Instance.Processor.UseCases.GetClientStringsByIds
         public override async Task<UseCaseResponse<IGetClientStringsByIdsResultContract>> Ask(
             IGetClientStringsByIdsRequestContract input,
             CancellationToken cancellationToken)
-        {
-            var result = await _context
-                .Clients
-                .Where(c => input.ClientIds.Contains(c.Id))
-                .Select(e => $"{e.Name} - {e.ClientProfile.Phone}")
-                .ToListAsync(cancellationToken);
-            
+        { 
+            var result = input
+                .ClientIds
+                .Select(a => 
+                    _context
+                        .Clients
+                        .First(c => c.Id == a)
+                        .ToString())
+                .ToList();
             return new UseCaseResponse<IGetClientStringsByIdsResultContract>(new GetClientStringsByIdsResultContract() {Data = result});
         }
     }
